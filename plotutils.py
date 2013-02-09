@@ -190,7 +190,66 @@ def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=No
         Hlevels.append(Hsorted[np.nonzero(Hsorted_cum >= cum_pts)[0][0]])
 
     pp.contour(xbins, ybins, H, colors=colors, cmap=cmap, levels=Hlevels, extent=(xmin,xmax,ymin,ymax))
-      
+
+def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, **args):
+    """Plots the a KDE estimate of the posterior from which ``pts``
+    are drawn.  Extra keyword arguments are passed to
+    :function:`pp.plot`.
+
+    :param pts: Shape ``(Npts,)`` array of samples.
+
+    :param xmin: Minimum x value.  If ``None``, will be derived from
+      ``pts``.
+
+    :param xmax: Maximum x value.  If ``None``, will be derived from
+      ``pts``.
+
+    :param N: Number of intervals across ``(xmin, xmax)`` in plot."""
+
+    if xmin is None:
+        xmin = np.min(pts)
+    if xmax is None:
+        xmax = np.max(pts)
+
+    kde=ss.gaussian_kde(pts)
+    xs=np.linspace(xmin, xmax, N)
+
+    pp.plot(xs, kde(xs), **args)
+
+def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
+    """Plots a histogram estimate of the posterior from which ``pts``
+    are drawn.  Extra arguments are passed to :function:`pp.hist`.
+
+    :param pts: Shape ``(Npts,)`` array of samples.
+
+    :param xmin: Minimum x value.  If ``None``, will be derived from
+      ``pts``.
+
+    :param xmax: Maximum x value.  If ``None``, will be derived from
+      ``pts``.
+    
+    :param fmt: Line format; see :function:`pp.plot`."""
+
+    if xmin is None:
+        xmin=np.min(pts)
+    if xmax is None:
+        xmax=np.max(pts)
+
+    Npts=pts.shape[0]
+    spts=np.sort(pts)
+
+    iqr = spts[int(Npts*0.75+0.5)] - spts[int(Npts*0.25 + 0.5)]
+
+    # Optimal for Gaussian PDF in 1D; minimizes the squared error
+    # between true and histogram PDF.
+    h = iqr/1.35*(42.5/Npts)**(1.0/3.0)
+
+    Nbins = int((xmax-xmin)/h + 0.5)
+
+    pp.hist(pts, bins=Nbins, **args)
+
+    # Just because matplotlib sometimes puts the y-axis above 0:
+    pp.axis(ymin=0)
 
 def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None):
     """Plot a 2D KDE estimated posterior.
