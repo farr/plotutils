@@ -17,6 +17,7 @@
 
 import numpy as np
 import matplotlib.pyplot as pp
+import scipy.interpolate as si
 import scipy.stats as ss
 
 def load_header_data(file, header_commented=False):
@@ -36,26 +37,33 @@ def load_header_data(file, header_commented=False):
 
     return np.loadtxt(file, dtype=[(h, np.float) for h in header])
 
-def bin_numbers_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None):
-    """Returns ``(Nx,Ny)`` the number of bins along each dimension
-    chosen according to optimality criterion for minimizing the
-    squared error between histogram and true Gaussian PDF in 2D.
+def decorrelated_2d_histogram_pdf(pts, xmin=None, xmax=None, ymin=None, ymax=None):
+    """Returns ``(XS, YS, ZS)``, with ``ZS`` of shape ``(Nx,Ny)`` and
+    ``XS`` and ``YS`` of shape ``(Nx+1,Ny+1)`` giving the height and
+    box corners, respectively, of the histogram estimate of the PDF
+    from which ``pts`` are drawn.  The bin widths and orientations are
+    chosen optimally for the convergence of the histogram to the true
+    PDF under a squared-error metric; the automatic binning is tuned
+    to work particularly well for multivariate Gaussians.
 
-    :param pts: Shape ``(Npts, 2)`` array of sample points.
+    Note: the first index of ZS varies with the X coordinate, while
+    the second varies with the y coordinate.  This is consistent with
+    :func:`pp.pcolor`, but inconsistent with :func:`pp.imshow` and
+    :func:`pp.contour`.
 
-    :param xmin: Minimum dimension in x.  If ``None``, obtained from
-      ``pts``.
+    :param pts: The sample points, of shape ``(Npts,2)``.
 
-    :param xmax: Maximum dimension in x.  If ``None``, obtained from
-      ``pts``.
+    :param xmin: Minimum value in x.  If ``None``, use minimum data
+      value.
 
-    :param ymin: Minimum dimension in y.  If ``None``, obtained from
-      ``pts``.
+    :param xmax: Maximum value in x.  If ``None``, use minimum data
+      value.
 
-    :param ymax: Maximum dimension in y.  If ``None``, obtained from
-      ``pts``."""
+    :param ymin: Minimum value in y.  If ``None``, use minimum data
+      value.
     
-    N = pts.shape[0]
+    :param ymax: Maximum value in y.  If ``None``, use minimum data
+      value."""
 
     if xmin is None:
         xmin = np.min(pts[:,0])
@@ -66,23 +74,34 @@ def bin_numbers_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None):
     if ymax is None:
         ymax = np.max(pts[:,1])
 
-    # Covariance matrix
-    sigma = np.cov(pts, rowvar=0)
-    
-    # Principal directions and widths
-    evals,evecs=np.linalg.eig(sigma)
+    cov=np.cov(pts, rowvar=0)
+    mu=np.mean(pts, axis=0)
 
-    # Scaled according to optimal width for Gaussian PDF in 2D
-    evals *= np.sqrt(42.5/N)
+    # cov = L*L^T
+    d, L = np.linalg.eig(cov)
 
-    # Rotated back to original frame
-    width_matrix = np.dot(evecs, np.dot(np.diag(evals), evecs))
+    rescaled_pts = np.dot(pts-mu, L)
+    rescaled_pts = rescaled_pts / np.reshape(np.sqrt(d), (1, 2))
 
-    # Projected onto original x-y axes
-    hx = np.abs(width_matrix[0,0])
-    hy = np.abs(width_matrix[1,1])
+    h = (42.5/pts.shape[0])**0.25
 
-    return int((xmax-xmin)/hx + 0.5), int((ymax-ymin)/hy + 0.5)
+    Nx=int((np.max(rescaled_pts[:,0])-np.min(rescaled_pts[:,0]))/h + 0.5)
+    Ny=int((np.max(rescaled_pts[:,1])-np.min(rescaled_pts[:,1]))/h + 0.5)
+
+    H,xs,ys = np.histogram2d(rescaled_pts[:,0], rescaled_pts[:,1], bins=(Nx,Ny))
+
+    # Backwards to account for the ordering in histogram2d.
+    YS_RESCALED,XS_RESCALED=np.meshgrid(ys, xs)
+
+    HPTS_RESCALED=np.column_stack((XS_RESCALED.flatten(),
+                                   YS_RESCALED.flatten()))
+
+    HPTS=np.dot(HPTS_RESCALED*np.reshape(np.sqrt(d), (1,2)), L.T) + mu
+
+    XS=np.reshape(HPTS[:,0], (Nx+1,Ny+1))
+    YS=np.reshape(HPTS[:,1], (Nx+1,Ny+1))
+
+    return XS,YS,H
 
 def interpolated_quantile(sorted_pts, quantile):
     """Returns a linearly interpolated quantile value.
@@ -179,7 +198,8 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
 
     pp.contour(XS, YS, ZS, zvalues, colors=colors, cmap=cmap)
 
-def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, cmap=None, colors=None):
+def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, 
+                                      cmap=None, colors=None):
     """Plot probability interval contours estimated from a histogram
     PDF of the given points.  The number of bins in each dimension is
     chosen optimally for minimizing the squared error with a Gaussian
@@ -201,6 +221,10 @@ def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=No
     :param ymax: Maximum value in y.  If ``None``, use minimum data
       value.
 
+    :param Nx: Number of divisions in x for contour resolution.
+
+    :param Ny: Number of divisions in y for contour resolution.
+
     :param cmap: See :func:`pp.contour`.
 
     :param colors: See :func:`pp.contour`."""
@@ -216,30 +240,37 @@ def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=No
 
     Npts = pts.shape[0]
 
-    Nx,Ny=bin_numbers_2d(pts, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
+    XS,YS,H=decorrelated_2d_histogram_pdf(pts, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
 
-    H,xbins,ybins=np.histogram2d(pts[:,0], pts[:,1], bins=(Nx,Ny), range=((xmin,xmax), (ymin,ymax)))
+    XS_CENTER=0.25*(XS[:-1,:-1]+XS[:-1,1:]+XS[1:,:-1]+XS[1:,1:])
+    YS_CENTER=0.25*(YS[:-1,:-1]+YS[:-1,1:]+YS[1:,:-1]+YS[1:,1:])
 
-    # histogram2d returns the x samples down the 0-axis, while we want
-    # x constant on the 0-axis
-    H = np.transpose(H)
+    pts_post=si.griddata(np.column_stack((XS_CENTER.flatten(),
+                                          YS_CENTER.flatten())),
+                         H.flatten(),
+                         pts,
+                         method='linear',
+                         fill_value=0.0)
 
-    # Bin centers, not bounds.
-    xbins = 0.5*(xbins[1:]+xbins[:-1])
-    ybins = 0.5*(ybins[1:]+ybins[:-1])
+    ipost=np.argsort(pts_post)[::-1]
 
-    Hsorted=np.sort(H.flatten())[::-1]
-    Hsorted_cum = np.cumsum(Hsorted)
+    post_levels = [pts_post[ipost[int(l*Npts+0.5)]] for l in levels]
+        
+    pxs=np.linspace(xmin, xmax, Nx)
+    pys=np.linspace(ymin, ymax, Ny)
 
-    Hlevels=[]
-    for level in levels:
-        cum_pts = int(Npts*level + 0.5)
-        if cum_pts >= Npts:
-            cum_pts = Npts-1
+    PXS,PYS=np.meshgrid(pxs, pys)
 
-        Hlevels.append(Hsorted[np.nonzero(Hsorted_cum >= cum_pts)[0][0]])
+    posts=si.griddata(np.column_stack((XS_CENTER.flatten(),
+                                       YS_CENTER.flatten())),
+                      H.flatten(),
+                      np.column_stack((PXS.flatten(), PYS.flatten())),
+                      method='linear',
+                      fill_value=0.0)
+    posts=np.reshape(posts, (Nx,Ny))
 
-    pp.contour(xbins, ybins, H, colors=colors, cmap=cmap, levels=Hlevels, extent=(xmin,xmax,ymin,ymax))
+    pp.contour(PXS, PYS, posts, post_levels, colors=colors, cmap=cmap, origin='lower', extent=(xmin,xmax,ymin,ymax))
+
 
 def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, **args):
     """Plots the a KDE estimate of the posterior from which ``pts``
@@ -340,34 +371,25 @@ def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=10
 
     pp.imshow(ZS, origin='lower', cmap=cmap, extent=(xmin, xmax, ymin, ymax), aspect='auto')
 
-def plot_histogram_posterior_2d(pts, cmap=None, xmin=None, xmax=None, ymin=None, ymax=None):
+def plot_histogram_posterior_2d(pts, cmap=None):
     """Plots a 2D histogram density of the given points.
 
     :param pts: An ``(Npts, 2)`` array of points.
 
-    :param cmap: Passed to :function:`pp.imshow` as colormap.
+    :param cmap: Passed to :function:`pp.imshow` as colormap."""
 
-    :param xmin: Minimum bound in x.  If ``None`` derived from
-      ``pts``.
+    XS,YS,HS=decorrelated_2d_histogram_pdf(pts)
 
-    :param xmax: Maximum bound in x.  If ``None`` derived from
-      ``pts``.
+    xmin=np.min(XS.flatten())
+    xmax=np.max(XS.flatten())
+    ymin=np.min(YS.flatten())
+    ymax=np.max(YS.flatten())
 
-    :param ymin: Minimum bound in y.  If ``None`` derived from
-      ``pts``.
+    # Plot a zero-level background...
+    pp.pcolor(np.array([[xmin, xmax], [xmin, xmax]]),
+              np.array([[ymin, ymin], [ymax, ymax]]),
+              np.array([[0.0]]), cmap=cmap)
 
-    :param ymax: Maximum bound in y.  If ``None`` derived from
-      ``pts``."""
+    pp.pcolor(XS,YS,HS, cmap=cmap)
 
-    if xmin is None:
-        xmin = np.min(pts[:,0])
-    if xmax is None:
-        xmax = np.max(pts[:,0])
-    if ymin is None:
-        ymin = np.min(pts[:,1])
-    if ymax is None:
-        ymax = np.max(pts[:,1])
-
-    Nx,Ny = bin_numbers_2d(pts, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
-
-    pp.hexbin(pts[:,0], pts[:,1], gridsize=(Nx,Ny), cmap=cmap, extent=(xmin,xmax,ymin,ymax))
+    pp.axis(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
