@@ -67,6 +67,39 @@ def bin_numbers_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None):
 
     return int((xmax-xmin)/hx + 0.5), int((ymax-ymin)/hy + 0.5)
 
+def interpolated_quantile(sorted_pts, quantile):
+    """Returns a linearly interpolated quantile value.
+
+    :param sorted_pts: A sorted array of points.
+
+    :param quantile: The quantile desired."""
+
+    N=sorted_pts.shape[0]
+
+    idx=N*quantile
+    lidx=int(np.floor(idx))
+    hidx=int(np.ceil(idx))
+
+    return (idx-lidx)*sorted_pts[lidx] + (hidx-idx)*sorted_pts[hidx]
+
+def plot_interval(pts, levels, **args):
+    """Plot probability intervals corresponding to ``levels`` in 1D.
+    Additional args are passed to :function:`pp.axvline`.
+
+    :param pts: Shape ``(Npts,)`` array of samples.
+
+    :params levels: Sequence of levels to plot."""
+
+    Npts=pts.shape[0]
+    spts=np.sort(pts)
+
+    for level in levels:
+        alpha=0.5*(1.0-level)
+
+        pp.axvline(interpolated_quantile(spts, alpha), **args)
+        pp.axvline(interpolated_quantile(spts, 1.0-alpha), **args)
+                   
+
 def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None, colors=None):
     """Plots the given probability interval contours, using a greedy
     selection algorithm.
