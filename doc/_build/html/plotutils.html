@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>plotutils Package &mdash; plotutils 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="plotutils 0.0.1 documentation" href="index.html" />
+    <link rel="prev" title="Welcome to plotutils’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to plotutils’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">plotutils 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="plotutils-package">
+<h1>plotutils Package<a class="headerlink" href="#plotutils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><a class="reference internal" href="#module-plotutils" title="plotutils"><tt class="xref py py-mod docutils literal"><span class="pre">plotutils</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-plotutils"></span></div>
+<div class="section" id="module-plotutils.plotutils">
+<span id="plotutils-module"></span><h2><a class="reference internal" href="#module-plotutils" title="plotutils"><tt class="xref py py-mod docutils literal"><span class="pre">plotutils</span></tt></a> Module<a class="headerlink" href="#module-plotutils.plotutils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="plotutils.plotutils.bin_numbers_2d">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">bin_numbers_2d</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#bin_numbers_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.bin_numbers_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <tt class="docutils literal"><span class="pre">(Nx,Ny)</span></tt> the number of bins along each dimension
+chosen according to optimality criterion for minimizing the
+squared error between histogram and true Gaussian PDF in 2D.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pts</strong> &#8211; Shape <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">2)</span></tt> array of sample points.</li>
+<li><strong>xmin</strong> &#8211; Minimum dimension in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, obtained from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>xmax</strong> &#8211; Maximum dimension in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, obtained from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>ymin</strong> &#8211; Minimum dimension in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, obtained from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>ymax</strong> &#8211; Maximum dimension in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, obtained from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.interpolated_quantile">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">interpolated_quantile</tt><big>(</big><em>sorted_pts</em>, <em>quantile</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#interpolated_quantile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.interpolated_quantile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a linearly interpolated quantile value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sorted_pts</strong> &#8211; A sorted array of points.</li>
+<li><strong>quantile</strong> &#8211; The quantile desired.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.load_header_data">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">load_header_data</tt><big>(</big><em>file</em>, <em>header_commented=False</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#load_header_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.load_header_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load data from the file, using header for column names.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file</strong> &#8211; A file object.</li>
+<li><strong>header_commented</strong> &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt>, discard the first character
+of header as comment marker.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.plot_greedy_histogram_interval_2d">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_histogram_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>cmap=None</em>, <em>colors=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_histogram_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_histogram_interval_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot probability interval contours estimated from a histogram
+PDF of the given points.  The number of bins in each dimension is
+chosen optimally for minimizing the squared error with a Gaussian
+PDF.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pts</strong> &#8211; Shape <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">2)</span></tt> array of samples.</li>
+<li><strong>levels</strong> &#8211; The probability interval levels to plot.</li>
+<li><strong>xmin</strong> &#8211; Minimum value in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>xmax</strong> &#8211; Maximum value in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>ymin</strong> &#8211; Minimum value in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>ymax</strong> &#8211; Maximum value in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>cmap</strong> &#8211; See <tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</li>
+<li><strong>colors</strong> &#8211; See <tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.plot_greedy_kde_interval_2d">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_kde_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>colors=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_kde_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_kde_interval_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the given probability interval contours, using a greedy
+selection algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pts</strong> &#8211; Array of shape <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">2)</span></tt> that contains the points
+in question.</li>
+<li><strong>levels</strong> &#8211; Sequence of levels (between 0 and 1) of probability
+intervals to plot.</li>
+<li><strong>xmin</strong> &#8211; Minimum value in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>xmax</strong> &#8211; Maximum value in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>ymin</strong> &#8211; Minimum value in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>ymax</strong> &#8211; Maximum value in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>Nx</strong> &#8211; Number of subdivisions in x for contour plot.  (Default
+100.)</li>
+<li><strong>Ny</strong> &#8211; Number of subdivisions in y for contour plot.  (Default
+100.)</li>
+<li><strong>cmap</strong> &#8211; See <tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</li>
+<li><strong>colors</strong> &#8211; See <tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.plot_histogram_posterior">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_histogram_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_histogram_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_histogram_posterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a histogram estimate of the posterior from which <tt class="docutils literal"><span class="pre">pts</span></tt>
+are drawn.  Extra arguments are passed to <a href="#id2"><span class="problematic" id="id3">:function:`pp.hist`</span></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pts</strong> &#8211; Shape <tt class="docutils literal"><span class="pre">(Npts,)</span></tt> array of samples.</li>
+<li><strong>xmin</strong> &#8211; Minimum x value.  If <tt class="docutils literal"><span class="pre">None</span></tt>, will be derived from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>xmax</strong> &#8211; Maximum x value.  If <tt class="docutils literal"><span class="pre">None</span></tt>, will be derived from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>fmt</strong> &#8211; Line format; see <a href="#id4"><span class="problematic" id="id5">:function:`pp.plot`</span></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.plot_histogram_posterior_2d">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_histogram_posterior_2d</tt><big>(</big><em>pts</em>, <em>cmap=None</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_histogram_posterior_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_histogram_posterior_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a 2D histogram density of the given points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pts</strong> &#8211; An <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">2)</span></tt> array of points.</li>
+<li><strong>cmap</strong> &#8211; Passed to <a href="#id6"><span class="problematic" id="id7">:function:`pp.imshow`</span></a> as colormap.</li>
+<li><strong>xmin</strong> &#8211; Minimum bound in x.  If <tt class="docutils literal"><span class="pre">None</span></tt> derived from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>xmax</strong> &#8211; Maximum bound in x.  If <tt class="docutils literal"><span class="pre">None</span></tt> derived from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>ymin</strong> &#8211; Minimum bound in y.  If <tt class="docutils literal"><span class="pre">None</span></tt> derived from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>ymax</strong> &#8211; Maximum bound in y.  If <tt class="docutils literal"><span class="pre">None</span></tt> derived from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.plot_interval">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_interval</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot probability intervals corresponding to <tt class="docutils literal"><span class="pre">levels</span></tt> in 1D.
+Additional args are passed to <a href="#id8"><span class="problematic" id="id9">:function:`pp.axvline`</span></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pts</strong> &#8211; Shape <tt class="docutils literal"><span class="pre">(Npts,)</span></tt> array of samples.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Params levels:</th><td class="field-body">Sequence of levels to plot.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.plot_kde_posterior">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the a KDE estimate of the posterior from which <tt class="docutils literal"><span class="pre">pts</span></tt>
+are drawn.  Extra keyword arguments are passed to
+<a href="#id10"><span class="problematic" id="id11">:function:`pp.plot`</span></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pts</strong> &#8211; Shape <tt class="docutils literal"><span class="pre">(Npts,)</span></tt> array of samples.</li>
+<li><strong>xmin</strong> &#8211; Minimum x value.  If <tt class="docutils literal"><span class="pre">None</span></tt>, will be derived from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>xmax</strong> &#8211; Maximum x value.  If <tt class="docutils literal"><span class="pre">None</span></tt>, will be derived from
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>N</strong> &#8211; Number of intervals across <tt class="docutils literal"><span class="pre">(xmin,</span> <span class="pre">xmax)</span></tt> in plot.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.plot_kde_posterior_2d">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior_2d</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a 2D KDE estimated posterior.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pts</strong> &#8211; A <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">2)</span></tt> array of points.</li>
+<li><strong>xmin</strong> &#8211; Minimum x-coordinate.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use the minimum
+value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>xmax</strong> &#8211; Maximum x-coordinate.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use the maximum
+value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>ymin</strong> &#8211; Minimum y-coordinate.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use the minimum
+value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>ymax</strong> &#8211; Maximum y-coordinate.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use the maximum
+value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>Nx</strong> &#8211; The number of pixels in the x direction.</li>
+<li><strong>Ny</strong> &#8211; The number of pixels in the y direction.</li>
+<li><strong>cmap</strong> &#8211; The colormap, passed to <a href="#id12"><span class="problematic" id="id13">:function:`pp.imshow`</span></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">plotutils Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-plotutils.plotutils"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to plotutils&#8217;s documentation!</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/plotutils.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to plotutils’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">plotutils 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Will M. Farr.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
