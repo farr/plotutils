@@ -33,6 +33,9 @@ posterior distribution you can
 To install ``plotutils``, simply execute ``python setup.py install``
 in the root directory.
 
+You can find the source for the ``plotutils`` package at
+http://github.com/farr/plotutils.
+
 Contents:
 
 .. toctree::

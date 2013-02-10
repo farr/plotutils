@@ -257,7 +257,7 @@ Additional args are passed to <tt class="xref py py-func docutils literal"><span
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_kde_posterior">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>periodic=False</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the a KDE estimate of the posterior from which <tt class="docutils literal"><span class="pre">pts</span></tt>
 are drawn.  Extra keyword arguments are passed to
 <tt class="xref py py-func docutils literal"><span class="pre">pp.plot()</span></tt>.</p>
@@ -272,6 +272,8 @@ are drawn.  Extra keyword arguments are passed to
 <li><strong>xmax</strong> &#8211; Maximum x value.  If <tt class="docutils literal"><span class="pre">None</span></tt>, will be derived from
 <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
 <li><strong>N</strong> &#8211; Number of intervals across <tt class="docutils literal"><span class="pre">(xmin,</span> <span class="pre">xmax)</span></tt> in plot.</li>
+<li><strong>periodic</strong> &#8211; If true, then the function is periodic on the
+interval.</li>
 </ul>
 </td>
 </tr>
