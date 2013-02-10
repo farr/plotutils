@@ -53,31 +53,36 @@
             
   <div class="section" id="plotutils-package">
 <h1>plotutils Package<a class="headerlink" href="#plotutils-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-plotutils" title="plotutils"><tt class="xref py py-mod docutils literal"><span class="pre">plotutils</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-plotutils"></span></div>
 <div class="section" id="module-plotutils.plotutils">
-<span id="plotutils-module"></span><h2><a class="reference internal" href="#module-plotutils" title="plotutils"><tt class="xref py py-mod docutils literal"><span class="pre">plotutils</span></tt></a> Module<a class="headerlink" href="#module-plotutils.plotutils" title="Permalink to this headline">¶</a></h2>
+<span id="plotutils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">plotutils</span></tt> Module<a class="headerlink" href="#module-plotutils.plotutils" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="plotutils.plotutils.bin_numbers_2d">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">bin_numbers_2d</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#bin_numbers_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.bin_numbers_2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <tt class="docutils literal"><span class="pre">(Nx,Ny)</span></tt> the number of bins along each dimension
-chosen according to optimality criterion for minimizing the
-squared error between histogram and true Gaussian PDF in 2D.</p>
+<dt id="plotutils.plotutils.decorrelated_2d_histogram_pdf">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">decorrelated_2d_histogram_pdf</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em><big>)</big><a class="headerlink" href="#plotutils.plotutils.decorrelated_2d_histogram_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <tt class="docutils literal"><span class="pre">(XS,</span> <span class="pre">YS,</span> <span class="pre">ZS)</span></tt>, with <tt class="docutils literal"><span class="pre">ZS</span></tt> of shape <tt class="docutils literal"><span class="pre">(Nx,Ny)</span></tt> and
+<tt class="docutils literal"><span class="pre">XS</span></tt> and <tt class="docutils literal"><span class="pre">YS</span></tt> of shape <tt class="docutils literal"><span class="pre">(Nx+1,Ny+1)</span></tt> giving the height and
+box corners, respectively, of the histogram estimate of the PDF
+from which <tt class="docutils literal"><span class="pre">pts</span></tt> are drawn.  The bin widths and orientations are
+chosen optimally for the convergence of the histogram to the true
+PDF under a squared-error metric; the automatic binning is tuned
+to work particularly well for multivariate Gaussians.</p>
+<p>Note: the first index of ZS varies with the X coordinate, while
+the second varies with the y coordinate.  This is consistent with
+<tt class="xref py py-func docutils literal"><span class="pre">pp.pcolor()</span></tt>, but inconsistent with <tt class="xref py py-func docutils literal"><span class="pre">pp.imshow()</span></tt> and
+<tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pts</strong> &#8211; Shape <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">2)</span></tt> array of sample points.</li>
-<li><strong>xmin</strong> &#8211; Minimum dimension in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, obtained from
-<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
-<li><strong>xmax</strong> &#8211; Maximum dimension in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, obtained from
-<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
-<li><strong>ymin</strong> &#8211; Minimum dimension in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, obtained from
-<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
-<li><strong>ymax</strong> &#8211; Maximum dimension in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, obtained from
-<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>pts</strong> &#8211; The sample points, of shape <tt class="docutils literal"><span class="pre">(Npts,2)</span></tt>.</li>
+<li><strong>xmin</strong> &#8211; Minimum value in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>xmax</strong> &#8211; Maximum value in x.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>ymin</strong> &#8211; Minimum value in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
+<li><strong>ymax</strong> &#8211; Maximum value in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
+value.</li>
 </ul>
 </td>
 </tr>
@@ -124,7 +129,7 @@ of header as comment marker.</li>
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_greedy_histogram_interval_2d">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_histogram_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>cmap=None</em>, <em>colors=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_histogram_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_histogram_interval_2d" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_histogram_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>colors=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_histogram_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_histogram_interval_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot probability interval contours estimated from a histogram
 PDF of the given points.  The number of bins in each dimension is
 chosen optimally for minimizing the squared error with a Gaussian
@@ -144,6 +149,8 @@ value.</li>
 value.</li>
 <li><strong>ymax</strong> &#8211; Maximum value in y.  If <tt class="docutils literal"><span class="pre">None</span></tt>, use minimum data
 value.</li>
+<li><strong>Nx</strong> &#8211; Number of divisions in x for contour resolution.</li>
+<li><strong>Ny</strong> &#8211; Number of divisions in y for contour resolution.</li>
 <li><strong>cmap</strong> &#8211; See <tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</li>
 <li><strong>colors</strong> &#8211; See <tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</li>
 </ul>
@@ -192,7 +199,7 @@ value.</li>
 <dt id="plotutils.plotutils.plot_histogram_posterior">
 <tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_histogram_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_histogram_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_histogram_posterior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a histogram estimate of the posterior from which <tt class="docutils literal"><span class="pre">pts</span></tt>
-are drawn.  Extra arguments are passed to <a href="#id2"><span class="problematic" id="id3">:function:`pp.hist`</span></a>.</p>
+are drawn.  Extra arguments are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.hist()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -203,7 +210,7 @@ are drawn.  Extra arguments are passed to <a href="#id2"><span class="problemati
 <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
 <li><strong>xmax</strong> &#8211; Maximum x value.  If <tt class="docutils literal"><span class="pre">None</span></tt>, will be derived from
 <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
-<li><strong>fmt</strong> &#8211; Line format; see <a href="#id4"><span class="problematic" id="id5">:function:`pp.plot`</span></a>.</li>
+<li><strong>fmt</strong> &#8211; Line format; see <tt class="xref py py-func docutils literal"><span class="pre">pp.plot()</span></tt>.</li>
 </ul>
 </td>
 </tr>
@@ -213,7 +220,7 @@ are drawn.  Extra arguments are passed to <a href="#id2"><span class="problemati
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_histogram_posterior_2d">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_histogram_posterior_2d</tt><big>(</big><em>pts</em>, <em>cmap=None</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_histogram_posterior_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_histogram_posterior_2d" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_histogram_posterior_2d</tt><big>(</big><em>pts</em>, <em>cmap=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_histogram_posterior_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_histogram_posterior_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a 2D histogram density of the given points.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -221,15 +228,7 @@ are drawn.  Extra arguments are passed to <a href="#id2"><span class="problemati
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>pts</strong> &#8211; An <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">2)</span></tt> array of points.</li>
-<li><strong>cmap</strong> &#8211; Passed to <a href="#id6"><span class="problematic" id="id7">:function:`pp.imshow`</span></a> as colormap.</li>
-<li><strong>xmin</strong> &#8211; Minimum bound in x.  If <tt class="docutils literal"><span class="pre">None</span></tt> derived from
-<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
-<li><strong>xmax</strong> &#8211; Maximum bound in x.  If <tt class="docutils literal"><span class="pre">None</span></tt> derived from
-<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
-<li><strong>ymin</strong> &#8211; Minimum bound in y.  If <tt class="docutils literal"><span class="pre">None</span></tt> derived from
-<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
-<li><strong>ymax</strong> &#8211; Maximum bound in y.  If <tt class="docutils literal"><span class="pre">None</span></tt> derived from
-<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
+<li><strong>cmap</strong> &#8211; Passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.imshow()</span></tt> as colormap.</li>
 </ul>
 </td>
 </tr>
@@ -241,7 +240,7 @@ are drawn.  Extra arguments are passed to <a href="#id2"><span class="problemati
 <dt id="plotutils.plotutils.plot_interval">
 <tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_interval</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_interval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot probability intervals corresponding to <tt class="docutils literal"><span class="pre">levels</span></tt> in 1D.
-Additional args are passed to <a href="#id8"><span class="problematic" id="id9">:function:`pp.axvline`</span></a>.</p>
+Additional args are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.axvline()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -259,7 +258,7 @@ Additional args are passed to <a href="#id8"><span class="problematic" id="id9">
 <tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the a KDE estimate of the posterior from which <tt class="docutils literal"><span class="pre">pts</span></tt>
 are drawn.  Extra keyword arguments are passed to
-<a href="#id10"><span class="problematic" id="id11">:function:`pp.plot`</span></a>.</p>
+<tt class="xref py py-func docutils literal"><span class="pre">pp.plot()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -298,7 +297,7 @@ value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
 value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
 <li><strong>Nx</strong> &#8211; The number of pixels in the x direction.</li>
 <li><strong>Ny</strong> &#8211; The number of pixels in the y direction.</li>
-<li><strong>cmap</strong> &#8211; The colormap, passed to <a href="#id12"><span class="problematic" id="id13">:function:`pp.imshow`</span></a>.</li>
+<li><strong>cmap</strong> &#8211; The colormap, passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.imshow()</span></tt>.</li>
 </ul>
 </td>
 </tr>
@@ -318,7 +317,6 @@ value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">plotutils Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Package</a></li>
 <li><a class="reference internal" href="#module-plotutils.plotutils"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Module</a></li>
 </ul>
 </li>

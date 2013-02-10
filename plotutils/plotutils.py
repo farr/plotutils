@@ -120,7 +120,7 @@ def interpolated_quantile(sorted_pts, quantile):
 
 def plot_interval(pts, levels, **args):
     """Plot probability intervals corresponding to ``levels`` in 1D.
-    Additional args are passed to :function:`pp.axvline`.
+    Additional args are passed to :func:`pp.axvline`.
 
     :param pts: Shape ``(Npts,)`` array of samples.
 
@@ -275,7 +275,7 @@ def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=No
 def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, **args):
     """Plots the a KDE estimate of the posterior from which ``pts``
     are drawn.  Extra keyword arguments are passed to
-    :function:`pp.plot`.
+    :func:`pp.plot`.
 
     :param pts: Shape ``(Npts,)`` array of samples.
 
@@ -299,7 +299,7 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, **args):
 
 def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
     """Plots a histogram estimate of the posterior from which ``pts``
-    are drawn.  Extra arguments are passed to :function:`pp.hist`.
+    are drawn.  Extra arguments are passed to :func:`pp.hist`.
 
     :param pts: Shape ``(Npts,)`` array of samples.
 
@@ -309,7 +309,7 @@ def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
     :param xmax: Maximum x value.  If ``None``, will be derived from
       ``pts``.
     
-    :param fmt: Line format; see :function:`pp.plot`."""
+    :param fmt: Line format; see :func:`pp.plot`."""
 
     if xmin is None:
         xmin=np.min(pts)
@@ -353,7 +353,7 @@ def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=10
 
     :param Ny: The number of pixels in the y direction.
 
-    :param cmap: The colormap, passed to :function:`pp.imshow`."""
+    :param cmap: The colormap, passed to :func:`pp.imshow`."""
 
     if xmin is None:
         xmin = np.min(pts[:,0])
@@ -376,7 +376,7 @@ def plot_histogram_posterior_2d(pts, cmap=None):
 
     :param pts: An ``(Npts, 2)`` array of points.
 
-    :param cmap: Passed to :function:`pp.imshow` as colormap."""
+    :param cmap: Passed to :func:`pp.imshow` as colormap."""
 
     XS,YS,HS=decorrelated_2d_histogram_pdf(pts)
 
