@@ -124,7 +124,7 @@ def plot_interval(pts, levels, **args):
 
     :param pts: Shape ``(Npts,)`` array of samples.
 
-    :params levels: Sequence of levels to plot."""
+    :param levels: Sequence of levels to plot."""
 
     Npts=pts.shape[0]
     spts=np.sort(pts)
