@@ -238,9 +238,11 @@ are drawn.  Extra arguments are passed to <tt class="xref py py-func docutils li
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_interval">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_interval</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_interval" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_interval</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_interval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot probability intervals corresponding to <tt class="docutils literal"><span class="pre">levels</span></tt> in 1D.
-Additional args are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.axvline()</span></tt>.</p>
+Additional args are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.axvline()</span></tt>.  The chosen
+levels are symmetric, in that they have equal probability mass
+outside the interval on each side.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -257,7 +259,7 @@ Additional args are passed to <tt class="xref py py-func docutils literal"><span
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_kde_posterior">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>periodic=False</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>periodic=False</em>, <em>low=None</em>, <em>high=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the a KDE estimate of the posterior from which <tt class="docutils literal"><span class="pre">pts</span></tt>
 are drawn.  Extra arguments are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.plot()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -273,6 +275,10 @@ are drawn.  Extra arguments are passed to <tt class="xref py py-func docutils li
 <li><strong>N</strong> &#8211; Number of intervals across <tt class="docutils literal"><span class="pre">(xmin,</span> <span class="pre">xmax)</span></tt> in plot.</li>
 <li><strong>periodic</strong> &#8211; If true, then the function is periodic on the
 interval.</li>
+<li><strong>low</strong> &#8211; If not <tt class="docutils literal"><span class="pre">None</span></tt>, indicates a lower boundary for the
+domain of the PDF.</li>
+<li><strong>high</strong> &#8211; If not <tt class="docutils literal"><span class="pre">None</span></tt>, indicates an upper boundary for the
+domain of the PDF.</li>
 </ul>
 </td>
 </tr>

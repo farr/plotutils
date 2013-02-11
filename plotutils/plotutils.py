@@ -15,10 +15,12 @@
 # along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
+import bounded_kde as bk
 import numpy as np
 import matplotlib.pyplot as pp
 import scipy.interpolate as si
 import scipy.stats as ss
+import scipy.stats.mstats as sm
 
 def load_header_data(file, header_commented=False):
     """Load data from the file, using header for column names.
@@ -118,23 +120,20 @@ def interpolated_quantile(sorted_pts, quantile):
 
     return (idx-lidx)*sorted_pts[lidx] + (hidx-idx)*sorted_pts[hidx]
 
-def plot_interval(pts, levels, **args):
+def plot_interval(pts, levels, *args, **kwargs):
     """Plot probability intervals corresponding to ``levels`` in 1D.
-    Additional args are passed to :func:`pp.axvline`.
+    Additional args are passed to :func:`pp.axvline`.  The chosen
+    levels are symmetric, in that they have equal probability mass
+    outside the interval on each side.
 
     :param pts: Shape ``(Npts,)`` array of samples.
 
     :param levels: Sequence of levels to plot."""
 
-    Npts=pts.shape[0]
-    spts=np.sort(pts)
-
     for level in levels:
-        alpha=0.5*(1.0-level)
-
-        pp.axvline(interpolated_quantile(spts, alpha), **args)
-        pp.axvline(interpolated_quantile(spts, 1.0-alpha), **args)
-                   
+        low,high = sm.mquantiles(pts, [0.5*(1.0-level), 0.5+0.5*level])
+        pp.axvline(low, *args, **kwargs)
+        pp.axvline(high, *args, **kwargs)
 
 def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None, colors=None):
     """Plots the given probability interval contours, using a greedy
@@ -272,7 +271,7 @@ def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=No
     pp.contour(PXS, PYS, posts, post_levels, colors=colors, cmap=cmap, origin='lower', extent=(xmin,xmax,ymin,ymax))
 
 
-def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, *args, **kwargs):
+def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=None, high=None, *args, **kwargs):
     """Plots the a KDE estimate of the posterior from which ``pts``
     are drawn.  Extra arguments are passed to :func:`pp.plot`.
 
@@ -288,20 +287,35 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, *args, 
 
     :param periodic: If true, then the function is periodic on the
       interval.
-"""
+
+    :param low: If not ``None``, indicates a lower boundary for the
+      domain of the PDF.  
+
+    :param high: If not ``None``, indicates an upper boundary for the
+      domain of the PDF."""
+
+    sigma = np.std(pts)
 
     if xmin is None:
-        xmin = np.min(pts)
+        xmin = np.min(pts)-0.5*sigma
+        if low is not None:
+            xmin = max(low, xmin)
     if xmax is None:
-        xmax = np.max(pts)
+        xmax = np.max(pts)+0.5*sigma
+        if high is not None:
+            xmax = min(high, xmax)
 
-    kde=ss.gaussian_kde(pts)
     xs=np.linspace(xmin, xmax, N)
 
     if periodic:
         period=xmax-xmin
+        kde=ss.gaussian_kde(pts)
         pp.plot(xs, kde(xs)+kde(xs+period)+kde(xs-period), *args, **kwargs)
+    elif low is not None or high is not None:
+        kde=bk.Bounded_kde(pts, low=low, high=high)
+        pp.plot(xs, kde(xs), *args, **kwargs)
     else:
+        kde=ss.gaussian_kde(pts)
         pp.plot(xs, kde(xs), *args, **kwargs)
 
 def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
