@@ -272,10 +272,9 @@ def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=No
     pp.contour(PXS, PYS, posts, post_levels, colors=colors, cmap=cmap, origin='lower', extent=(xmin,xmax,ymin,ymax))
 
 
-def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, **args):
+def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, *args, **kwargs):
     """Plots the a KDE estimate of the posterior from which ``pts``
-    are drawn.  Extra keyword arguments are passed to
-    :func:`pp.plot`.
+    are drawn.  Extra arguments are passed to :func:`pp.plot`.
 
     :param pts: Shape ``(Npts,)`` array of samples.
 
@@ -301,9 +300,9 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, **args)
 
     if periodic:
         period=xmax-xmin
-        pp.plot(xs, kde(xs)+kde(xs+period)+kde(xs-period), **args)
+        pp.plot(xs, kde(xs)+kde(xs+period)+kde(xs-period), *args, **kwargs)
     else:
-        pp.plot(xs, kde(xs), **args)
+        pp.plot(xs, kde(xs), *args, **kwargs)
 
 def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
     """Plots a histogram estimate of the posterior from which ``pts``
