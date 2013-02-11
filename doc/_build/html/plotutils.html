@@ -238,9 +238,11 @@ are drawn.  Extra arguments are passed to <tt class="xref py py-func docutils li
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_interval">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_interval</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_interval" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_interval</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_interval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot probability intervals corresponding to <tt class="docutils literal"><span class="pre">levels</span></tt> in 1D.
-Additional args are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.axvline()</span></tt>.</p>
+Additional args are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.axvline()</span></tt>.  The chosen
+levels are symmetric, in that they have equal probability mass
+outside the interval on each side.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -257,10 +259,9 @@ Additional args are passed to <tt class="xref py py-func docutils literal"><span
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_kde_posterior">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>periodic=False</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>periodic=False</em>, <em>low=None</em>, <em>high=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the a KDE estimate of the posterior from which <tt class="docutils literal"><span class="pre">pts</span></tt>
-are drawn.  Extra keyword arguments are passed to
-<tt class="xref py py-func docutils literal"><span class="pre">pp.plot()</span></tt>.</p>
+are drawn.  Extra arguments are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.plot()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -274,6 +275,10 @@ are drawn.  Extra keyword arguments are passed to
 <li><strong>N</strong> &#8211; Number of intervals across <tt class="docutils literal"><span class="pre">(xmin,</span> <span class="pre">xmax)</span></tt> in plot.</li>
 <li><strong>periodic</strong> &#8211; If true, then the function is periodic on the
 interval.</li>
+<li><strong>low</strong> &#8211; If not <tt class="docutils literal"><span class="pre">None</span></tt>, indicates a lower boundary for the
+domain of the PDF.</li>
+<li><strong>high</strong> &#8211; If not <tt class="docutils literal"><span class="pre">None</span></tt>, indicates an upper boundary for the
+domain of the PDF.</li>
 </ul>
 </td>
 </tr>
@@ -310,6 +315,37 @@ value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-plotutils.bounded_kde">
+<span id="bounded-kde-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">bounded_kde</span></tt> Module<a class="headerlink" href="#module-plotutils.bounded_kde" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="plotutils.bounded_kde.Bounded_kde">
+<em class="property">class </em><tt class="descclassname">plotutils.bounded_kde.</tt><tt class="descname">Bounded_kde</tt><big>(</big><em>pts</em>, <em>low=None</em>, <em>high=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/bounded_kde.html#Bounded_kde"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.bounded_kde.Bounded_kde" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">scipy.stats.kde.gaussian_kde</span></tt></p>
+<p>Represents a one-dimensional Gaussian kernel density estimator
+for a probability distribution function that exists on a bounded
+domain.</p>
+<dl class="method">
+<dt id="plotutils.bounded_kde.Bounded_kde.evaluate">
+<tt class="descname">evaluate</tt><big>(</big><em>xs</em><big>)</big><a class="reference internal" href="_modules/plotutils/bounded_kde.html#Bounded_kde.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.bounded_kde.Bounded_kde.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an estimate of the density evaluated at the given
+points.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.bounded_kde.Bounded_kde.high">
+<tt class="descname">high</tt><a class="reference internal" href="_modules/plotutils/bounded_kde.html#Bounded_kde.high"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.bounded_kde.Bounded_kde.high" title="Permalink to this definition">¶</a></dt>
+<dd><p>The upper bound of the domain.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.bounded_kde.Bounded_kde.low">
+<tt class="descname">low</tt><a class="reference internal" href="_modules/plotutils/bounded_kde.html#Bounded_kde.low"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.bounded_kde.Bounded_kde.low" title="Permalink to this definition">¶</a></dt>
+<dd><p>The lower bound of the domain.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -322,6 +358,7 @@ value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
   <ul>
 <li><a class="reference internal" href="#">plotutils Package</a><ul>
 <li><a class="reference internal" href="#module-plotutils.plotutils"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-plotutils.bounded_kde"><tt class="docutils literal"><span class="pre">bounded_kde</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
