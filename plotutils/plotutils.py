@@ -16,8 +16,10 @@
 # <http://www.gnu.org/licenses/>.
 
 import bounded_kde as bk
+import gzip
 import numpy as np
 import matplotlib.pyplot as pp
+import os.path 
 import scipy.interpolate as si
 import scipy.stats as ss
 import scipy.stats.mstats as sm
@@ -25,19 +27,32 @@ import scipy.stats.mstats as sm
 def load_header_data(file, header_commented=False):
     """Load data from the file, using header for column names.
 
-    :param file: A file object.
+    :param file: A file object or filename.
 
     :param header_commented: If ``True``, discard the first character
       of header as comment marker."""
 
-    header=file.readline()
+    def do_read(file):
+        header=file.readline()
 
-    if header_commented:
-        header=header[1:].split()
+        if header_commented:
+            header=header[1:].split()
+        else:
+            header=header.split()
+            
+        return np.loadtxt(file, dtype=[(h, np.float) for h in header])
+
+    if isinstance(file, str):
+        f,ext = os.path.splitext(file)
+        
+        if ext == '.gz':
+            with gzip.open(file, 'r') as inp:
+                return do_read(inp)
+        else:
+            with open(file, 'r') as inp:
+                return do_read(inp)
     else:
-        header=header.split()
-
-    return np.loadtxt(file, dtype=[(h, np.float) for h in header])
+        return do_read(inp)
 
 def decorrelated_2d_histogram_pdf(pts, xmin=None, xmax=None, ymin=None, ymax=None):
     """Returns ``(XS, YS, ZS)``, with ``ZS`` of shape ``(Nx,Ny)`` and
