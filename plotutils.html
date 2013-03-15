@@ -346,6 +346,26 @@ points.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-plotutils.log_kde">
+<span id="log-kde-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">log_kde</span></tt> Module<a class="headerlink" href="#module-plotutils.log_kde" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="plotutils.log_kde.Log_kde">
+<em class="property">class </em><tt class="descclassname">plotutils.log_kde.</tt><tt class="descname">Log_kde</tt><big>(</big><em>pts</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/log_kde.html#Log_kde"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.log_kde.Log_kde" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a one-dimensional Gaussian kernel density estimator
+conducted in log-space, according to the formula</p>
+<div class="math">
+\[\frac{dN}{d\ln x}(\ln x) = x \frac{dN}{dx}(x)\]</div>
+<p>The KDE occurs on the left-hand-side, but the reported
+distribution is <span class="math">\(dN/dx(x)\)</span>.</p>
+<dl class="method">
+<dt id="plotutils.log_kde.Log_kde.evaluate">
+<tt class="descname">evaluate</tt><big>(</big><em>xs</em><big>)</big><a class="reference internal" href="_modules/plotutils/log_kde.html#Log_kde.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.log_kde.Log_kde.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an estimate of the density at the given points.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -359,6 +379,7 @@ points.</p>
 <li><a class="reference internal" href="#">plotutils Package</a><ul>
 <li><a class="reference internal" href="#module-plotutils.plotutils"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.bounded_kde"><tt class="docutils literal"><span class="pre">bounded_kde</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-plotutils.log_kde"><tt class="docutils literal"><span class="pre">log_kde</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
