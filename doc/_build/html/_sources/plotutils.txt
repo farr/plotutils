@@ -16,3 +16,10 @@ plotutils Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`log_kde` Module
+---------------------
+
+.. automodule:: plotutils.log_kde
+    :members:
+    :undoc-members: 

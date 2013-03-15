@@ -17,6 +17,7 @@
 
 import bounded_kde as bk
 import gzip
+import log_kde as lk
 import numpy as np
 import matplotlib.pyplot as pp
 import os.path 
@@ -286,7 +287,7 @@ def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=No
     pp.contour(PXS, PYS, posts, post_levels, colors=colors, cmap=cmap, origin='lower', extent=(xmin,xmax,ymin,ymax))
 
 
-def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=None, high=None, *args, **kwargs):
+def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=None, high=None, log=False, *args, **kwargs):
     """Plots the a KDE estimate of the posterior from which ``pts``
     are drawn.  Extra arguments are passed to :func:`pp.plot`.
 
@@ -311,16 +312,17 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=Non
 
     sigma = np.std(pts)
 
-    if xmin is None:
+    if xmin is None and not log:
         xmin = np.min(pts)-0.5*sigma
         if low is not None:
             xmin = max(low, xmin)
-    if xmax is None:
+    if xmax is None and not log:
         xmax = np.max(pts)+0.5*sigma
         if high is not None:
             xmax = min(high, xmax)
 
-    xs=np.linspace(xmin, xmax, N)
+    if not log:
+        xs=np.linspace(xmin, xmax, N)
 
     if periodic:
         period=xmax-xmin
@@ -329,6 +331,29 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=Non
     elif low is not None or high is not None:
         kde=bk.Bounded_kde(pts, low=low, high=high)
         pp.plot(xs, kde(xs), *args, **kwargs)
+    elif log:
+        assert low is None, 'cannot impose low boundary in log-space'
+        assert high is None, 'cannot impose high boundary in log-space'
+
+        lpts = np.log(pts)
+        sigma = np.std(lpts)
+
+        if xmin is None or xmin < 0:
+            xmin = np.min(lpts) - 0.5*sigma
+        else:
+            xmin = np.log(xmin)
+
+        if xmax is None:
+            xmax = np.max(lpts) + 0.5*sigma
+        else:
+            xmax = np.log(xmax)
+
+        kde=lk.Log_kde(pts)
+
+        xs = np.exp(np.linspace(xmin, xmax, N))
+
+        pp.plot(xs, kde(xs), *args, **kwargs)
+        pp.xscale('log')
     else:
         kde=ss.gaussian_kde(pts)
         pp.plot(xs, kde(xs), *args, **kwargs)
