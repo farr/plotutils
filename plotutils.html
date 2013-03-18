@@ -129,11 +129,11 @@ of header as comment marker.</li>
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_greedy_histogram_interval_2d">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_histogram_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>colors=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_histogram_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_histogram_interval_2d" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_histogram_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>colors=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_histogram_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_histogram_interval_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot probability interval contours estimated from a histogram
 PDF of the given points.  The number of bins in each dimension is
 chosen optimally for minimizing the squared error with a Gaussian
-PDF.</p>
+PDF.  Additional arguments passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -162,9 +162,10 @@ value.</li>
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_greedy_kde_interval_2d">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_kde_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>colors=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_kde_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_kde_interval_2d" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_kde_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>colors=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_kde_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_kde_interval_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the given probability interval contours, using a greedy
-selection algorithm.</p>
+selection algorithm.  Additional arguments passed to
+<tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -259,7 +260,7 @@ outside the interval on each side.</p>
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_kde_posterior">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>periodic=False</em>, <em>low=None</em>, <em>high=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>N=100</em>, <em>periodic=False</em>, <em>low=None</em>, <em>high=None</em>, <em>log=False</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the a KDE estimate of the posterior from which <tt class="docutils literal"><span class="pre">pts</span></tt>
 are drawn.  Extra arguments are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.plot()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
