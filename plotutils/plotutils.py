@@ -151,9 +151,10 @@ def plot_interval(pts, levels, *args, **kwargs):
         pp.axvline(low, *args, **kwargs)
         pp.axvline(high, *args, **kwargs)
 
-def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None, colors=None):
+def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None, colors=None, *args, **kwargs):
     """Plots the given probability interval contours, using a greedy
-    selection algorithm.
+    selection algorithm.  Additional arguments passed to
+    :func:`pp.contour`.
 
     :param pts: Array of shape ``(Npts, 2)`` that contains the points
       in question.
@@ -211,14 +212,14 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
             ilevel = Npts-1
         zvalues.append(densort[ilevel])
 
-    pp.contour(XS, YS, ZS, zvalues, colors=colors, cmap=cmap)
+    pp.contour(XS, YS, ZS, zvalues, colors=colors, cmap=cmap, *args, **kwargs)
 
 def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, 
-                                      cmap=None, colors=None):
+                                      cmap=None, colors=None, *args, **kwargs):
     """Plot probability interval contours estimated from a histogram
     PDF of the given points.  The number of bins in each dimension is
     chosen optimally for minimizing the squared error with a Gaussian
-    PDF.
+    PDF.  Additional arguments passed to :func:`pp.contour`.
 
     :param pts: Shape ``(Npts, 2)`` array of samples.
 
@@ -284,7 +285,7 @@ def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=No
                       fill_value=0.0)
     posts=np.reshape(posts, (Nx,Ny))
 
-    pp.contour(PXS, PYS, posts, post_levels, colors=colors, cmap=cmap, origin='lower', extent=(xmin,xmax,ymin,ymax))
+    pp.contour(PXS, PYS, posts, post_levels, colors=colors, cmap=cmap, origin='lower', extent=(xmin,xmax,ymin,ymax), *args, **kwargs)
 
 
 def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=None, high=None, log=False, *args, **kwargs):
