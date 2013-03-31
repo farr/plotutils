@@ -23,3 +23,10 @@ plotutils Package
 .. automodule:: plotutils.log_kde
     :members:
     :undoc-members: 
+
+:mod:`contour` Module
+---------------------
+
+.. automodule:: plotutils.contour
+   :members:
+   :undoc-members:

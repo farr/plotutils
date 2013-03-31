@@ -1,1 +1,1 @@
-__all__ = ['plotutils', 'bounded_kde', 'log_kde']
+__all__ = ['plotutils', 'bounded_kde', 'log_kde', 'contour']

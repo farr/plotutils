@@ -367,6 +367,58 @@ distribution is <span class="math">\(dN/dx(x)\)</span>.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-plotutils.contour">
+<span id="contour-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">contour</span></tt> Module<a class="headerlink" href="#module-plotutils.contour" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="plotutils.contour.Contour">
+<em class="property">class </em><tt class="descclassname">plotutils.contour.</tt><tt class="descname">Contour</tt><big>(</big><em>data</em>, <em>contours</em><big>)</big><a class="reference internal" href="_modules/plotutils/contour.html#Contour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.contour.Contour" title="Permalink to this definition">¶</a></dt>
+<dd><p>A contour calculator.  Takes as input a set of points drawn from
+some distribution, and a set of credible levels.  Then
+<a class="reference internal" href="#plotutils.contour.Contour.in_contours" title="plotutils.contour.Contour.in_contours"><tt class="xref py py-meth docutils literal"><span class="pre">Contour.in_contours()</span></tt></a> computes for any set of points which
+ones like within the given credible contours and which are
+outside.</p>
+<dl class="attribute">
+<dt id="plotutils.contour.Contour.contour_limits">
+<tt class="descname">contour_limits</tt><a class="reference internal" href="_modules/plotutils/contour.html#Contour.contour_limits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.contour.Contour.contour_limits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the lower bound on the posterior estimate for inclusion in
+each of the contours.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.contour.Contour.contours">
+<tt class="descname">contours</tt><a class="reference internal" href="_modules/plotutils/contour.html#Contour.contours"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.contour.Contour.contours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the quantiles of the contours represented by this object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plotutils.contour.Contour.in_contours">
+<tt class="descname">in_contours</tt><big>(</big><em>pts</em><big>)</big><a class="reference internal" href="_modules/plotutils/contour.html#Contour.in_contours"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.contour.Contour.in_contours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns arrays indicating whether the given points are within each
+of the contours of the object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pts</strong> &#8211; A <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">Ndim)</span></tt> array of points to test against
+each contour.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A sequence of the same shape as
+<tt class="xref py py-data docutils literal"><span class="pre">Contours.contours</span></tt> containing boolean arrays
+indicating which points lie within the contour.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.contour.Contour.kde">
+<tt class="descname">kde</tt><a class="reference internal" href="_modules/plotutils/contour.html#Contour.kde"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.contour.Contour.kde" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Gaussian kernel density estimator for the stored data set.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -381,6 +433,7 @@ distribution is <span class="math">\(dN/dx(x)\)</span>.</p>
 <li><a class="reference internal" href="#module-plotutils.plotutils"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.bounded_kde"><tt class="docutils literal"><span class="pre">bounded_kde</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.log_kde"><tt class="docutils literal"><span class="pre">log_kde</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-plotutils.contour"><tt class="docutils literal"><span class="pre">contour</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
