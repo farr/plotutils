@@ -394,7 +394,7 @@ def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
     # Just because matplotlib sometimes puts the y-axis above 0:
     pp.axis(ymin=0)
 
-def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None):
+def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None, log=False):
     """Plot a 2D KDE estimated posterior.
 
     :param pts: A ``(Npts, 2)`` array of points.
@@ -415,7 +415,14 @@ def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=10
 
     :param Ny: The number of pixels in the y direction.
 
-    :param cmap: The colormap, passed to :func:`pp.imshow`."""
+    :param cmap: The colormap, passed to :func:`pp.imshow`.
+
+    :param log: If ``True`` compute and plot the density in log-space.
+
+    """
+
+    if log:
+        pts = np.log(pts)
 
     if xmin is None:
         xmin = np.min(pts[:,0])
@@ -431,7 +438,21 @@ def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=10
                       np.linspace(ymin, ymax, Ny))
     ZS=np.reshape(kde(np.row_stack((XS.flatten(), YS.flatten()))), (Nx, Ny))
 
-    pp.imshow(ZS, origin='lower', cmap=cmap, extent=(xmin, xmax, ymin, ymax), aspect='auto')
+    if log:
+        XS = np.exp(XS)
+        YS = np.exp(YS)
+
+        xmin = np.exp(xmin)
+        xmax = np.exp(xmax)
+        ymin = np.exp(ymin)
+        ymax = np.exp(ymax)
+
+    pp.pcolor(XS, YS, ZS, cmap=cmap)
+    pp.axis(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
+
+    if log:
+        pp.xscale('log')
+        pp.yscale('log')
 
 def plot_histogram_posterior_2d(pts, log=False, cmap=None):
     """Plots a 2D histogram density of the given points.
