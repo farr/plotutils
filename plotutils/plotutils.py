@@ -359,7 +359,7 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=Non
         kde=ss.gaussian_kde(pts)
         pp.plot(xs, kde(xs), *args, **kwargs)
 
-def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
+def plot_histogram_posterior(pts, xmin=None, xmax=None, log=False, **args):
     """Plots a histogram estimate of the posterior from which ``pts``
     are drawn.  Extra arguments are passed to :func:`pp.hist`.
 
@@ -371,7 +371,11 @@ def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
     :param xmax: Maximum x value.  If ``None``, will be derived from
       ``pts``.
 
-    :param fmt: Line format; see :func:`pp.plot`."""
+    :param fmt: Line format; see :func:`pp.plot`.
+
+    :param log: If ``True`` compute and plot histogram in log-space.
+
+    """
 
     if xmin is None:
         xmin=np.min(pts)
@@ -389,10 +393,16 @@ def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
 
     Nbins = int((xmax-xmin)/h + 0.5)
 
-    pp.hist(pts, bins=Nbins, **args)
+    if log:
+        pp.hist(pts, bins=np.exp(np.linspace(np.log(xmin), np.log(xmax), Nbins+1)), **args)
+    else:
+        pp.hist(pts, bins=Nbins, **args)
 
     # Just because matplotlib sometimes puts the y-axis above 0:
     pp.axis(ymin=0)
+
+    if log:
+        pp.xscale('log')
 
 def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None, log=False):
     """Plot a 2D KDE estimated posterior.
@@ -436,7 +446,9 @@ def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=10
     kde=ss.gaussian_kde(pts.T)
     XS,YS=np.meshgrid(np.linspace(xmin, xmax, Nx),
                       np.linspace(ymin, ymax, Ny))
-    ZS=np.reshape(kde(np.row_stack((XS.flatten(), YS.flatten()))), (Nx, Ny))
+    XCENTERS = 0.25*(XS[:-1, :-1] + XS[:-1, 1:] + XS[1:,:-1] + XS[1:, 1:])
+    YCENTERS = 0.25*(YS[:-1, :-1] + YS[:-1, 1:] + YS[1:,:-1] + YS[1:, 1:])
+    ZS=np.reshape(kde(np.row_stack((XCENTERS.flatten(), YCENTERS.flatten()))), (Nx-1, Ny-1))
 
     if log:
         XS = np.exp(XS)
@@ -447,7 +459,7 @@ def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=10
         ymin = np.exp(ymin)
         ymax = np.exp(ymax)
 
-    pp.pcolor(XS, YS, ZS, cmap=cmap)
+    pp.pcolormesh(XS, YS, ZS, cmap=cmap)
     pp.axis(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
 
     if log:
@@ -479,11 +491,11 @@ def plot_histogram_posterior_2d(pts, log=False, cmap=None):
     ymax=np.max(YS.flatten())
 
     # Plot a zero-level background...
-    pp.pcolor(np.array([[xmin, xmax], [xmin, xmax]]),
-              np.array([[ymin, ymin], [ymax, ymax]]),
-              np.array([[0.0]]), cmap=cmap)
+    pp.pcolormesh(np.array([[xmin, xmax], [xmin, xmax]]),
+                  np.array([[ymin, ymin], [ymax, ymax]]),
+                  np.array([[0.0]]), cmap=cmap)
 
-    pp.pcolor(XS,YS,HS, cmap=cmap)
+    pp.pcolormesh(XS,YS,HS, cmap=cmap)
 
     pp.axis(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
 

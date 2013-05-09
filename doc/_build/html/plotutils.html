@@ -198,7 +198,7 @@ value.</li>
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_histogram_posterior">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_histogram_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_histogram_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_histogram_posterior" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_histogram_posterior</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>log=False</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_histogram_posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_histogram_posterior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a histogram estimate of the posterior from which <tt class="docutils literal"><span class="pre">pts</span></tt>
 are drawn.  Extra arguments are passed to <tt class="xref py py-func docutils literal"><span class="pre">pp.hist()</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -212,6 +212,7 @@ are drawn.  Extra arguments are passed to <tt class="xref py py-func docutils li
 <li><strong>xmax</strong> &#8211; Maximum x value.  If <tt class="docutils literal"><span class="pre">None</span></tt>, will be derived from
 <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
 <li><strong>fmt</strong> &#8211; Line format; see <tt class="xref py py-func docutils literal"><span class="pre">pp.plot()</span></tt>.</li>
+<li><strong>log</strong> &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt> compute and plot histogram in log-space.</li>
 </ul>
 </td>
 </tr>
