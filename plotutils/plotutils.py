@@ -370,7 +370,7 @@ def plot_histogram_posterior(pts, xmin=None, xmax=None, **args):
 
     :param xmax: Maximum x value.  If ``None``, will be derived from
       ``pts``.
-    
+
     :param fmt: Line format; see :func:`pp.plot`."""
 
     if xmin is None:
@@ -433,14 +433,24 @@ def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=10
 
     pp.imshow(ZS, origin='lower', cmap=cmap, extent=(xmin, xmax, ymin, ymax), aspect='auto')
 
-def plot_histogram_posterior_2d(pts, cmap=None):
+def plot_histogram_posterior_2d(pts, log=False, cmap=None):
     """Plots a 2D histogram density of the given points.
 
     :param pts: An ``(Npts, 2)`` array of points.
 
-    :param cmap: Passed to :func:`pp.imshow` as colormap."""
+    :param log: If ``True``, then compute and plot the histogram in
+      log-space.
 
-    XS,YS,HS=decorrelated_2d_histogram_pdf(pts)
+    :param cmap: Passed to :func:`pp.imshow` as colormap.
+
+    """
+
+    if log:
+        XS,YS,HS=decorrelated_2d_histogram_pdf(np.log(pts))
+        XS = np.exp(XS)
+        YS = np.exp(YS)
+    else:
+        XS,YS,HS=decorrelated_2d_histogram_pdf(pts)
 
     xmin=np.min(XS.flatten())
     xmax=np.max(XS.flatten())
@@ -455,3 +465,7 @@ def plot_histogram_posterior_2d(pts, cmap=None):
     pp.pcolor(XS,YS,HS, cmap=cmap)
 
     pp.axis(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
+
+    if log:
+        pp.xscale('log')
+        pp.yscale('log')
