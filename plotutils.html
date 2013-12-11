@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -57,7 +55,7 @@
 <span id="plotutils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">plotutils</span></tt> Module<a class="headerlink" href="#module-plotutils.plotutils" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="plotutils.plotutils.decorrelated_2d_histogram_pdf">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">decorrelated_2d_histogram_pdf</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em><big>)</big><a class="headerlink" href="#plotutils.plotutils.decorrelated_2d_histogram_pdf" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">decorrelated_2d_histogram_pdf</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#decorrelated_2d_histogram_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.decorrelated_2d_histogram_pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <tt class="docutils literal"><span class="pre">(XS,</span> <span class="pre">YS,</span> <span class="pre">ZS)</span></tt>, with <tt class="docutils literal"><span class="pre">ZS</span></tt> of shape <tt class="docutils literal"><span class="pre">(Nx,Ny)</span></tt> and
 <tt class="docutils literal"><span class="pre">XS</span></tt> and <tt class="docutils literal"><span class="pre">YS</span></tt> of shape <tt class="docutils literal"><span class="pre">(Nx+1,Ny+1)</span></tt> giving the height and
 box corners, respectively, of the histogram estimate of the PDF
@@ -125,6 +123,13 @@ of header as comment marker.</li>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.plotutils.plot_cumulative_distribution">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_cumulative_distribution</tt><big>(</big><em>pts</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_cumulative_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_cumulative_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the 1D normalized empirical CDF for the given points.
+Additional arguments are passed to matplotlib&#8217;s <tt class="docutils literal"><span class="pre">plot</span></tt>.</p>
 </dd></dl>
 
 <dl class="function">
@@ -484,7 +489,7 @@ indicating which points lie within the contour.</td>
     </div>
     <div class="footer">
         &copy; Copyright 2013, Will M. Farr.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>
