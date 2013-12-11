@@ -510,3 +510,15 @@ def plot_histogram_posterior_2d(pts, log=False, cmap=None):
         pp.xscale('log')
         pp.yscale('log')
 
+def plot_cumulative_distribution(pts, *args, **kwargs):
+    """Plots the 1D normalized empirical CDF for the given points.
+    Additional arguments are passed to matplotlib's ``plot``.
+
+    """
+    pts = np.atleast_1d(pts)
+    pts = np.sort(np.concatenate(([0], pts)))
+
+    pp.plot(pts, np.linspace(0, 1, pts.shape[0]), *args, **kwargs)
+
+
+    
