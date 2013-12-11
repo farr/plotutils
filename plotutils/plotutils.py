@@ -16,6 +16,7 @@
 # <http://www.gnu.org/licenses/>.
 
 import bounded_kde as bk
+import bz2
 import gzip
 import log_kde as lk
 import numpy as np
@@ -48,6 +49,9 @@ def load_header_data(file, header_commented=False):
         
         if ext == '.gz':
             with gzip.open(file, 'r') as inp:
+                return do_read(inp)
+        elif ext == '.bz2':
+            with bz2.BZ2File(file, 'r') as inp:
                 return do_read(inp)
         else:
             with open(file, 'r') as inp:
@@ -377,6 +381,9 @@ def plot_histogram_posterior(pts, xmin=None, xmax=None, log=False, **args):
 
     """
 
+    if log:
+        pts = np.log(pts)
+
     if xmin is None:
         xmin=np.min(pts)
     if xmax is None:
@@ -394,7 +401,7 @@ def plot_histogram_posterior(pts, xmin=None, xmax=None, log=False, **args):
     Nbins = int((xmax-xmin)/h + 0.5)
 
     if log:
-        pp.hist(pts, bins=np.exp(np.linspace(np.log(xmin), np.log(xmax), Nbins+1)), **args)
+        pp.hist(np.exp(pts), bins=np.exp(np.linspace(xmin, xmax, Nbins+1)), **args)
     else:
         pp.hist(pts, bins=Nbins, **args)
 
@@ -502,3 +509,4 @@ def plot_histogram_posterior_2d(pts, log=False, cmap=None):
     if log:
         pp.xscale('log')
         pp.yscale('log')
+
