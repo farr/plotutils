@@ -63,6 +63,6 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
     acl_selector = summed_acf < acls
 
     if np.any(acl_selector):
-        return np.float(np.nonzero(acl_selector)[0][0])
+        return acls[np.nonzero(acl_selector)[0][0]]
     else:
         return None
