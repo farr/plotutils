@@ -29,6 +29,10 @@ posterior distribution you can
   :func:`plotutils.plotutils.plot_interval`,
   :func:`plotutils.plotutils.plot_greedy_histogram_interval_2d`, and
   :func:`plotutils.plotutils.plot_greedy_kde_interval_2d`.
+* Estimate autocorrelation functions and autocorrelation lengths of
+  one-dimensional series.  See
+  :func:`plotutils.autocorr.autocorrelation_function` and
+  :func:`plotutils.autocorr.autocorrelation_length_estimate`.
 
 To install ``plotutils``, simply execute ``python setup.py install``
 in the root directory.
