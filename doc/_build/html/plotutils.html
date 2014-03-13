@@ -325,6 +325,38 @@ value from <tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-plotutils.autocorr">
+<span id="autocorr-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">autocorr</span></tt> Module<a class="headerlink" href="#module-plotutils.autocorr" title="Permalink to this headline">¶</a></h2>
+<p>Module containing functions to compute the autocorrelation function
+and estimate the associated autocorrelation length of series.</p>
+<p>The estimate of the autocorrelation function is based on the method
+described at <a class="reference external" href="http://www.math.nyu.edu/faculty/goodman/software/acor/">http://www.math.nyu.edu/faculty/goodman/software/acor/</a>
+and implemented in the associated <tt class="docutils literal"><span class="pre">acor</span></tt> C++ code, though the
+implementation details differ.</p>
+<dl class="function">
+<dt id="plotutils.autocorr.autocorrelation_function">
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">autocorrelation_function</tt><big>(</big><em>series</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#autocorrelation_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.autocorrelation_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the autocorrelation function of the given series.  The
+function is normalised so that it is 1 at zero lag.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.autocorr.autocorrelation_length_estimate">
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">autocorrelation_length_estimate</tt><big>(</big><em>series</em>, <em>acf=None</em>, <em>M=5</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#autocorrelation_length_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.autocorrelation_length_estimate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an estimate of the autocorrelation length of the given
+series.  The autocorrelation length is defined as the smallest
+integer, <span class="math">\(i\)</span>, such that</p>
+<div class="math">
+\[\begin{split}\sum_{j &lt; M i} \left| \rho(j) \right| &lt; i\end{split}\]</div>
+<p>This empirical relation is intended to estimate in a robust way
+the exponential decay constant for an ACF that decays like
+<span class="math">\(\exp(t/\tau)\)</span>.  The constant <span class="math">\(M\)</span> controls how many
+estimated ACLs are included in the calculation of the ACL.</p>
+<p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if no such index is present; this indicates that
+the ACL estimate is not converged.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-plotutils.bounded_kde">
 <span id="bounded-kde-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">bounded_kde</span></tt> Module<a class="headerlink" href="#module-plotutils.bounded_kde" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -440,6 +472,7 @@ indicating which points lie within the contour.</td>
   <ul>
 <li><a class="reference internal" href="#">plotutils Package</a><ul>
 <li><a class="reference internal" href="#module-plotutils.plotutils"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-plotutils.autocorr"><tt class="docutils literal"><span class="pre">autocorr</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.bounded_kde"><tt class="docutils literal"><span class="pre">bounded_kde</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.log_kde"><tt class="docutils literal"><span class="pre">log_kde</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.contour"><tt class="docutils literal"><span class="pre">contour</span></tt> Module</a></li>

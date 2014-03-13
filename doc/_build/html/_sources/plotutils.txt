@@ -9,6 +9,14 @@ plotutils Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`autocorr` Module
+----------------------
+
+.. automodule:: plotutils.autocorr
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`bounded_kde` Module
 -------------------------
 

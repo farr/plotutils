@@ -1,1 +1,1 @@
-__all__ = ['plotutils', 'bounded_kde', 'log_kde', 'contour']
+__all__ = ['autocorr', 'plotutils', 'bounded_kde', 'log_kde', 'contour']
