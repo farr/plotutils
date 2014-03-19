@@ -42,6 +42,25 @@ def load_header_data(file, header_commented=False):
     else:
         return do_read(inp)
 
+def plot_emcee_chains(chain):
+    """Produces a chain plot of the mean values of each variable at each
+    step.  The chain should have the shape ``(nwalkers, nsteps,
+    nvars)``, and the resulting grid of plots will be as close to
+    square as possible, showing the mean walker position at each step.
+
+    """
+    nk = chain.shape[2]
+    n = int(np.ceil(np.sqrt(nk)))
+
+    pp.subplots_adjust(hspace=0, wspace=0)
+
+    for k in range(nk):
+        pp.subplot(n,n,k+1)
+        pp.gca().xaxis.set_ticklabels([])
+        pp.gca().yaxis.set_ticklabels([])
+
+        pp.plot(np.mean(chain[:,:,k], axis=0))
+
 def decorrelated_2d_histogram_pdf(pts, xmin=None, xmax=None, ymin=None, ymax=None):
     """Returns ``(XS, YS, ZS)``, with ``ZS`` of shape ``(Nx,Ny)`` and
     ``XS`` and ``YS`` of shape ``(Nx+1,Ny+1)`` giving the height and
