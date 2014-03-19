@@ -133,6 +133,15 @@ Additional arguments are passed to matplotlib&#8217;s <tt class="docutils litera
 </dd></dl>
 
 <dl class="function">
+<dt id="plotutils.plotutils.plot_emcee_chains">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains</tt><big>(</big><em>chain</em><big>)</big><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a chain plot of the mean values of each variable at each
+step.  The chain should have the shape <tt class="docutils literal"><span class="pre">(nwalkers,</span> <span class="pre">nsteps,</span>
+<span class="pre">nvars)</span></tt>, and the resulting grid of plots will be as close to
+square as possible, showing the mean walker position at each step.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="plotutils.plotutils.plot_greedy_histogram_interval_2d">
 <tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_histogram_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>colors=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_histogram_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_histogram_interval_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot probability interval contours estimated from a histogram
