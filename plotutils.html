@@ -134,11 +134,26 @@ Additional arguments are passed to matplotlib&#8217;s <tt class="docutils litera
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_emcee_chains">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains</tt><big>(</big><em>chain</em><big>)</big><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains</tt><big>(</big><em>chain</em>, <em>truths=None</em><big>)</big><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produces a chain plot of the mean values of each variable at each
 step.  The chain should have the shape <tt class="docutils literal"><span class="pre">(nwalkers,</span> <span class="pre">nsteps,</span>
 <span class="pre">nvars)</span></tt>, and the resulting grid of plots will be as close to
 square as possible, showing the mean walker position at each step.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>chain</strong> &#8211; An array of shape <tt class="docutils literal"><span class="pre">(nwalkers,</span> <span class="pre">nsteps,</span> <span class="pre">nvars)</span></tt>
+giving the history of the chain.</li>
+<li><strong>truths</strong> &#8211; Either <tt class="docutils literal"><span class="pre">None</span></tt> or an iterable giving the truth
+values for each of the parameters, which will be plotted as a
+horizontal line.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
