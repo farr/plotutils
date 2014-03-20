@@ -42,11 +42,18 @@ def load_header_data(file, header_commented=False):
     else:
         return do_read(inp)
 
-def plot_emcee_chains(chain):
+def plot_emcee_chains(chain, truths=None):
     """Produces a chain plot of the mean values of each variable at each
     step.  The chain should have the shape ``(nwalkers, nsteps,
     nvars)``, and the resulting grid of plots will be as close to
     square as possible, showing the mean walker position at each step.
+
+    :param chain: An array of shape ``(nwalkers, nsteps, nvars)``
+      giving the history of the chain.
+
+    :param truths: Either ``None`` or an iterable giving the truth
+      values for each of the parameters, which will be plotted as a
+      horizontal line.
 
     """
     nk = chain.shape[2]
@@ -60,6 +67,9 @@ def plot_emcee_chains(chain):
         pp.gca().yaxis.set_ticklabels([])
 
         pp.plot(np.mean(chain[:,:,k], axis=0))
+
+        if truths is not None:
+            pp.axhline(truths[k], color='k')
 
 def decorrelated_2d_histogram_pdf(pts, xmin=None, xmax=None, ymin=None, ymax=None):
     """Returns ``(XS, YS, ZS)``, with ``ZS`` of shape ``(Nx,Ny)`` and
