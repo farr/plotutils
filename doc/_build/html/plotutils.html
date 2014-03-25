@@ -134,7 +134,7 @@ Additional arguments are passed to matplotlib&#8217;s <tt class="docutils litera
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_emcee_chains">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains</tt><big>(</big><em>chain</em>, <em>truths=None</em><big>)</big><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains</tt><big>(</big><em>chain</em>, <em>truths=None</em>, <em>mean=True</em><big>)</big><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produces a chain plot of the mean values of each variable at each
 step.  The chain should have the shape <tt class="docutils literal"><span class="pre">(nwalkers,</span> <span class="pre">nsteps,</span>
 <span class="pre">nvars)</span></tt>, and the resulting grid of plots will be as close to
@@ -149,6 +149,9 @@ giving the history of the chain.</li>
 <li><strong>truths</strong> &#8211; Either <tt class="docutils literal"><span class="pre">None</span></tt> or an iterable giving the truth
 values for each of the parameters, which will be plotted as a
 horizontal line.</li>
+<li><strong>mean</strong> &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt> (default) plot only the mean of the
+walker ensemble.  Otherwise, plot the evolution of each walker
+in the chain.</li>
 </ul>
 </td>
 </tr>

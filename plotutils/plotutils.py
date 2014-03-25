@@ -42,7 +42,7 @@ def load_header_data(file, header_commented=False):
     else:
         return do_read(inp)
 
-def plot_emcee_chains(chain, truths=None):
+def plot_emcee_chains(chain, truths=None, mean=True):
     """Produces a chain plot of the mean values of each variable at each
     step.  The chain should have the shape ``(nwalkers, nsteps,
     nvars)``, and the resulting grid of plots will be as close to
@@ -55,6 +55,10 @@ def plot_emcee_chains(chain, truths=None):
       values for each of the parameters, which will be plotted as a
       horizontal line.
 
+    :param mean: If ``True`` (default) plot only the mean of the
+      walker ensemble.  Otherwise, plot the evolution of each walker
+      in the chain.
+
     """
     nk = chain.shape[2]
     n = int(np.ceil(np.sqrt(nk)))
@@ -66,7 +70,10 @@ def plot_emcee_chains(chain, truths=None):
         pp.gca().xaxis.set_ticklabels([])
         pp.gca().yaxis.set_ticklabels([])
 
-        pp.plot(np.mean(chain[:,:,k], axis=0))
+        if mean:
+            pp.plot(np.mean(chain[:,:,k], axis=0))
+        else:
+            pp.plot(chain[:,:,k].T)
 
         if truths is not None:
             pp.axhline(truths[k], color='k')
