@@ -57,7 +57,9 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
     if acf is None:
         acf = autocorrelation_function(series)
 
-    summed_acf = np.cumsum(np.abs(acf))
+    summed_acf = np.cumsum(np.abs(acf)) + 1.0 # Don't forget about
+                                              # double the zero-lag
+                                              # component
     acls = np.arange(0, summed_acf.shape[0])/5.0
     
     acl_selector = summed_acf < acls
