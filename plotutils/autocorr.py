@@ -17,29 +17,34 @@ def _next_power_of_two(i):
 
     return pt
 
-def autocorrelation_function(series):
+def autocorrelation_function(series, axis=0):
     """Returns the autocorrelation function of the given series.  The
     function is normalised so that it is 1 at zero lag.
 
     """
     series = np.atleast_1d(series)
-    
-    n = _next_power_of_two(series.shape[0]*2)
+    shape = np.array(series.shape)
+    m = [slice(None)] * len(shape)
 
-    padded_series = np.zeros(n)
-    padded_series[:series.shape[0]] = series - np.mean(series)
+    n = _next_power_of_two(shape[axis]*2)
+    m[axis] = slice(0, shape[axis])
+    shape[axis] = n
 
-    ps_tilde = np.fft.fft(padded_series)
+    padded_series = np.zeros(shape)
+    padded_series[m] = series - np.mean(series, axis=axis)
 
-    acf = np.real(np.fft.ifft(ps_tilde*np.conj(ps_tilde)))
-    acf /= acf[0]
+    ps_tilde = np.fft.fft(padded_series, axis=axis)
 
-    return acf[:series.shape[0]]
+    acf = np.real(np.fft.ifft(ps_tilde*np.conj(ps_tilde), axis=axis))[m]
+    m[axis] = 0
+    acf /= acf[m]
 
-def autocorrelation_length_estimate(series, acf=None, M=5):
+    return acf
+
+def autocorrelation_length_estimate(series, acf=None, M=5, axis=0):
     r"""Returns an estimate of the autocorrelation length of the given
     series.  The autocorrelation length is defined as the smallest
-    integer, :math:`i`, such that 
+    integer, :math:`i`, such that
 
     .. math::
 
@@ -55,16 +60,18 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
 
     """
     if acf is None:
-        acf = autocorrelation_function(series)
+        acf = autocorrelation_function(series, axis=axis)
 
-    summed_acf = np.cumsum(np.abs(acf)) + 1.0 # Don't forget about
-                                              # double the zero-lag
-                                              # component
-    acls = np.arange(0, summed_acf.shape[0])/5.0
-    
-    acl_selector = summed_acf < acls
-
-    if np.any(acl_selector):
-        return acls[np.nonzero(acl_selector)[0][0]]
+    summed_acf = np.cumsum(np.abs(acf), axis=axis) + 1.0 # Don't forget about
+                                                         # double the zero-lag
+                                                         # component
+    m = [slice(None)] * len(acf.shape)
+    m[axis] = slice(0,10)
+    acls = (np.cumsum(np.ones(summed_acf.shape), axis=axis)-1.0)/M
+    diffs = summed_acf - acls
+    if np.any(diffs < 0):
+        i = np.argmin(np.abs(diffs), axis=axis)
+        j = tuple(np.indices(i.shape))
+        return acls[j[:axis] + (i,) + j[axis:]]
     else:
         return None
