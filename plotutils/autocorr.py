@@ -26,18 +26,20 @@ def autocorrelation_function(series, axis=0):
     shape = np.array(series.shape)
     m = [slice(None)] * len(shape)
 
+    n0 = shape[axis]
     n = _next_power_of_two(shape[axis]*2)
-    m[axis] = slice(0, shape[axis])
+    m[axis] = slice(0, n0)
     shape[axis] = n
 
     padded_series = np.zeros(shape)
     padded_series[m] = series - np.mean(series, axis=axis)
 
     ps_tilde = np.fft.fft(padded_series, axis=axis)
-
     acf = np.real(np.fft.ifft(ps_tilde*np.conj(ps_tilde), axis=axis))[m]
+
     m[axis] = 0
-    acf /= acf[m]
+    shape[axis] = 1
+    acf /= acf[m].reshape(shape).repeat(n0, axis)
 
     return acf
 
