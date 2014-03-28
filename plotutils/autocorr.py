@@ -68,7 +68,6 @@ def autocorrelation_length_estimate(series, acf=None, M=5, axis=0):
                                                          # double the zero-lag
                                                          # component
     m = [slice(None)] * len(acf.shape)
-    m[axis] = slice(0,10)
     acls = (np.cumsum(np.ones(summed_acf.shape), axis=axis)-1.0)/M
     diffs = summed_acf - acls
     if np.any(diffs < 0):
