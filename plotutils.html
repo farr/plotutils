@@ -374,13 +374,14 @@ function is normalised so that it is 1 at zero lag.</p>
 series.  The autocorrelation length is defined as the smallest
 integer, <span class="math">\(i\)</span>, such that</p>
 <div class="math">
-\[\begin{split}\sum_{j &lt; M i} \left| \rho(j) \right| &lt; i\end{split}\]</div>
+\[\begin{split}\sum_{j &lt; M i} \left| 2 \rho(j) \right| - 1 &lt; i\end{split}\]</div>
 <p>This empirical relation is intended to estimate in a robust way
 the exponential decay constant for an ACF that decays like
 <span class="math">\(\exp(t/\tau)\)</span>.  The constant <span class="math">\(M\)</span> controls how many
 estimated ACLs are included in the calculation of the ACL.</p>
 <p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if no such index is present; this indicates that
-the ACL estimate is not converged.</p>
+the ACL estimate is not converged (i.e. that there are not at
+least <tt class="docutils literal"><span class="pre">M</span></tt> ACL&#8217;s worth of samples in the series).</p>
 </dd></dl>
 
 </div>
