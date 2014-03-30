@@ -43,7 +43,7 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
 
     .. math::
 
-      \sum_{j < M i} \left| \rho(j) \right| < i
+      \sum_{j < M i} \left| 2 \rho(j) \right| - 1 < i
 
     This empirical relation is intended to estimate in a robust way
     the exponential decay constant for an ACF that decays like
@@ -51,17 +51,16 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
     estimated ACLs are included in the calculation of the ACL.
 
     Returns ``None`` if no such index is present; this indicates that
-    the ACL estimate is not converged.
+    the ACL estimate is not converged (i.e. that there are not at
+    least ``M`` ACL's worth of samples in the series).
 
     """
     if acf is None:
         acf = autocorrelation_function(series)
 
-    summed_acf = np.cumsum(np.abs(acf)) + 1.0 # Don't forget about
-                                              # double the zero-lag
-                                              # component
-    acls = np.arange(0, summed_acf.shape[0])/5.0
-    
+    summed_acf = 2.0*np.cumsum(np.abs(acf)) - 1.0
+    acls = np.arange(0, summed_acf.shape[0])/float(M)
+
     acl_selector = summed_acf < acls
 
     if np.any(acl_selector):
