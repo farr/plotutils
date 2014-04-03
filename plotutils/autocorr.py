@@ -38,32 +38,32 @@ def autocorrelation_function(series):
 
 def autocorrelation_length_estimate(series, acf=None, M=5):
     r"""Returns an estimate of the autocorrelation length of the given
-    series.  The autocorrelation length is defined as the smallest
-    integer, :math:`i`, such that 
+    series:
 
     .. math::
 
-      \sum_{j < M i} \left| 2 \rho(j) \right| - 1 < i
+      L = \int_{-\infty}^\infty \rho(t) dt
 
-    This empirical relation is intended to estimate in a robust way
-    the exponential decay constant for an ACF that decays like
-    :math:`\exp(t/\tau)`.  The constant :math:`M` controls how many
-    estimated ACLs are included in the calculation of the ACL.
+    The estimate is the smallest :math:`L` such that 
 
-    Returns ``None`` if no such index is present; this indicates that
-    the ACL estimate is not converged (i.e. that there are not at
-    least ``M`` ACL's worth of samples in the series).
+    .. math::
+
+      L = 1 + 2*\sum_{j = 1}^{M L} \rho(j)
+
+    In words: the ACL is estimated over a window that is at least
+    :math:`M` ACLs long.
+
+    Returns ``None`` if there is no such estimate possible (because
+    the series is too short to fit 5 ACLs).
 
     """
     if acf is None:
         acf = autocorrelation_function(series)
 
-    summed_acf = 2.0*np.cumsum(np.abs(acf)) - 1.0
-    acls = np.arange(0, summed_acf.shape[0])/float(M)
+    acl_ests = 2.0*np.cumsum(acf) - 1.0
+    sel = M*acl_ests < np.arange(0, acf.shape[0])
 
-    acl_selector = summed_acf < acls
-
-    if np.any(acl_selector):
-        return acls[np.nonzero(acl_selector)[0][0]]
+    if np.any(sel):
+        return acl_ests[np.nonzero(sel)[0][0]]
     else:
         return None
