@@ -371,17 +371,16 @@ function is normalised so that it is 1 at zero lag.</p>
 <dt id="plotutils.autocorr.autocorrelation_length_estimate">
 <tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">autocorrelation_length_estimate</tt><big>(</big><em>series</em>, <em>acf=None</em>, <em>M=5</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#autocorrelation_length_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.autocorrelation_length_estimate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an estimate of the autocorrelation length of the given
-series.  The autocorrelation length is defined as the smallest
-integer, <span class="math">\(i\)</span>, such that</p>
+series:</p>
 <div class="math">
-\[\begin{split}\sum_{j &lt; M i} \left| 2 \rho(j) \right| - 1 &lt; i\end{split}\]</div>
-<p>This empirical relation is intended to estimate in a robust way
-the exponential decay constant for an ACF that decays like
-<span class="math">\(\exp(t/\tau)\)</span>.  The constant <span class="math">\(M\)</span> controls how many
-estimated ACLs are included in the calculation of the ACL.</p>
-<p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if no such index is present; this indicates that
-the ACL estimate is not converged (i.e. that there are not at
-least <tt class="docutils literal"><span class="pre">M</span></tt> ACL&#8217;s worth of samples in the series).</p>
+\[L = \int_{-\infty}^\infty \rho(t) dt\]</div>
+<p>The estimate is the smallest <span class="math">\(L\)</span> such that</p>
+<div class="math">
+\[L = 1 + 2*\sum_{j = 1}^{M L} \rho(j)\]</div>
+<p>In words: the ACL is estimated over a window that is at least
+<span class="math">\(M\)</span> ACLs long.</p>
+<p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if there is no such estimate possible (because
+the series is too short to fit 5 ACLs).</p>
 </dd></dl>
 
 </div>
