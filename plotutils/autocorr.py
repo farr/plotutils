@@ -67,3 +67,11 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
         return acl_ests[np.nonzero(sel)[0][0]]
     else:
         return None
+
+def emcee_chain_autocorrelation_lengths(chain, M=5):
+    r"""Returns an array giving the ACL for each parameter in the given
+    emcee chain.
+
+    """
+
+    return np.array([autocorrelation_length_estimate(np.mean(chain[:,:,k], axis=0)) for k in range(chain.shape[2])])
