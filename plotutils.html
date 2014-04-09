@@ -376,7 +376,7 @@ series:</p>
 \[L = \int_{-\infty}^\infty \rho(t) dt\]</div>
 <p>The estimate is the smallest <span class="math">\(L\)</span> such that</p>
 <div class="math">
-\[L = 1 + 2*\sum_{j = 1}^{M L} \rho(j)\]</div>
+\[L = 1 + 2*\sum_{j = 1}^{M L} \left| \rho(j) \right|\]</div>
 <p>In words: the ACL is estimated over a window that is at least
 <span class="math">\(M\)</span> ACLs long.</p>
 <p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if there is no such estimate possible (because
