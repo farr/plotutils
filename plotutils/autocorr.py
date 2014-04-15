@@ -68,10 +68,19 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
     else:
         return None
 
-def emcee_chain_autocorrelation_lengths(chain, M=5):
+def emcee_chain_autocorrelation_lengths(chain, M=5, fburnin=0):
     r"""Returns an array giving the ACL for each parameter in the given
     emcee chain.
 
+    :param chain: The emcee sampler chain.
+
+    :param M: See :func:`autocorrelation_length_estimate`
+
+    :param fburnin: Discard the first ``fburnin`` fraction of the
+      samples as burn-in before computing the ACLs.
+
     """
 
-    return np.array([autocorrelation_length_estimate(np.mean(chain[:,:,k], axis=0)) for k in range(chain.shape[2])])
+    istart = int(round(fburnin*chain.shape[1]))
+
+    return np.array([autocorrelation_length_estimate(np.mean(chain[:,istart:,k], axis=0)) for k in range(chain.shape[2])])

@@ -385,9 +385,23 @@ the series is too short to fit 5 ACLs).</p>
 
 <dl class="function">
 <dt id="plotutils.autocorr.emcee_chain_autocorrelation_lengths">
-<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_chain_autocorrelation_lengths</tt><big>(</big><em>chain</em>, <em>M=5</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_chain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_chain_autocorrelation_lengths</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=0</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_chain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an array giving the ACL for each parameter in the given
 emcee chain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>chain</strong> &#8211; The emcee sampler chain.</li>
+<li><strong>M</strong> &#8211; See <a class="reference internal" href="#plotutils.autocorr.autocorrelation_length_estimate" title="plotutils.autocorr.autocorrelation_length_estimate"><tt class="xref py py-func docutils literal"><span class="pre">autocorrelation_length_estimate()</span></tt></a></li>
+<li><strong>fburnin</strong> &#8211; Discard the first <tt class="docutils literal"><span class="pre">fburnin</span></tt> fraction of the
+samples as burn-in before computing the ACLs.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
