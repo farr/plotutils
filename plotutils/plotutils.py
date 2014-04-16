@@ -63,12 +63,8 @@ def plot_emcee_chains(chain, truths=None, mean=True):
     nk = chain.shape[2]
     n = int(np.ceil(np.sqrt(nk)))
 
-    pp.subplots_adjust(hspace=0, wspace=0)
-
     for k in range(nk):
         pp.subplot(n,n,k+1)
-        pp.gca().xaxis.set_ticklabels([])
-        pp.gca().yaxis.set_ticklabels([])
 
         if mean:
             pp.plot(np.mean(chain[:,:,k], axis=0))
