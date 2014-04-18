@@ -68,7 +68,10 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
     else:
         return None
 
-def emcee_chain_autocorrelation_lengths(chain, M=5, fburnin=0):
+def _default_burnin(M):
+    return 1.0/(M + 1.0)
+
+def emcee_chain_autocorrelation_lengths(chain, M=5, fburnin=None):
     r"""Returns an array giving the ACL for each parameter in the given
     emcee chain.
 
@@ -77,10 +80,36 @@ def emcee_chain_autocorrelation_lengths(chain, M=5, fburnin=0):
     :param M: See :func:`autocorrelation_length_estimate`
 
     :param fburnin: Discard the first ``fburnin`` fraction of the
-      samples as burn-in before computing the ACLs.
+      samples as burn-in before computing the ACLs.  Default is to
+      discard the first :math:`1/(M+1)`, ensuring that at least one
+      ACL is discarded.
 
     """
+
+    if fburnin is None:
+        fburnin = _default_burnin(M)
 
     istart = int(round(fburnin*chain.shape[1]))
 
     return np.array([autocorrelation_length_estimate(np.mean(chain[:,istart:,k], axis=0)) for k in range(chain.shape[2])])
+
+def thinned_emcee_chain(chain, acl=None, M=5, fburnin=None):
+    """Returns ``chain`` thinned by the maximum parameter ACL, as given in
+    ``acl`` or computing using the given parameters.
+
+    """
+
+    if acl is None:
+        acls = emcee_chain_autocorrelation_lengths(chain, M=M, fburnin=fburnin)
+
+        for ac in acls:
+            if ac == None:
+                return None
+        acl = int(round(np.max(acls)))
+
+    if fburnin is None:
+        fburnin = _default_burnin(M)
+    
+    iburnin = int(round(fburnin*chain.shape[1]))
+
+    return chain[:,iburnin::acl,:]
