@@ -114,31 +114,9 @@ def emcee_thinned_chain(chain, M=5, fburnin=None):
 
     acls = emcee_chain_autocorrelation_lengths(chain, M=M, fburnin=fburnin)
 
-    for ac in acls:
-        if ac is None:
-            return None
+    if any(ac is None for ac in acls):
+        return None
 
     tau = int(np.ceil(np.max(acls)))
 
     return chain[:,istart::tau,:]
-
-def thinned_emcee_chain(chain, acl=None, M=5, fburnin=None):
-    """Returns ``chain`` thinned by the maximum parameter ACL, as given in
-    ``acl`` or computing using the given parameters.
-
-    """
-
-    if acl is None:
-        acls = emcee_chain_autocorrelation_lengths(chain, M=M, fburnin=fburnin)
-
-        for ac in acls:
-            if ac == None:
-                return None
-        acl = int(round(np.max(acls)))
-
-    if fburnin is None:
-        fburnin = _default_burnin(M)
-    
-    iburnin = int(round(fburnin*chain.shape[1]))
-
-    return chain[:,iburnin::acl,:]
