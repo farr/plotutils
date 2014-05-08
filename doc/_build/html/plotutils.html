@@ -407,6 +407,28 @@ ACL is discarded.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="plotutils.autocorr.emcee_thinned_chain">
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_thinned_chain</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_thinned_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a thinned, burned-in version of the emcee chain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>chain</strong> &#8211; The emcee sampler chain.</li>
+<li><strong>M</strong> &#8211; See <a class="reference internal" href="#plotutils.autocorr.autocorrelation_length_estimate" title="plotutils.autocorr.autocorrelation_length_estimate"><tt class="xref py py-func docutils literal"><span class="pre">autocorrelation_length_estimate()</span></tt></a></li>
+<li><strong>fburnin</strong> &#8211; Discard the first <tt class="docutils literal"><span class="pre">fburnin</span></tt> fraction of the
+samples as burn-in before computing the ACLs.  Default is to
+discard the first <span class="math">\(1/(M+1)\)</span>, ensuring that at least one
+ACL is discarded.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="plotutils.autocorr.thinned_emcee_chain">
 <tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">thinned_emcee_chain</tt><big>(</big><em>chain</em>, <em>acl=None</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.thinned_emcee_chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <tt class="docutils literal"><span class="pre">chain</span></tt> thinned by the maximum parameter ACL, as given in
