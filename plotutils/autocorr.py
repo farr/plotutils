@@ -48,20 +48,22 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
 
     .. math::
 
-      L = 1 + 2*\sum_{j = 1}^{M L} \left| \rho(j) \right|
+      L = \sum_{j = 0}^{M L} \rho(j)
 
     In words: the ACL is estimated over a window that is at least
-    :math:`M` ACLs long.
+    :math:`M` ACLs long, with the constraint that :math:`ML < N/2`.
 
     Returns ``None`` if there is no such estimate possible (because
-    the series is too short to fit 5 ACLs).
+    the series is too short to fit :math:`2M` ACLs).
 
     """
     if acf is None:
         acf = autocorrelation_function(series)
 
-    acl_ests = 2.0*np.cumsum(np.abs(acf)) - 1.0
-    sel = M*acl_ests < np.arange(0, acf.shape[0])
+    nmax = acf.shape[0]/2
+
+    acl_ests = np.cumsum(acf[:nmax])
+    sel = M*acl_ests < np.arange(0, nmax)
 
     if np.any(sel):
         return acl_ests[np.nonzero(sel)[0][0]]

@@ -376,11 +376,11 @@ series:</p>
 \[L = \int_{-\infty}^\infty \rho(t) dt\]</div>
 <p>The estimate is the smallest <span class="math">\(L\)</span> such that</p>
 <div class="math">
-\[L = 1 + 2*\sum_{j = 1}^{M L} \left| \rho(j) \right|\]</div>
+\[L = \sum_{j = 0}^{M L} \rho(j)\]</div>
 <p>In words: the ACL is estimated over a window that is at least
-<span class="math">\(M\)</span> ACLs long.</p>
+<span class="math">\(M\)</span> ACLs long, with the constraint that <span class="math">\(ML &lt; N/2\)</span>.</p>
 <p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if there is no such estimate possible (because
-the series is too short to fit 5 ACLs).</p>
+the series is too short to fit <span class="math">\(2M\)</span> ACLs).</p>
 </dd></dl>
 
 <dl class="function">
@@ -426,13 +426,6 @@ ACL is discarded.</li>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="function">
-<dt id="plotutils.autocorr.thinned_emcee_chain">
-<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">thinned_emcee_chain</tt><big>(</big><em>chain</em>, <em>acl=None</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.thinned_emcee_chain" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <tt class="docutils literal"><span class="pre">chain</span></tt> thinned by the maximum parameter ACL, as given in
-<tt class="docutils literal"><span class="pre">acl</span></tt> or computing using the given parameters.</p>
 </dd></dl>
 
 </div>
