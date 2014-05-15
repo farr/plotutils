@@ -376,16 +376,16 @@ series:</p>
 \[L = \int_{-\infty}^\infty \rho(t) dt\]</div>
 <p>The estimate is the smallest <span class="math">\(L\)</span> such that</p>
 <div class="math">
-\[L = 1 + 2*\sum_{j = 1}^{M L} \left| \rho(j) \right|\]</div>
+\[L = \sum_{j = 0}^{M L} \rho(j)\]</div>
 <p>In words: the ACL is estimated over a window that is at least
-<span class="math">\(M\)</span> ACLs long.</p>
+<span class="math">\(M\)</span> ACLs long, with the constraint that <span class="math">\(ML &lt; N/2\)</span>.</p>
 <p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if there is no such estimate possible (because
-the series is too short to fit 5 ACLs).</p>
+the series is too short to fit <span class="math">\(2M\)</span> ACLs).</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="plotutils.autocorr.emcee_chain_autocorrelation_lengths">
-<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_chain_autocorrelation_lengths</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=0</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_chain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_chain_autocorrelation_lengths</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_chain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an array giving the ACL for each parameter in the given
 emcee chain.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -396,7 +396,31 @@ emcee chain.</p>
 <li><strong>chain</strong> &#8211; The emcee sampler chain.</li>
 <li><strong>M</strong> &#8211; See <a class="reference internal" href="#plotutils.autocorr.autocorrelation_length_estimate" title="plotutils.autocorr.autocorrelation_length_estimate"><tt class="xref py py-func docutils literal"><span class="pre">autocorrelation_length_estimate()</span></tt></a></li>
 <li><strong>fburnin</strong> &#8211; Discard the first <tt class="docutils literal"><span class="pre">fburnin</span></tt> fraction of the
-samples as burn-in before computing the ACLs.</li>
+samples as burn-in before computing the ACLs.  Default is to
+discard the first <span class="math">\(1/(M+1)\)</span>, ensuring that at least one
+ACL is discarded.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.autocorr.emcee_thinned_chain">
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_thinned_chain</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_thinned_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a thinned, burned-in version of the emcee chain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>chain</strong> &#8211; The emcee sampler chain.</li>
+<li><strong>M</strong> &#8211; See <a class="reference internal" href="#plotutils.autocorr.autocorrelation_length_estimate" title="plotutils.autocorr.autocorrelation_length_estimate"><tt class="xref py py-func docutils literal"><span class="pre">autocorrelation_length_estimate()</span></tt></a></li>
+<li><strong>fburnin</strong> &#8211; Discard the first <tt class="docutils literal"><span class="pre">fburnin</span></tt> fraction of the
+samples as burn-in before computing the ACLs.  Default is to
+discard the first <span class="math">\(1/(M+1)\)</span>, ensuring that at least one
+ACL is discarded.</li>
 </ul>
 </td>
 </tr>
