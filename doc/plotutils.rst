@@ -17,6 +17,14 @@ plotutils Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`runner` Module
+--------------------
+
+.. automodule:: plotutils.runner
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 :mod:`bounded_kde` Module
 -------------------------
 

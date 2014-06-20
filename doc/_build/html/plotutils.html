@@ -429,6 +429,80 @@ ACL is discarded.</li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-plotutils.runner">
+<span id="runner-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">runner</span></tt> Module<a class="headerlink" href="#module-plotutils.runner" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="plotutils.runner.EnsembleSamplerRunner">
+<em class="property">class </em><tt class="descclassname">plotutils.runner.</tt><tt class="descname">EnsembleSamplerRunner</tt><big>(</big><em>sampler</em>, <em>pts</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Runner object for an emcee sampler.</p>
+<dl class="attribute">
+<dt id="plotutils.runner.EnsembleSamplerRunner.acls">
+<tt class="descname">acls</tt><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.acls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.acls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the estimate of the current chain&#8217;s autocorrelation lengths,
+using <a class="reference internal" href="#plotutils.autocorr.emcee_chain_autocorrelation_lengths" title="plotutils.autocorr.emcee_chain_autocorrelation_lengths"><tt class="xref py py-func docutils literal"><span class="pre">plotutils.autocorr.emcee_chain_autocorrelation_lengths()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.runner.EnsembleSamplerRunner.chain">
+<tt class="descname">chain</tt><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current state of the sampler&#8217;s chain.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.runner.EnsembleSamplerRunner.lnprobability">
+<tt class="descname">lnprobability</tt><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.lnprobability"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.lnprobability" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current state of the sampler&#8217;s lnprobability.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plotutils.runner.EnsembleSamplerRunner.load_state">
+<tt class="descname">load_state</tt><big>(</big><em>dir</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.load_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.load_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a stored state from the given directory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plotutils.runner.EnsembleSamplerRunner.rethin">
+<tt class="descname">rethin</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.rethin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.rethin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase the thinning parameter by a factor of two, modifying the
+stored chain and lnprob states accordingly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plotutils.runner.EnsembleSamplerRunner.run_mcmc">
+<tt class="descname">run_mcmc</tt><big>(</big><em>nthinsteps</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.run_mcmc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.run_mcmc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the associated sampler to produce <tt class="docutils literal"><span class="pre">nthinsteps</span></tt> worth of
+stored ensembles (i.e. the sampler will be run for
+<tt class="docutils literal"><span class="pre">nthinsteps*self.thin</span></tt> total steps).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plotutils.runner.EnsembleSamplerRunner.save_state">
+<tt class="descname">save_state</tt><big>(</big><em>dir</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.save_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.save_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the state of the runner stored chain, lnprob, and thin
+parameter in the given directory.  Three files will be created
+(approximately atomically, so the operation is nearly safe
+from interruption):</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">chain.npy.bz2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">lnprob.npy.bz2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">thin.txt</span></tt></li>
+</ul>
+</div></blockquote>
+<p>Storing the current chain, lnprob and the thin parameter.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.runner.EnsembleSamplerRunner.thin_chain">
+<tt class="descname">thin_chain</tt><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.thin_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.thin_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a thinned chain (if possible), using
+<tt class="xref py py-func docutils literal"><span class="pre">ac.emcee_thinned_chain()</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-plotutils.bounded_kde">
 <span id="bounded-kde-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">bounded_kde</span></tt> Module<a class="headerlink" href="#module-plotutils.bounded_kde" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -545,6 +619,7 @@ indicating which points lie within the contour.</td>
 <li><a class="reference internal" href="#">plotutils Package</a><ul>
 <li><a class="reference internal" href="#module-plotutils.plotutils"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.autocorr"><tt class="docutils literal"><span class="pre">autocorr</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-plotutils.runner"><tt class="docutils literal"><span class="pre">runner</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.bounded_kde"><tt class="docutils literal"><span class="pre">bounded_kde</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.log_kde"><tt class="docutils literal"><span class="pre">log_kde</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.contour"><tt class="docutils literal"><span class="pre">contour</span></tt> Module</a></li>

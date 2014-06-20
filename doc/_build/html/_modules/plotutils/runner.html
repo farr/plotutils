@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>plotutils.runner &mdash; plotutils 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="plotutils 0.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">plotutils 0.0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for plotutils.runner</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">autocorr</span> <span class="kn">as</span> <span class="nn">ac</span>
+<span class="kn">import</span> <span class="nn">bz2</span>
+<span class="kn">import</span> <span class="nn">emcee</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
+
+<div class="viewcode-block" id="EnsembleSamplerRunner"><a class="viewcode-back" href="../../plotutils.html#plotutils.runner.EnsembleSamplerRunner">[docs]</a><span class="k">class</span> <span class="nc">EnsembleSamplerRunner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Runner object for an emcee sampler.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sampler</span><span class="p">,</span> <span class="n">pts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the runner with the given sampler and initial ensemble</span>
+<span class="sd">        position.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">sampler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">pts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_first_step</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">thin</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="EnsembleSamplerRunner.chain"><a class="viewcode-back" href="../../plotutils.html#plotutils.runner.EnsembleSamplerRunner.chain">[docs]</a>    <span class="k">def</span> <span class="nf">chain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The current state of the sampler&#39;s chain.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">chain</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="EnsembleSamplerRunner.lnprobability"><a class="viewcode-back" href="../../plotutils.html#plotutils.runner.EnsembleSamplerRunner.lnprobability">[docs]</a>    <span class="k">def</span> <span class="nf">lnprobability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The current state of the sampler&#39;s lnprobability.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">lnprobability</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="EnsembleSamplerRunner.thin_chain"><a class="viewcode-back" href="../../plotutils.html#plotutils.runner.EnsembleSamplerRunner.thin_chain">[docs]</a>    <span class="k">def</span> <span class="nf">thin_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a thinned chain (if possible), using</span>
+<span class="sd">        :func:`ac.emcee_thinned_chain`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ac</span><span class="o">.</span><span class="n">emcee_thinned_chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="p">)</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="EnsembleSamplerRunner.acls"><a class="viewcode-back" href="../../plotutils.html#plotutils.runner.EnsembleSamplerRunner.acls">[docs]</a>    <span class="k">def</span> <span class="nf">acls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the estimate of the current chain&#39;s autocorrelation lengths,</span>
+<span class="sd">        using :func:`ac.emcee_chain_autocorrelation_lengths`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ac</span><span class="o">.</span><span class="n">emcee_chain_autocorrelation_lengths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="EnsembleSamplerRunner.save_state"><a class="viewcode-back" href="../../plotutils.html#plotutils.runner.EnsembleSamplerRunner.save_state">[docs]</a>    <span class="k">def</span> <span class="nf">save_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the state of the runner stored chain, lnprob, and thin</span>
+<span class="sd">        parameter in the given directory.  Three files will be created</span>
+<span class="sd">        (approximately atomically, so the operation is nearly safe</span>
+<span class="sd">        from interruption):</span>
+
+<span class="sd">         * ``chain.npy.bz2``</span>
+<span class="sd">         * ``lnprob.npy.bz2``</span>
+<span class="sd">         * ``thin.txt``</span>
+
+<span class="sd">        Storing the current chain, lnprob and the thin parameter.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="n">bz2</span><span class="o">.</span><span class="n">BZ2File</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;chain.npy.bz2.temp&#39;</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">bz2</span><span class="o">.</span><span class="n">BZ2File</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;lnprob.npy.bz2.temp&#39;</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lnprobability</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;thin.txt.temp&#39;</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;{0:d}</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thin</span><span class="p">))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;chain.npy.bz2.temp&#39;</span><span class="p">),</span>
+                      <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;chain.npy.bz2&#39;</span><span class="p">))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;lnprob.npy.bz2.temp&#39;</span><span class="p">),</span>
+                      <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;lnprob.npy.bz2&#39;</span><span class="p">))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;thin.txt.temp&#39;</span><span class="p">),</span>
+                      <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;thin.txt&#39;</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;WARNING: EnsembleSamplerRunner: interrupted during save, inconsistent saved state&#39;</span>
+            <span class="k">raise</span>
+</div>
+<div class="viewcode-block" id="EnsembleSamplerRunner.load_state"><a class="viewcode-back" href="../../plotutils.html#plotutils.runner.EnsembleSamplerRunner.load_state">[docs]</a>    <span class="k">def</span> <span class="nf">load_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load a stored state from the given directory.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">bz2</span><span class="o">.</span><span class="n">BZ2File</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;chain.npy.bz2&#39;</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">_chain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">bz2</span><span class="o">.</span><span class="n">BZ2File</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;lnprob.npy.bz2&#39;</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">_lnprob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">&#39;thin.txt&#39;</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">thin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_first_step</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;WARNING: EnsembleSamplerRunner: interrupted during load, inconsistent loaded state&#39;</span>
+            <span class="k">raise</span>
+</div>
+<div class="viewcode-block" id="EnsembleSamplerRunner.run_mcmc"><a class="viewcode-back" href="../../plotutils.html#plotutils.runner.EnsembleSamplerRunner.run_mcmc">[docs]</a>    <span class="k">def</span> <span class="nf">run_mcmc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nthinsteps</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the associated sampler to produce ``nthinsteps`` worth of</span>
+<span class="sd">        stored ensembles (i.e. the sampler will be run for</span>
+<span class="sd">        ``nthinsteps*self.thin`` total steps).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nsteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thin</span> <span class="o">*</span> <span class="n">nthinsteps</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_step</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">thin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">thin</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_first_step</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">lnprob0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">thin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">thin</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+</div>
+<div class="viewcode-block" id="EnsembleSamplerRunner.rethin"><a class="viewcode-back" href="../../plotutils.html#plotutils.runner.EnsembleSamplerRunner.rethin">[docs]</a>    <span class="k">def</span> <span class="nf">rethin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Increase the thinning parameter by a factor of two, modifying the</span>
+<span class="sd">        stored chain and lnprob states accordingly.  </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">_chain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">_chain</span><span class="p">[:,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">_lnprob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">_lnprob</span><span class="p">[:,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thin</span> <span class="o">*=</span> <span class="mi">2</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">plotutils 0.0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Will M. Farr.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
