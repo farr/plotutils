@@ -45,6 +45,14 @@ class EnsembleSamplerRunner(object):
         return ac.emcee_thinned_chain(self.chain)
 
     @property
+    def thin_flatchain(self):
+        """Returns a thinned chain that has been flattened.
+
+        """
+        tc = self.thin_chain
+        return tc.reshape((-1, tc.shape[2]))
+
+    @property
     def acls(self):
         """Return the estimate of the current chain's autocorrelation lengths,
         using :func:`plotutils.autocorr.emcee_chain_autocorrelation_lengths`.
