@@ -4,6 +4,7 @@ import emcee
 import numpy as np
 import os
 import os.path as op
+import pickle
 
 class EnsembleSamplerRunner(object):
     """Runner object for an emcee sampler.
@@ -92,6 +93,14 @@ class EnsembleSamplerRunner(object):
             print 'WARNING: EnsembleSamplerRunner: interrupted during save, inconsistent saved state'
             raise
 
+        try:
+            with bz2.BZ2File(op.join(dir, 'runner.pkl.bz2.temp'), 'w') as out:
+                pickle.dump(self, out)
+            os.rename(op.join(dir, 'runner.pkl.bz2.temp'),
+                      op.join(dir, 'runner.pkl.bz2'))
+        except:
+            print 'WARNING: EnsembleSampleRunner: pickling of runner failed.'
+
     def load_state(self, dir):
         """Load a stored state from the given directory.
 
@@ -126,6 +135,25 @@ class EnsembleSamplerRunner(object):
             self.result = self.sampler.run_mcmc(self.result[0], nsteps, lnprob0=self.result[1], thin=self.thin)
 
         return self.result
+
+    def run_to_neff(self, neff, savedir=None):
+        """Run the sampler, thinning as necessary, until ``neff`` effective
+        ensembles are obtained.  When ``savedir`` is not ``None``, the
+        sampler will be periodically saved to the given directory.
+
+        """
+        
+        while self.thin_chain is None or self.thin_chain.shape[1] < neff:
+            self.run_mcmc(neff)
+            
+            print 'Accumulated ', self.chain.shape[1], ' ensembles'
+
+            if savedir is not None:
+                print 'Saving state...'
+                self.save_state(savedir)
+
+            if self.chain.shape[1] > 10*neff:
+                self.rethin()
 
     def rethin(self):
         """Increase the thinning parameter by a factor of two, modifying the
