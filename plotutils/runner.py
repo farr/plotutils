@@ -147,6 +147,8 @@ class EnsembleSamplerRunner(object):
             self.run_mcmc(neff)
             
             print 'Accumulated ', self.chain.shape[1], ' ensembles'
+            if self.thin_chain is not None:
+                print 'Equivalent to ', self.thin_chain.shape[1], ' effective ensembles'
 
             if savedir is not None:
                 print 'Saving state...'
