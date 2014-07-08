@@ -477,6 +477,14 @@ stored ensembles (i.e. the sampler will be run for
 </dd></dl>
 
 <dl class="method">
+<dt id="plotutils.runner.EnsembleSamplerRunner.run_to_neff">
+<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em><big>)</big><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the sampler, thinning as necessary, until <tt class="docutils literal"><span class="pre">neff</span></tt> effective
+ensembles are obtained.  When <tt class="docutils literal"><span class="pre">savedir</span></tt> is not <tt class="docutils literal"><span class="pre">None</span></tt>, the
+sampler will be periodically saved to the given directory.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="plotutils.runner.EnsembleSamplerRunner.save_state">
 <tt class="descname">save_state</tt><big>(</big><em>dir</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.save_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.save_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the state of the runner stored chain, lnprob, and thin
