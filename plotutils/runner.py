@@ -156,6 +156,7 @@ class EnsembleSamplerRunner(object):
 
             if self.chain.shape[1] > 10*neff:
                 self.rethin()
+                print 'Thinned chain; now ', self.chain.shape[1], ' ensembles'
 
     def rethin(self):
         """Increase the thinning parameter by a factor of two, modifying the
