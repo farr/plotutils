@@ -73,6 +73,9 @@ class EnsembleSamplerRunner(object):
 
         Storing the current chain, lnprob and the thin parameter.
 
+        In addition, the file runner.pkl.bz2 will be created storing a
+        pickled version of the runner object.
+
         """
 
         with bz2.BZ2File(op.join(dir, 'chain.npy.bz2.temp'), 'w') as out:
