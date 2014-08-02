@@ -6,6 +6,14 @@ import os
 import os.path as op
 import pickle
 
+def load_runner(dir):
+    """Loads the saved runner from the given directory.
+
+    """
+    with bz2.BZ2File(op.join(dir, 'runner.pkl.bz2'), 'r') as inp:
+        runner = pickle.load(inp)
+    return runner
+
 class EnsembleSamplerRunner(object):
     """Runner object for an emcee sampler.
 
