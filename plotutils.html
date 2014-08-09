@@ -456,12 +456,6 @@ using <a class="reference internal" href="#plotutils.autocorr.emcee_chain_autoco
 </dd></dl>
 
 <dl class="method">
-<dt id="plotutils.runner.EnsembleSamplerRunner.load_state">
-<tt class="descname">load_state</tt><big>(</big><em>dir</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.load_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.load_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a stored state from the given directory.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="plotutils.runner.EnsembleSamplerRunner.rethin">
 <tt class="descname">rethin</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.rethin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.rethin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increase the thinning parameter by a factor of two, modifying the
@@ -486,21 +480,9 @@ sampler will be periodically saved to the given directory.</p>
 
 <dl class="method">
 <dt id="plotutils.runner.EnsembleSamplerRunner.save_state">
-<tt class="descname">save_state</tt><big>(</big><em>dir</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.save_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.save_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the state of the runner stored chain, lnprob, and thin
-parameter in the given directory.  Three files will be created
-(approximately atomically, so the operation is nearly safe
-from interruption):</p>
-<blockquote>
-<div><ul class="simple">
-<li><tt class="docutils literal"><span class="pre">chain.npy.bz2</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">lnprob.npy.bz2</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">thin.txt</span></tt></li>
-</ul>
-</div></blockquote>
-<p>Storing the current chain, lnprob and the thin parameter.</p>
-<p>In addition, the file runner.pkl.bz2 will be created storing a
-pickled version of the runner object.</p>
+<tt class="descname">save_state</tt><big>(</big><em>dir</em>, <em>fname='runner.pkl.bz2'</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.save_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.save_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the current state of the runner via a pickled object in the
+given directory.  The object will be pickled and bz2-compressed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -520,7 +502,7 @@ pickled version of the runner object.</p>
 
 <dl class="function">
 <dt id="plotutils.runner.load_runner">
-<tt class="descclassname">plotutils.runner.</tt><tt class="descname">load_runner</tt><big>(</big><em>dir</em><big>)</big><a class="headerlink" href="#plotutils.runner.load_runner" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.runner.</tt><tt class="descname">load_runner</tt><big>(</big><em>dir</em>, <em>fname='runner.pkl.bz2'</em><big>)</big><a class="headerlink" href="#plotutils.runner.load_runner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the saved runner from the given directory.</p>
 </dd></dl>
 
