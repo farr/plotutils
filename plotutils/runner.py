@@ -6,11 +6,11 @@ import os
 import os.path as op
 import pickle
 
-def load_runner(dir):
+def load_runner(dir, fname='runner.pkl.bz2'):
     """Loads the saved runner from the given directory.
 
     """
-    with bz2.BZ2File(op.join(dir, 'runner.pkl.bz2'), 'r') as inp:
+    with bz2.BZ2File(op.join(dir, fname), 'r') as inp:
         runner = pickle.load(inp)
     return runner
 
@@ -69,66 +69,22 @@ class EnsembleSamplerRunner(object):
         """
         return ac.emcee_chain_autocorrelation_lengths(self.chain)
 
-    def save_state(self, dir):
-        """Save the state of the runner stored chain, lnprob, and thin
-        parameter in the given directory.  Three files will be created
-        (approximately atomically, so the operation is nearly safe
-        from interruption):
-
-         * ``chain.npy.bz2``
-         * ``lnprob.npy.bz2``
-         * ``thin.txt``
-
-        Storing the current chain, lnprob and the thin parameter.
-
-        In addition, the file runner.pkl.bz2 will be created storing a
-        pickled version of the runner object.
+    def save_state(self, dir, fname='runner.pkl.bz2'):
+        """Stores the current state of the runner via a pickled object in the
+        given directory.  The object will be pickled and bz2-compressed.
 
         """
 
-        with bz2.BZ2File(op.join(dir, 'chain.npy.bz2.temp'), 'w') as out:
-            np.save(out, self.chain)
-        with bz2.BZ2File(op.join(dir, 'lnprob.npy.bz2.temp'), 'w') as out:
-            np.save(out, self.lnprobability)
-        with open(op.join(dir, 'thin.txt.temp'), 'w') as out:
-            out.write('{0:d}\n'.format(self.thin))
+        name,ext = op.split(fname)
 
-        try:
-            os.rename(op.join(dir, 'chain.npy.bz2.temp'),
-                      op.join(dir, 'chain.npy.bz2'))
-            os.rename(op.join(dir, 'lnprob.npy.bz2.temp'),
-                      op.join(dir, 'lnprob.npy.bz2'))
-            os.rename(op.join(dir, 'thin.txt.temp'),
-                      op.join(dir, 'thin.txt'))
-        except:
-            print 'WARNING: EnsembleSamplerRunner: interrupted during save, inconsistent saved state'
-            raise
+        if not (ext == '.bz2'):
+            fname += '.bz2'
 
-        try:
-            with bz2.BZ2File(op.join(dir, 'runner.pkl.bz2.temp'), 'w') as out:
-                pickle.dump(self, out)
-            os.rename(op.join(dir, 'runner.pkl.bz2.temp'),
-                      op.join(dir, 'runner.pkl.bz2'))
-        except:
-            print 'WARNING: EnsembleSampleRunner: pickling of runner failed.'
+        tfname = fname + '.temp'
 
-    def load_state(self, dir):
-        """Load a stored state from the given directory.
-
-        """
-        try:
-            with bz2.BZ2File(op.join(dir, 'chain.npy.bz2'), 'r') as inp:
-                self.sampler._chain = np.load(inp)
-            with bz2.BZ2File(op.join(dir, 'lnprob.npy.bz2'), 'r') as inp:
-                self.sampler._lnprob = np.load(inp)
-            with open(op.join(dir, 'thin.txt'), 'r') as inp:
-                self.thin = int(inp.readline())
-
-            self.result = self.chain[:,-1,:]
-            self._first_step = True
-        except:
-            print 'WARNING: EnsembleSamplerRunner: interrupted during load, inconsistent loaded state'
-            raise
+        with bz2.BZ2File(op.join(dir, tfname), 'w') as out:
+            pickle.dump(self, out)
+        os.rename(op.join(dir, tfname), op.join(dir, fname))
 
     def run_mcmc(self, nthinsteps):
         """Run the associated sampler to produce ``nthinsteps`` worth of
