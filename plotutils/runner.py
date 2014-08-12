@@ -51,7 +51,10 @@ class EnsembleSamplerRunner(object):
         :func:`ac.emcee_thinned_chain`
 
         """
-        return ac.emcee_thinned_chain(self.chain)
+        if self.chain.shape[1] == 0:
+            return None
+        else:
+            return ac.emcee_thinned_chain(self.chain)
 
     @property
     def thin_flatchain(self):
@@ -59,7 +62,10 @@ class EnsembleSamplerRunner(object):
 
         """
         tc = self.thin_chain
-        return tc.reshape((-1, tc.shape[2]))
+        if tc is None:
+            return None
+        else:
+            return tc.reshape((-1, tc.shape[2]))
 
     @property
     def acls(self):
