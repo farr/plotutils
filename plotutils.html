@@ -543,6 +543,48 @@ pickled version of the runner object.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-plotutils.parameterizations">
+<span id="parameterizations-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">parameterizations</span></tt> Module<a class="headerlink" href="#module-plotutils.parameterizations" title="Permalink to this headline">¶</a></h2>
+<p>Useful parameterizations for various commonly-found elements of
+models.</p>
+<dl class="function">
+<dt id="plotutils.parameterizations.cov_log_jacobian">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">cov_log_jacobian</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#cov_log_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.cov_log_jacobian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log of the determinant of the Jacobian of the
+transformation that produces the covariance matrix from parameters
+<tt class="docutils literal"><span class="pre">x</span></tt>:</p>
+<div class="math">
+\[\log |J| = \log \left| \frac{\partial \Sigma}{\partial x} \right|\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.parameterizations.cov_matrix">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">cov_matrix</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#cov_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.cov_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a covariance matrix from the parameters <tt class="docutils literal"><span class="pre">x</span></tt>, which should
+be of shape <tt class="docutils literal"><span class="pre">((N+1)*N/2,)</span></tt> for an <tt class="docutils literal"><span class="pre">(N,N)</span></tt> covariance matrix.</p>
+<p>The parametersation is taken from the <a class="reference external" href="http://mc-stan.org/">Stan</a> sampler, and is as follows.  The
+parameters <tt class="docutils literal"><span class="pre">x</span></tt> are the lower-triangluar elements of a matrix,
+<span class="math">\(y\)</span>.  Let</p>
+<div class="math">
+\[\begin{split}z_{ij} = \begin{cases}
+  \exp\left(y_{ij}\right) &amp; i = j \\
+  y_{ij} &amp; \mathrm{otherwise}
+\end{cases}\end{split}\]</div>
+<p>Then the covariance matrix is</p>
+<div class="math">
+\[\Sigma = z z^T\]</div>
+<p>With this parameterization, there are no constraints on the
+components of <tt class="docutils literal"><span class="pre">x</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.parameterizations.cov_parameters">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">cov_parameters</tt><big>(</big><em>m</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#cov_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.cov_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a covariance matrix, <tt class="docutils literal"><span class="pre">m</span></tt>, returns the parameters associated
+with it through the <a class="reference internal" href="#plotutils.parameterizations.cov_matrix" title="plotutils.parameterizations.cov_matrix"><tt class="xref py py-func docutils literal"><span class="pre">cov_matrix()</span></tt></a> function.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-plotutils.bounded_kde">
 <span id="bounded-kde-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">bounded_kde</span></tt> Module<a class="headerlink" href="#module-plotutils.bounded_kde" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -660,6 +702,7 @@ indicating which points lie within the contour.</td>
 <li><a class="reference internal" href="#module-plotutils.plotutils"><tt class="docutils literal"><span class="pre">plotutils</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.autocorr"><tt class="docutils literal"><span class="pre">autocorr</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.runner"><tt class="docutils literal"><span class="pre">runner</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-plotutils.parameterizations"><tt class="docutils literal"><span class="pre">parameterizations</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.bounded_kde"><tt class="docutils literal"><span class="pre">bounded_kde</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.log_kde"><tt class="docutils literal"><span class="pre">log_kde</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-plotutils.contour"><tt class="docutils literal"><span class="pre">contour</span></tt> Module</a></li>
