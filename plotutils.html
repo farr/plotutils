@@ -444,6 +444,15 @@ using <a class="reference internal" href="#plotutils.autocorr.emcee_chain_autoco
 </dd></dl>
 
 <dl class="attribute">
+<dt id="plotutils.runner.EnsembleSamplerRunner.burnedin_chain">
+<tt class="descname">burnedin_chain</tt><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.burnedin_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a chain with the first 1/6 of the samples removed.  This
+chain corresponds to the samples that are then thinned to
+produce the <tt class="docutils literal"><span class="pre">thin_chain</span></tt> property.  There is, of course, no
+guarantee that this chain is actually burned in.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="plotutils.runner.EnsembleSamplerRunner.chain">
 <tt class="descname">chain</tt><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>The current state of the sampler&#8217;s chain.</p>
