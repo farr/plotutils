@@ -471,6 +471,15 @@ guarantee that this chain is actually burned in.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="plotutils.runner.EnsembleSamplerRunner.reset">
+<tt class="descname">reset</tt><big>(</big><em>pts=None</em><big>)</big><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the stored sampler and internal state.  If no <tt class="docutils literal"><span class="pre">pts</span></tt>
+argument is given, will use the last position of the sampler
+as the new starting position; otherwise, the new starting
+position will be given by <tt class="docutils literal"><span class="pre">pts</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="plotutils.runner.EnsembleSamplerRunner.rethin">
 <tt class="descname">rethin</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.rethin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.rethin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increase the thinning parameter by a factor of two, modifying the

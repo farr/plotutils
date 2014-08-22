@@ -26,10 +26,7 @@ class EnsembleSamplerRunner(object):
         """
 
         self.sampler = sampler
-        self.result = pts
-        self._first_step = True
-
-        self.thin = 1
+        self.reset(pts=pts)
 
     @property
     def chain(self):
@@ -197,3 +194,22 @@ class EnsembleSamplerRunner(object):
         self.sampler._chain = self.sampler._chain[:,1::2,:]
         self.sampler._lnprob = self.sampler._lnprob[:,1::2]
         self.thin *= 2
+
+    def reset(self, pts=None):
+        """Resets the stored sampler and internal state.  If no ``pts``
+        argument is given, will use the last position of the sampler
+        as the new starting position; otherwise, the new starting
+        position will be given by ``pts``.
+
+        """
+
+        if pts is None:
+            if self._first_step:
+                pts = self.result
+            else:
+                pts = self.result[0]
+
+        self.result = pts
+        self._first_step = True
+
+        self.thin = 1
