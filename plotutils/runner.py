@@ -46,6 +46,19 @@ class EnsembleSamplerRunner(object):
         return self.sampler.lnprobability
 
     @property
+    def burnedin_chain(self):
+        """Returns a chain with the first 1/6 of the samples removed.  This
+        chain corresponds to the samples that are then thinned to
+        produce the ``thin_chain`` property.  There is, of course, no
+        guarantee that this chain is actually burned in.
+
+        """
+        nensembles = self.chain.shape[1]
+        istart = int(round(nensembles/6.0))
+
+        return self.chain[:,istart:,:]
+
+    @property
     def thin_chain(self):
         """Return a thinned chain (if possible), using
         :func:`ac.emcee_thinned_chain`
