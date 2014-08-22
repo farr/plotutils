@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>plotutils.parameterizations &mdash; plotutils 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="plotutils 0.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">plotutils 0.0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for plotutils.parameterizations</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Useful parameterizations for various commonly-found elements of</span>
+<span class="sd">models.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">_cov_matrix_dim</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">8.0</span><span class="o">*</span><span class="n">M</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">N</span><span class="o">/</span><span class="mi">2</span> <span class="o">==</span> <span class="n">M</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;input must have shape (N+1)*N/2 for some N&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">N</span>
+    
+<span class="k">def</span> <span class="nf">_cov_params_to_cholesky</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">_cov_matrix_dim</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">))</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">tril_indices</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">y</span><span class="o">.</span><span class="n">flat</span><span class="p">[::(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">flat</span><span class="p">[::(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+
+    <span class="k">return</span> <span class="n">y</span>
+
+<div class="viewcode-block" id="cov_matrix"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.cov_matrix">[docs]</a><span class="k">def</span> <span class="nf">cov_matrix</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Returns a covariance matrix from the parameters ``x``, which should</span>
+<span class="sd">    be of shape ``((N+1)*N/2,)`` for an ``(N,N)`` covariance matrix.</span>
+
+<span class="sd">    The parametersation is taken from the `Stan</span>
+<span class="sd">    &lt;http://mc-stan.org/&gt;`_ sampler, and is as follows.  The</span>
+<span class="sd">    parameters ``x`` are the lower-triangluar elements of a matrix,</span>
+<span class="sd">    :math:`y`.  Let </span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">      z_{ij} = \begin{cases}</span>
+<span class="sd">        \exp\left(y_{ij}\right) &amp; i = j \\</span>
+<span class="sd">        y_{ij} &amp; \mathrm{otherwise}</span>
+<span class="sd">      \end{cases}</span>
+
+<span class="sd">    Then the covariance matrix is </span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">      \Sigma = z z^T</span>
+
+<span class="sd">    With this parameterization, there are no constraints on the</span>
+<span class="sd">    components of ``x``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">_cov_params_to_cholesky</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="cov_parameters"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.cov_parameters">[docs]</a><span class="k">def</span> <span class="nf">cov_parameters</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given a covariance matrix, ``m``, returns the parameters associated</span>
+<span class="sd">    with it through the :func:`cov_matrix` function.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">flat</span><span class="p">[::(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">flat</span><span class="p">[::(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+
+    <span class="k">return</span> <span class="n">z</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">tril_indices</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+</div>
+<div class="viewcode-block" id="cov_log_jacobian"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.cov_log_jacobian">[docs]</a><span class="k">def</span> <span class="nf">cov_log_jacobian</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Returns the log of the determinant of the Jacobian of the</span>
+<span class="sd">    transformation that produces the covariance matrix from parameters</span>
+<span class="sd">    ``x``:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">      \log |J| = \log \left| \frac{\partial \Sigma}{\partial x} \right|</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="n">_cov_matrix_dim</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">_cov_params_to_cholesky</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">expts</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>
+
+    <span class="k">return</span> <span class="n">N</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="n">expts</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">plotutils 0.0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Will M. Farr.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
