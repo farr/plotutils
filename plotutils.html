@@ -584,6 +584,38 @@ components of <tt class="docutils literal"><span class="pre">x</span></tt>.</p>
 with it through the <a class="reference internal" href="#plotutils.parameterizations.cov_matrix" title="plotutils.parameterizations.cov_matrix"><tt class="xref py py-func docutils literal"><span class="pre">cov_matrix()</span></tt></a> function.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="plotutils.parameterizations.usimp_lengths">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_lengths</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#plotutils.parameterizations.usimp_lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given <tt class="docutils literal"><span class="pre">N-1</span></tt> parameters, <tt class="docutils literal"><span class="pre">p</span></tt>, returns <tt class="docutils literal"><span class="pre">N</span></tt> positive values that
+sum to one.  The transformation comes from the Stan manual.
+Imagine a stick that begins with unit length; the parameters are
+logit-transformed fractions of the amount of the stick remaining
+that is broken off in each of <tt class="docutils literal"><span class="pre">N-1</span></tt> steps to produce the <tt class="docutils literal"><span class="pre">N</span></tt>
+lengths.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.parameterizations.usimp_log_jacobian">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_log_jacobian</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#plotutils.parameterizations.usimp_log_jacobian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log of the Jacobian factor,</p>
+<blockquote>
+<div><div class="math">
+\[\left| \]</div>
+</div></blockquote>
+<p>rac{partial x}{partial p} 
+ight|</p>
+<blockquote>
+<div>where <span class="math">\(x\)</span> are the unit simplex lengths.</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.parameterizations.usimp_parameters">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_parameters</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#plotutils.parameterizations.usimp_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <tt class="docutils literal"><span class="pre">N-1</span></tt> unit simplex parameters that will produce the
+<tt class="docutils literal"><span class="pre">N</span></tt> lengths <tt class="docutils literal"><span class="pre">x</span></tt>.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-plotutils.bounded_kde">
 <span id="bounded-kde-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">bounded_kde</span></tt> Module<a class="headerlink" href="#module-plotutils.bounded_kde" title="Permalink to this headline">¶</a></h2>
