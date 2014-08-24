@@ -84,3 +84,79 @@ def cov_log_jacobian(x):
     expts = N - np.arange(1, N+1) + 2
 
     return N*np.log(2) + np.dot(np.log(np.diag(y)), expts)
+
+def _logit(x):
+    return np.log(x) - np.log1p(-x)
+
+def _invlogit(y):
+    return 1.0/(1.0 + np.exp(-y))
+
+def _usimp_zs(p):
+    p = np.atleast_1d(p)
+    N = p.shape[0]+1
+    ks = N - np.arange(1, N)
+    
+    zs = _invlogit(p - np.log(ks))
+
+    return zs
+
+def usimp_lengths(p):
+    """Given ``N-1`` parameters, ``p``, returns ``N`` positive values that
+    sum to one.  The transformation comes from the Stan manual.
+    Imagine a stick that begins with unit length; the parameters are
+    logit-transformed fractions of the amount of the stick remaining
+    that is broken off in each of ``N-1`` steps to produce the ``N``
+    lengths.
+
+    """
+    p = np.atleast_1d(p)
+    N = p.shape[0]+1
+
+    zs = _usimp_zs(p)
+
+    xs = np.zeros(N)
+    for i in range(xs.shape[0]-1):
+        xs[i] = zs[i]*(1 - np.sum(xs[:i]))
+    xs[N-1] = 1 - np.sum(xs[:N-1])
+
+    return xs
+
+def usimp_parameters(x):
+    """Returns the ``N-1`` unit simplex parameters that will produce the
+    ``N`` lengths ``x``.
+
+    """
+    x = np.atleast_1d(x)
+    N = x.shape[0]
+    zs = np.zeros(N-1)
+    csxs = np.cumsum(x)
+
+    for i in range(N-1):
+        zs[i] = x[i]/(1-csxs[i]+x[i])
+
+    ks = N - np.arange(1, N)
+
+    ys = _logit(zs) + np.log(ks)
+
+    return ys
+
+def usimp_log_jacobian(p):
+    """Returns the log of the Jacobian factor, 
+
+    .. math::
+
+      \left| \frac{\partial x}{\partial p} \right|
+
+    where :math:`x` are the unit simplex lengths.
+
+    """
+    p = np.atleast_1d(p)
+    N = p.shape[0]
+    zs = _usimp_zs(p)
+
+    xs = usimp_lengths(p)
+    csxs = np.cumsum(xs) - xs # Starts from zero
+
+    log_j_terms = np.log(zs) + np.log1p(-zs) + np.log1p(-csxs[:-1])
+
+    return np.sum(log_j_terms)
