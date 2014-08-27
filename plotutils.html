@@ -563,6 +563,93 @@ pickled version of the runner object.</p>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="plotutils.runner.PTSamplerRunner">
+<em class="property">class </em><tt class="descclassname">plotutils.runner.</tt><tt class="descname">PTSamplerRunner</tt><big>(</big><em>sampler</em>, <em>pts</em><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#plotutils.runner.EnsembleSamplerRunner" title="plotutils.runner.EnsembleSamplerRunner"><tt class="xref py py-class docutils literal"><span class="pre">plotutils.runner.EnsembleSamplerRunner</span></tt></a></p>
+<p>Runner class for the PTSampler; basically behaves as
+<a class="reference internal" href="#plotutils.runner.EnsembleSamplerRunner" title="plotutils.runner.EnsembleSamplerRunner"><tt class="xref py py-class docutils literal"><span class="pre">EnsembleSamplerRunner</span></tt></a>, but tailored to the different
+chain shape and behaviour of <tt class="xref py py-class docutils literal"><span class="pre">emcee.PTSampler</span></tt>.</p>
+<dl class="attribute">
+<dt id="plotutils.runner.PTSamplerRunner.acls">
+<tt class="descname">acls</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.acls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the estimate of the current chain&#8217;s autocorrelation lengths,
+using <a class="reference internal" href="#plotutils.autocorr.emcee_ptchain_autocorrelation_lengths" title="plotutils.autocorr.emcee_ptchain_autocorrelation_lengths"><tt class="xref py py-func docutils literal"><span class="pre">plotutils.autocorr.emcee_ptchain_autocorrelation_lengths()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.runner.PTSamplerRunner.burnedin_chain">
+<tt class="descname">burnedin_chain</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.burnedin_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a chain with the first 1/6 of the samples removed.  This
+chain corresponds to the samples that are then thinned to
+produce the <tt class="docutils literal"><span class="pre">thin_chain</span></tt> property.  There is, of course, no
+guarantee that this chain is actually burned in.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.runner.PTSamplerRunner.lnlikelihood">
+<tt class="descname">lnlikelihood</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.lnlikelihood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current state of the sampler&#8217;s lnlikelihood.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plotutils.runner.PTSamplerRunner.load_state">
+<tt class="descname">load_state</tt><big>(</big><em>dir</em><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.load_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a stored state from the given directory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plotutils.runner.PTSamplerRunner.rethin">
+<tt class="descname">rethin</tt><big>(</big><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.rethin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase the thinning parameter by a factor of two, modifying the
+stored chain and lnprob states accordingly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plotutils.runner.PTSamplerRunner.run_to_neff">
+<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the sampler, thinning as necessary, until <tt class="docutils literal"><span class="pre">neff</span></tt> effective
+ensembles are obtained.  When <tt class="docutils literal"><span class="pre">savedir</span></tt> is not <tt class="docutils literal"><span class="pre">None</span></tt>, the
+sampler will be periodically saved to the given directory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plotutils.runner.PTSamplerRunner.save_state">
+<tt class="descname">save_state</tt><big>(</big><em>dir</em><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.save_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the state of the runner stored chain, lnprob, lnlike, betas,
+and thin parameter in the given directory.  Three files will
+be created (approximately atomically, so the operation is
+nearly safe from interruption):</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">chain.npy.bz2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">lnprob.npy.bz2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">lnlike.npy.bz2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">betas.txt</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">thin.txt</span></tt></li>
+</ul>
+</div></blockquote>
+<p>Storing the current chain, lnprob, lnlike, betas (inverse
+temperatures), and the thin parameter.</p>
+<p>In addition, the file runner.pkl.bz2 will be created storing a
+pickled version of the runner object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.runner.PTSamplerRunner.thin_chain">
+<tt class="descname">thin_chain</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.thin_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a thinned chain (if possible), using
+<tt class="xref py py-func docutils literal"><span class="pre">ac.emcee_thinned_ptchain()</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="plotutils.runner.PTSamplerRunner.thin_flatchain">
+<tt class="descname">thin_flatchain</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.thin_flatchain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a thinned chain that has been flattened.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="plotutils.runner.load_runner">
 <tt class="descclassname">plotutils.runner.</tt><tt class="descname">load_runner</tt><big>(</big><em>dir</em><big>)</big><a class="headerlink" href="#plotutils.runner.load_runner" title="Permalink to this definition">¶</a></dt>
