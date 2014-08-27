@@ -48,10 +48,21 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
 
     .. math::
 
-      L = \sum_{j = 0}^{M L} \rho(j)
+      L = \rho(0) + 2 \sum_{j = 1}^{M L} \rho(j)
 
     In words: the ACL is estimated over a window that is at least
     :math:`M` ACLs long, with the constraint that :math:`ML < N/2`.
+
+    Defined in this way, the ACL gives the reduction factor between
+    the number of samples and the "effective" number of samples.  In
+    particular, the variance of the estimated mean of the series is
+    given by
+
+    .. math::
+
+      \left\langle \left( \frac{1}{N} \sum_{i=0}^{N-1} x_i - \mu
+      \right)^2 \right\rangle = \frac{\left\langle \left(x_i -
+      \mu\right)^2 \right\rangle}{N/L}
 
     Returns ``None`` if there is no such estimate possible (because
     the series is too short to fit :math:`2M` ACLs).
@@ -62,7 +73,7 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
 
     nmax = acf.shape[0]/2
 
-    acl_ests = np.cumsum(acf[:nmax])
+    acl_ests = 2.0*np.cumsum(acf[:nmax]) - 1.0
     sel = M*acl_ests < np.arange(0, nmax)
 
     if np.any(sel):
@@ -95,6 +106,18 @@ def emcee_chain_autocorrelation_lengths(chain, M=5, fburnin=None):
 
     return np.array([autocorrelation_length_estimate(np.mean(chain[:,istart:,k], axis=0)) for k in range(chain.shape[2])])
 
+def emcee_ptchain_autocorrelation_lengths(ptchain, M=5, fburnin=None):
+    r"""Returns an array of shape ``(Ntemp, Nparams)`` giving the estimated
+    autocorrelation lengths for each parameter across each temperature
+    of the parallel-tempered set of chains.  If a particular ACL
+    cannot be estimated, that element of the array will be ``None``.
+    See :func:`emcee_chain_autocorrelation_lengths` for a description
+    of the optional arguments.
+
+    """
+
+    return np.array([emcee_chain_autocorrelation_lengths(ptchain[i,...], M=M, fburnin=fburnin) for i in range(ptchain.shape[0])])
+
 def emcee_thinned_chain(chain, M=5, fburnin=None):
     r"""Returns a thinned, burned-in version of the emcee chain.
 
@@ -122,3 +145,24 @@ def emcee_thinned_chain(chain, M=5, fburnin=None):
     tau = int(np.ceil(np.max(acls)))
 
     return chain[:,istart::tau,:]
+
+def emcee_thinned_ptchain(ptchain, M=5, fburnin=None):
+    r"""Returns a thinned, burned in version of the emcee parallel-tempered
+    chains in ``ptchain``, or ``None`` if it is not possible to
+    estimate an ACL for some component of the chain.
+
+    """
+
+    if fburnin is None:
+        fburnin = _default_burnin(M)
+
+    istart = int(round(fburnin*ptchain.shape[2]))
+
+    acls = emcee_ptchain_autocorrelation_lengths(ptchain, M=M, fburnin=fburnin)
+
+    if any(ac is None for ac in acls.flatten()):
+        return None
+
+    tau = int(np.ceil(np.max(acls)))
+
+    return ptchain[:,:,istart::tau,:]
