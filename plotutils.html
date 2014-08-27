@@ -376,9 +376,17 @@ series:</p>
 \[L = \int_{-\infty}^\infty \rho(t) dt\]</div>
 <p>The estimate is the smallest <span class="math">\(L\)</span> such that</p>
 <div class="math">
-\[L = \sum_{j = 0}^{M L} \rho(j)\]</div>
+\[L = \rho(0) + 2 \sum_{j = 1}^{M L} \rho(j)\]</div>
 <p>In words: the ACL is estimated over a window that is at least
 <span class="math">\(M\)</span> ACLs long, with the constraint that <span class="math">\(ML &lt; N/2\)</span>.</p>
+<p>Defined in this way, the ACL gives the reduction factor between
+the number of samples and the &#8220;effective&#8221; number of samples.  In
+particular, the variance of the estimated mean of the series is
+given by</p>
+<div class="math">
+\[\left\langle \left( \frac{1}{N} \sum_{i=0}^{N-1} x_i - \mu
+\right)^2 \right\rangle = \frac{\left\langle \left(x_i -
+\mu\right)^2 \right\rangle}{N/L}\]</div>
 <p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if there is no such estimate possible (because
 the series is too short to fit <span class="math">\(2M\)</span> ACLs).</p>
 </dd></dl>
@@ -407,6 +415,17 @@ ACL is discarded.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="plotutils.autocorr.emcee_ptchain_autocorrelation_lengths">
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_ptchain_autocorrelation_lengths</tt><big>(</big><em>ptchain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_ptchain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an array of shape <tt class="docutils literal"><span class="pre">(Ntemp,</span> <span class="pre">Nparams)</span></tt> giving the estimated
+autocorrelation lengths for each parameter across each temperature
+of the parallel-tempered set of chains.  If a particular ACL
+cannot be estimated, that element of the array will be <tt class="docutils literal"><span class="pre">None</span></tt>.
+See <a class="reference internal" href="#plotutils.autocorr.emcee_chain_autocorrelation_lengths" title="plotutils.autocorr.emcee_chain_autocorrelation_lengths"><tt class="xref py py-func docutils literal"><span class="pre">emcee_chain_autocorrelation_lengths()</span></tt></a> for a description
+of the optional arguments.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="plotutils.autocorr.emcee_thinned_chain">
 <tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_thinned_chain</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_thinned_chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a thinned, burned-in version of the emcee chain.</p>
@@ -426,6 +445,14 @@ ACL is discarded.</li>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.autocorr.emcee_thinned_ptchain">
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_thinned_ptchain</tt><big>(</big><em>ptchain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_thinned_ptchain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a thinned, burned in version of the emcee parallel-tempered
+chains in <tt class="docutils literal"><span class="pre">ptchain</span></tt>, or <tt class="docutils literal"><span class="pre">None</span></tt> if it is not possible to
+estimate an ACL for some component of the chain.</p>
 </dd></dl>
 
 </div>
