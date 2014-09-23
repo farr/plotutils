@@ -175,6 +175,13 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
     selection algorithm.  Additional arguments passed to
     :func:`pp.contour`.
 
+    The algorithm uses a two-step process (see `this document
+    <https://dcc.ligo.org/LIGO-P1400054/public>`_) so that the
+    resulting credible areas will be unbiased.
+
+    :return: ``(kde, den)``, the KDE object that estimates the density
+      and an array of equal-quantile-spaced density values.
+
     :param pts: Array of shape ``(Npts, 2)`` that contains the points
       in question.
 
@@ -202,12 +209,20 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
     :param cmap: See :func:`pp.contour`.
 
     :param colors: See :func:`pp.contour`.
-      """
 
-    kde=ss.gaussian_kde(pts.T)
-    den=kde(pts.T)
-    densort=np.sort(den)[::-1]
+    """
+
     Npts=pts.shape[0]
+
+    kde_pts = pts[:Npts/2,:]
+    den_pts = pts[Npts/2:,:]
+
+    Nkde = kde_pts.shape[0]
+    Nden = den_pts.shape[0]
+
+    kde=ss.gaussian_kde(kde_pts.T)
+    den=kde(den_pts.T)
+    densort=np.sort(den)[::-1]
 
     if xmin is None:
         xmin = np.min(pts[:,0])
@@ -226,12 +241,14 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
 
     zvalues=[]
     for level in levels:
-        ilevel = int(Npts*level + 0.5)
-        if ilevel >= Npts:
-            ilevel = Npts-1
+        ilevel = int(Nden*level + 0.5)
+        if ilevel >= Nden:
+            ilevel = Nden-1
         zvalues.append(densort[ilevel])
 
     pp.contour(XS, YS, ZS, zvalues, colors=colors, cmap=cmap, *args, **kwargs)
+
+    return kde, densort
 
 def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, 
                                       cmap=None, colors=None, *args, **kwargs):

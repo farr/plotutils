@@ -134,7 +134,7 @@ Additional arguments are passed to matplotlib&#8217;s <tt class="docutils litera
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_emcee_chains">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains</tt><big>(</big><em>chain</em>, <em>truths=None</em>, <em>mean=True</em><big>)</big><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains</tt><big>(</big><em>chain</em>, <em>truths=None</em>, <em>mean=True</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_emcee_chains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produces a chain plot of the mean values of each variable at each
 step.  The chain should have the shape <tt class="docutils literal"><span class="pre">(nwalkers,</span> <span class="pre">nsteps,</span>
 <span class="pre">nvars)</span></tt>, and the resulting grid of plots will be as close to
@@ -198,11 +198,17 @@ value.</li>
 <dd><p>Plots the given probability interval contours, using a greedy
 selection algorithm.  Additional arguments passed to
 <tt class="xref py py-func docutils literal"><span class="pre">pp.contour()</span></tt>.</p>
+<p>The algorithm uses a two-step process (see <a class="reference external" href="https://dcc.ligo.org/LIGO-P1400054/public">this document</a>) so that the
+resulting credible areas will be unbiased.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><tt class="docutils literal"><span class="pre">(kde,</span> <span class="pre">den)</span></tt>, the KDE object that estimates the density
+and an array of equal-quantile-spaced density values.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>pts</strong> &#8211; Array of shape <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">2)</span></tt> that contains the points
 in question.</li>
 <li><strong>levels</strong> &#8211; Sequence of levels (between 0 and 1) of probability
@@ -393,7 +399,7 @@ the series is too short to fit <span class="math">\(2M\)</span> ACLs).</p>
 
 <dl class="function">
 <dt id="plotutils.autocorr.emcee_chain_autocorrelation_lengths">
-<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_chain_autocorrelation_lengths</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_chain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_chain_autocorrelation_lengths</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#emcee_chain_autocorrelation_lengths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.emcee_chain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an array giving the ACL for each parameter in the given
 emcee chain.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -416,7 +422,7 @@ ACL is discarded.</li>
 
 <dl class="function">
 <dt id="plotutils.autocorr.emcee_ptchain_autocorrelation_lengths">
-<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_ptchain_autocorrelation_lengths</tt><big>(</big><em>ptchain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_ptchain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_ptchain_autocorrelation_lengths</tt><big>(</big><em>ptchain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#emcee_ptchain_autocorrelation_lengths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.emcee_ptchain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an array of shape <tt class="docutils literal"><span class="pre">(Ntemp,</span> <span class="pre">Nparams)</span></tt> giving the estimated
 autocorrelation lengths for each parameter across each temperature
 of the parallel-tempered set of chains.  If a particular ACL
@@ -427,7 +433,7 @@ of the optional arguments.</p>
 
 <dl class="function">
 <dt id="plotutils.autocorr.emcee_thinned_chain">
-<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_thinned_chain</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_thinned_chain" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_thinned_chain</tt><big>(</big><em>chain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#emcee_thinned_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.emcee_thinned_chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a thinned, burned-in version of the emcee chain.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -449,7 +455,7 @@ ACL is discarded.</li>
 
 <dl class="function">
 <dt id="plotutils.autocorr.emcee_thinned_ptchain">
-<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_thinned_ptchain</tt><big>(</big><em>ptchain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="headerlink" href="#plotutils.autocorr.emcee_thinned_ptchain" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_thinned_ptchain</tt><big>(</big><em>ptchain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#emcee_thinned_ptchain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.emcee_thinned_ptchain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a thinned, burned in version of the emcee parallel-tempered
 chains in <tt class="docutils literal"><span class="pre">ptchain</span></tt>, or <tt class="docutils literal"><span class="pre">None</span></tt> if it is not possible to
 estimate an ACL for some component of the chain.</p>
@@ -472,7 +478,7 @@ using <a class="reference internal" href="#plotutils.autocorr.emcee_chain_autoco
 
 <dl class="attribute">
 <dt id="plotutils.runner.EnsembleSamplerRunner.burnedin_chain">
-<tt class="descname">burnedin_chain</tt><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.burnedin_chain" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">burnedin_chain</tt><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.burnedin_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.burnedin_chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a chain with the first 1/6 of the samples removed.  This
 chain corresponds to the samples that are then thinned to
 produce the <tt class="docutils literal"><span class="pre">thin_chain</span></tt> property.  There is, of course, no
@@ -499,7 +505,7 @@ guarantee that this chain is actually burned in.</p>
 
 <dl class="method">
 <dt id="plotutils.runner.EnsembleSamplerRunner.reset">
-<tt class="descname">reset</tt><big>(</big><em>pts=None</em><big>)</big><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.reset" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reset</tt><big>(</big><em>pts=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets the stored sampler and internal state.  If no <tt class="docutils literal"><span class="pre">pts</span></tt>
 argument is given, will use the last position of the sampler
 as the new starting position; otherwise, the new starting
@@ -523,7 +529,7 @@ stored ensembles (i.e. the sampler will be run for
 
 <dl class="method">
 <dt id="plotutils.runner.EnsembleSamplerRunner.run_to_neff">
-<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em><big>)</big><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.run_to_neff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the sampler, thinning as necessary, until <tt class="docutils literal"><span class="pre">neff</span></tt> effective
 ensembles are obtained.  When <tt class="docutils literal"><span class="pre">savedir</span></tt> is not <tt class="docutils literal"><span class="pre">None</span></tt>, the
 sampler will be periodically saved to the given directory.</p>
@@ -557,7 +563,7 @@ pickled version of the runner object.</p>
 
 <dl class="attribute">
 <dt id="plotutils.runner.EnsembleSamplerRunner.thin_flatchain">
-<tt class="descname">thin_flatchain</tt><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.thin_flatchain" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">thin_flatchain</tt><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.thin_flatchain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.thin_flatchain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a thinned chain that has been flattened.</p>
 </dd></dl>
 
@@ -565,21 +571,21 @@ pickled version of the runner object.</p>
 
 <dl class="class">
 <dt id="plotutils.runner.PTSamplerRunner">
-<em class="property">class </em><tt class="descclassname">plotutils.runner.</tt><tt class="descname">PTSamplerRunner</tt><big>(</big><em>sampler</em>, <em>pts</em><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">plotutils.runner.</tt><tt class="descname">PTSamplerRunner</tt><big>(</big><em>sampler</em>, <em>pts</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#plotutils.runner.EnsembleSamplerRunner" title="plotutils.runner.EnsembleSamplerRunner"><tt class="xref py py-class docutils literal"><span class="pre">plotutils.runner.EnsembleSamplerRunner</span></tt></a></p>
 <p>Runner class for the PTSampler; basically behaves as
 <a class="reference internal" href="#plotutils.runner.EnsembleSamplerRunner" title="plotutils.runner.EnsembleSamplerRunner"><tt class="xref py py-class docutils literal"><span class="pre">EnsembleSamplerRunner</span></tt></a>, but tailored to the different
 chain shape and behaviour of <tt class="xref py py-class docutils literal"><span class="pre">emcee.PTSampler</span></tt>.</p>
 <dl class="attribute">
 <dt id="plotutils.runner.PTSamplerRunner.acls">
-<tt class="descname">acls</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.acls" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">acls</tt><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.acls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.acls" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the estimate of the current chain&#8217;s autocorrelation lengths,
 using <a class="reference internal" href="#plotutils.autocorr.emcee_ptchain_autocorrelation_lengths" title="plotutils.autocorr.emcee_ptchain_autocorrelation_lengths"><tt class="xref py py-func docutils literal"><span class="pre">plotutils.autocorr.emcee_ptchain_autocorrelation_lengths()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="plotutils.runner.PTSamplerRunner.burnedin_chain">
-<tt class="descname">burnedin_chain</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.burnedin_chain" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">burnedin_chain</tt><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.burnedin_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.burnedin_chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a chain with the first 1/6 of the samples removed.  This
 chain corresponds to the samples that are then thinned to
 produce the <tt class="docutils literal"><span class="pre">thin_chain</span></tt> property.  There is, of course, no
@@ -588,26 +594,26 @@ guarantee that this chain is actually burned in.</p>
 
 <dl class="attribute">
 <dt id="plotutils.runner.PTSamplerRunner.lnlikelihood">
-<tt class="descname">lnlikelihood</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.lnlikelihood" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">lnlikelihood</tt><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.lnlikelihood"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.lnlikelihood" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the current state of the sampler&#8217;s lnlikelihood.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="plotutils.runner.PTSamplerRunner.load_state">
-<tt class="descname">load_state</tt><big>(</big><em>dir</em><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.load_state" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">load_state</tt><big>(</big><em>dir</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.load_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.load_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a stored state from the given directory.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="plotutils.runner.PTSamplerRunner.rethin">
-<tt class="descname">rethin</tt><big>(</big><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.rethin" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rethin</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.rethin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.rethin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increase the thinning parameter by a factor of two, modifying the
 stored chain and lnprob states accordingly.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="plotutils.runner.PTSamplerRunner.run_to_neff">
-<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.run_to_neff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the sampler, thinning as necessary, until <tt class="docutils literal"><span class="pre">neff</span></tt> effective
 ensembles are obtained.  When <tt class="docutils literal"><span class="pre">savedir</span></tt> is not <tt class="docutils literal"><span class="pre">None</span></tt>, the
 sampler will be periodically saved to the given directory.</p>
@@ -615,7 +621,7 @@ sampler will be periodically saved to the given directory.</p>
 
 <dl class="method">
 <dt id="plotutils.runner.PTSamplerRunner.save_state">
-<tt class="descname">save_state</tt><big>(</big><em>dir</em><big>)</big><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.save_state" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">save_state</tt><big>(</big><em>dir</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.save_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.save_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the state of the runner stored chain, lnprob, lnlike, betas,
 and thin parameter in the given directory.  Three files will
 be created (approximately atomically, so the operation is
@@ -637,14 +643,14 @@ pickled version of the runner object.</p>
 
 <dl class="attribute">
 <dt id="plotutils.runner.PTSamplerRunner.thin_chain">
-<tt class="descname">thin_chain</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.thin_chain" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">thin_chain</tt><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.thin_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.thin_chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a thinned chain (if possible), using
 <tt class="xref py py-func docutils literal"><span class="pre">ac.emcee_thinned_ptchain()</span></tt></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="plotutils.runner.PTSamplerRunner.thin_flatchain">
-<tt class="descname">thin_flatchain</tt><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.thin_flatchain" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">thin_flatchain</tt><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.thin_flatchain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.thin_flatchain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a thinned chain that has been flattened.</p>
 </dd></dl>
 
@@ -652,7 +658,7 @@ pickled version of the runner object.</p>
 
 <dl class="function">
 <dt id="plotutils.runner.load_runner">
-<tt class="descclassname">plotutils.runner.</tt><tt class="descname">load_runner</tt><big>(</big><em>dir</em><big>)</big><a class="headerlink" href="#plotutils.runner.load_runner" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.runner.</tt><tt class="descname">load_runner</tt><big>(</big><em>dir</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#load_runner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.load_runner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the saved runner from the given directory.</p>
 </dd></dl>
 
@@ -700,7 +706,7 @@ with it through the <a class="reference internal" href="#plotutils.parameterizat
 
 <dl class="function">
 <dt id="plotutils.parameterizations.usimp_lengths">
-<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_lengths</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#plotutils.parameterizations.usimp_lengths" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_lengths</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#usimp_lengths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.usimp_lengths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given <tt class="docutils literal"><span class="pre">N-1</span></tt> parameters, <tt class="docutils literal"><span class="pre">p</span></tt>, returns <tt class="docutils literal"><span class="pre">N</span></tt> positive values that
 sum to one.  The transformation comes from the Stan manual.
 Imagine a stick that begins with unit length; the parameters are
@@ -711,7 +717,7 @@ lengths.</p>
 
 <dl class="function">
 <dt id="plotutils.parameterizations.usimp_log_jacobian">
-<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_log_jacobian</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#plotutils.parameterizations.usimp_log_jacobian" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_log_jacobian</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#usimp_log_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.usimp_log_jacobian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the log of the Jacobian factor,</p>
 <blockquote>
 <div><div class="math">
@@ -725,7 +731,7 @@ ight|</p>
 
 <dl class="function">
 <dt id="plotutils.parameterizations.usimp_parameters">
-<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_parameters</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#plotutils.parameterizations.usimp_parameters" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_parameters</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#usimp_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.usimp_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <tt class="docutils literal"><span class="pre">N-1</span></tt> unit simplex parameters that will produce the
 <tt class="docutils literal"><span class="pre">N</span></tt> lengths <tt class="docutils literal"><span class="pre">x</span></tt>.</p>
 </dd></dl>
@@ -898,7 +904,7 @@ indicating which points lie within the contour.</td>
     </div>
     <div class="footer">
         &copy; Copyright 2013, Will M. Farr.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
