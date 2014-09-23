@@ -73,7 +73,7 @@ def autocorrelation_length_estimate(series, acf=None, M=5):
 
     nmax = acf.shape[0]/2
 
-    acl_ests = 2.0*np.cumsum(np.abs(acf[:nmax])) - 1.0
+    acl_ests = 2.0*np.cumsum(acf[:nmax]) - 1.0
 
     sel = M*acl_ests < np.arange(0, nmax)
 
