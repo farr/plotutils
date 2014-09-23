@@ -133,7 +133,83 @@
 
     <span class="n">expts</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>
 
-    <span class="k">return</span> <span class="n">N</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="n">expts</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">N</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="n">expts</span><span class="p">)</span>
+</div>
+<span class="k">def</span> <span class="nf">_logit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_invlogit</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">y</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">_usimp_zs</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">ks</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    
+    <span class="n">zs</span> <span class="o">=</span> <span class="n">_invlogit</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ks</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">zs</span>
+
+<div class="viewcode-block" id="usimp_lengths"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.usimp_lengths">[docs]</a><span class="k">def</span> <span class="nf">usimp_lengths</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given ``N-1`` parameters, ``p``, returns ``N`` positive values that</span>
+<span class="sd">    sum to one.  The transformation comes from the Stan manual.</span>
+<span class="sd">    Imagine a stick that begins with unit length; the parameters are</span>
+<span class="sd">    logit-transformed fractions of the amount of the stick remaining</span>
+<span class="sd">    that is broken off in each of ``N-1`` steps to produce the ``N``</span>
+<span class="sd">    lengths.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="n">zs</span> <span class="o">=</span> <span class="n">_usimp_zs</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">zs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">xs</span><span class="p">[:</span><span class="n">i</span><span class="p">]))</span>
+    <span class="n">xs</span><span class="p">[</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">xs</span><span class="p">[:</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">xs</span>
+</div>
+<div class="viewcode-block" id="usimp_parameters"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.usimp_parameters">[docs]</a><span class="k">def</span> <span class="nf">usimp_parameters</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the ``N-1`` unit simplex parameters that will produce the</span>
+<span class="sd">    ``N`` lengths ``x``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">csxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">zs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">csxs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="n">ks</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">_logit</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ks</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ys</span>
+</div>
+<div class="viewcode-block" id="usimp_log_jacobian"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.usimp_log_jacobian">[docs]</a><span class="k">def</span> <span class="nf">usimp_log_jacobian</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the log of the Jacobian factor, </span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">      \left| \frac{\partial x}{\partial p} \right|</span>
+
+<span class="sd">    where :math:`x` are the unit simplex lengths.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">zs</span> <span class="o">=</span> <span class="n">_usimp_zs</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">usimp_lengths</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">csxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">-</span> <span class="n">xs</span> <span class="c"># Starts from zero</span>
+
+    <span class="n">log_j_terms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="o">-</span><span class="n">zs</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="o">-</span><span class="n">csxs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">log_j_terms</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -173,7 +249,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Will M. Farr.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
