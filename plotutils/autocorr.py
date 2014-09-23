@@ -8,6 +8,7 @@ implementation details differ.
 
 """
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 def _next_power_of_two(i):
@@ -167,3 +168,23 @@ def emcee_thinned_ptchain(ptchain, M=5, fburnin=None):
     tau = int(np.ceil(np.max(acls)))
 
     return ptchain[:,:,istart::tau,:]
+
+def plot_emcee_chain_autocorrelation_functions(chain, fburnin=None):
+    r"""Plots a grid of the autocorrelation function (post burnin) for each
+    of the parameters in the given chain.
+    
+    """
+
+    if fburnin is None:
+        fburnin = _default_burnin(5)
+
+    istart = int(round(fburnin*chain.shape[1]))
+
+    chain = chain[:,istart:,:]
+
+    npar = chain.shape[2]
+    nside = int(np.ceil(np.sqrt(npar)))
+
+    for i in range(npar):
+        plt.subplot(nside, nside, i+1)
+        plt.plot(autocorrelation_function(np.mean(chain[:,:,i], axis=0)))

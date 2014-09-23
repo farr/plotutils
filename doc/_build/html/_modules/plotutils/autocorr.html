@@ -58,6 +58,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">def</span> <span class="nf">_next_power_of_two</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
@@ -123,7 +124,7 @@
 
     <span class="n">nmax</span> <span class="o">=</span> <span class="n">acf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span>
 
-    <span class="n">acl_ests</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">acf</span><span class="p">[:</span><span class="n">nmax</span><span class="p">]))</span> <span class="o">-</span> <span class="mf">1.0</span>
+    <span class="n">acl_ests</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">acf</span><span class="p">[:</span><span class="n">nmax</span><span class="p">])</span> <span class="o">-</span> <span class="mf">1.0</span>
 
     <span class="n">sel</span> <span class="o">=</span> <span class="n">M</span><span class="o">*</span><span class="n">acl_ests</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
 
@@ -216,7 +217,27 @@
 
     <span class="n">tau</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">acls</span><span class="p">)))</span>
 
-    <span class="k">return</span> <span class="n">ptchain</span><span class="p">[:,:,</span><span class="n">istart</span><span class="p">::</span><span class="n">tau</span><span class="p">,:]</span></div>
+    <span class="k">return</span> <span class="n">ptchain</span><span class="p">[:,:,</span><span class="n">istart</span><span class="p">::</span><span class="n">tau</span><span class="p">,:]</span>
+</div>
+<div class="viewcode-block" id="plot_emcee_chain_autocorrelation_functions"><a class="viewcode-back" href="../../plotutils.html#plotutils.autocorr.plot_emcee_chain_autocorrelation_functions">[docs]</a><span class="k">def</span> <span class="nf">plot_emcee_chain_autocorrelation_functions</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Plots a grid of the autocorrelation function (post burnin) for each</span>
+<span class="sd">    of the parameters in the given chain.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">fburnin</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">fburnin</span> <span class="o">=</span> <span class="n">_default_burnin</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="n">istart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">fburnin</span><span class="o">*</span><span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">chain</span><span class="p">[:,</span><span class="n">istart</span><span class="p">:,:]</span>
+
+    <span class="n">npar</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">nside</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">npar</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">npar</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">nside</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">autocorrelation_function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)))</span></div>
 </pre></div>
 
           </div>
