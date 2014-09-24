@@ -170,7 +170,7 @@ class EnsembleSamplerRunner(object):
 
         """
         
-        while self.thin_chain is None or self.thin_chain.shape[1] < neff:
+        while self.chain.shape[1] == 0 or self.thin_chain is None or self.thin_chain.shape[1] < neff:
             self.run_mcmc(neff)
             
             print 'Accumulated ', self.chain.shape[1], ' ensembles'
