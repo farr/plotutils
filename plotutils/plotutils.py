@@ -179,9 +179,6 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
     <https://dcc.ligo.org/LIGO-P1400054/public>`_) so that the
     resulting credible areas will be unbiased.
 
-    :return: ``(kde, den)``, the KDE object that estimates the density
-      and an array of equal-quantile-spaced density values.
-
     :param pts: Array of shape ``(Npts, 2)`` that contains the points
       in question.
 
@@ -248,7 +245,60 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
 
     pp.contour(XS, YS, ZS, zvalues, colors=colors, cmap=cmap, *args, **kwargs)
 
-    return kde, densort
+
+def greedy_kde_areas_2d(pts, levels, Nx=100, Ny=100):
+    """Returns an estimate of the area within the given credible levels
+    for the posterior represented by ``pts``.  
+
+    The algorithm uses a two-step process (see `this document
+    <https://dcc.ligo.org/LIGO-P1400054/public>`_) so that the
+    resulting credible areas will be unbiased.
+
+    :param pts: An ``(Npts, 2)`` array giving samples from the
+      posterior.  The algorithm assumes that each point is an
+      independent draw from the posterior.
+
+    :param levels: The credible levels for which the areas are
+      desired.
+
+    :param Nx: The number of subdivisions along the first parameter to
+      be used for the credible area integral.
+
+    :param Ny: The number of subdivisions along the second parameter
+      to be used for the credible area integral.
+
+    """
+
+    pts = np.random.permutation(pts)
+
+    Npts = pts.shape[0]
+    kde_pts = pts[:Npts/2, :]
+    den_pts = pts[Npts/2:, :]
+
+    kde = ss.gaussian_kde(kde_pts.T)
+    den = kde(den_pts.T)
+    densort = np.sort(den)[::-1]
+
+    xs = np.linspace(np.min(pts[:,0]), np.max(pts[:,0]), Nx)
+    ys = np.linspace(np.min(pts[:,1]), np.max(pts[:,1]), Ny)
+
+    dx = xs[1]-xs[0]
+    dy = ys[1]-ys[0]
+
+    xmids = 0.5*(xs[:-1] + xs[1:])
+    ymids = 0.5*(ys[:-1] + ys[1:])
+
+    XMIDS, YMIDS = np.meshgrid(xmids, ymids)
+    ZS = kde(np.row_stack((XMIDS.flatten(), YMIDS.flatten()))).reshape(XMIDS.shape)
+
+    areas = []
+    for l in levels:
+        d = densort[int(round(l*den_pts.shape[0]))]
+        count = np.sum(ZS > d)
+        areas.append(dx*dy*count)
+
+    return areas
+    
 
 def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, 
                                       cmap=None, colors=None, *args, **kwargs):
