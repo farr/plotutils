@@ -90,7 +90,7 @@ value.</li>
 
 <dl class="function">
 <dt id="plotutils.plotutils.greedy_kde_areas_2d">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">greedy_kde_areas_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>Nx=100</em>, <em>Ny=100</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#greedy_kde_areas_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.greedy_kde_areas_2d" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">greedy_kde_areas_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>truth=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#greedy_kde_areas_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.greedy_kde_areas_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an estimate of the area within the given credible levels
 for the posterior represented by <tt class="docutils literal"><span class="pre">pts</span></tt>.</p>
 <p>The algorithm uses a two-step process (see <a class="reference external" href="https://dcc.ligo.org/LIGO-P1400054/public">this document</a>) so that the
@@ -99,7 +99,7 @@ resulting credible areas will be unbiased.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>pts</strong> &#8211; An <tt class="docutils literal"><span class="pre">(Npts,</span> <span class="pre">2)</span></tt> array giving samples from the
 posterior.  The algorithm assumes that each point is an
 independent draw from the posterior.</li>
@@ -109,7 +109,19 @@ desired.</li>
 be used for the credible area integral.</li>
 <li><strong>Ny</strong> &#8211; The number of subdivisions along the second parameter
 to be used for the credible area integral.</li>
+<li><strong>truth</strong> &#8211; If given, then the area contained within the
+posterior contours that are more probable than the posterior
+evaluated at <tt class="docutils literal"><span class="pre">truth</span></tt> will be returned.  Also, the credible
+level that corresponds to truth is returned.  The area quantity
+is sometimes called the &#8216;searched area&#8217;, since it is the area a
+greedy search algorithm will cover before finding the true
+values.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If <tt class="docutils literal"><span class="pre">truth</span></tt> is None, <tt class="docutils literal"><span class="pre">areas</span></tt>, an array of the same
+shape as <tt class="docutils literal"><span class="pre">levels</span></tt> giving the credible areas; if <tt class="docutils literal"><span class="pre">truth</span></tt> is
+not <tt class="docutils literal"><span class="pre">None</span></tt> then <tt class="docutils literal"><span class="pre">(areas,</span> <span class="pre">searched_area,</span> <span class="pre">p_value)</span></tt>.</p>
 </td>
 </tr>
 </tbody>
