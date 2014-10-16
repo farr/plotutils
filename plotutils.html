@@ -711,6 +711,55 @@ pickled version of the runner object.</p>
 <p>Useful parameterizations for various commonly-found elements of
 models.</p>
 <dl class="function">
+<dt id="plotutils.parameterizations.bounded_log_jacobian">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">bounded_log_jacobian</tt><big>(</big><em>p</em>, <em>low=-inf</em>, <em>high=inf</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#bounded_log_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.bounded_log_jacobian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log of the Jacobian factor</p>
+<div class="math">
+\[\left| \frac{\partial x}{\partial p} \right|\]</div>
+<p>for the bounded parameters p.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.parameterizations.bounded_params">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">bounded_params</tt><big>(</big><em>x</em>, <em>low=-inf</em>, <em>high=inf</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#bounded_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.bounded_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameters associated with the values <tt class="docutils literal"><span class="pre">x</span></tt> that are
+bounded between <tt class="docutils literal"><span class="pre">low</span></tt> and <tt class="docutils literal"><span class="pre">high</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.parameterizations.bounded_values">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">bounded_values</tt><big>(</big><em>p</em>, <em>low=-inf</em>, <em>high=inf</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#bounded_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.bounded_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the values, each bounded between <tt class="docutils literal"><span class="pre">low</span></tt> and <tt class="docutils literal"><span class="pre">high</span></tt> (one
+of these can be <tt class="docutils literal"><span class="pre">None</span></tt>) associated with the parameters <tt class="docutils literal"><span class="pre">p</span></tt>.</p>
+<p>The parameterisation is</p>
+<div class="math">
+\[p = \log\left( x - \mathrm{low} \right) - \log\left( \mathrm{high} - x \right)\]</div>
+<p>if both lower and upper limits are given, and</p>
+<div class="math">
+\[p = \log\left( x - \mathrm{low} \right)\]</div>
+<p>or</p>
+<div class="math">
+\[p = -\log\left( \mathrm{high} - x \right)\]</div>
+<p>if only one limit is given.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> &#8211; The parameters associated with the values.
+<span class="math">\(-\infty &lt; p &lt; \infty\)</span></li>
+<li><strong>low</strong> &#8211; The lower bound on the parameters.  Can be a vector
+that matches the shape of <tt class="docutils literal"><span class="pre">p</span></tt>.</li>
+<li><strong>high</strong> &#8211; The upper bound on the parameters.  Can be a vector
+that matches the shape of <tt class="docutils literal"><span class="pre">p</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="plotutils.parameterizations.cov_log_jacobian">
 <tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">cov_log_jacobian</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#cov_log_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.cov_log_jacobian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the log of the determinant of the Jacobian of the
