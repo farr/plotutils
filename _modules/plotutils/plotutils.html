@@ -229,9 +229,6 @@
 <span class="sd">    &lt;https://dcc.ligo.org/LIGO-P1400054/public&gt;`_) so that the</span>
 <span class="sd">    resulting credible areas will be unbiased.</span>
 
-<span class="sd">    :return: ``(kde, den)``, the KDE object that estimates the density</span>
-<span class="sd">      and an array of equal-quantile-spaced density values.</span>
-
 <span class="sd">    :param pts: Array of shape ``(Npts, 2)`` that contains the points</span>
 <span class="sd">      in question.</span>
 
@@ -298,7 +295,60 @@
 
     <span class="n">pp</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">XS</span><span class="p">,</span> <span class="n">YS</span><span class="p">,</span> <span class="n">ZS</span><span class="p">,</span> <span class="n">zvalues</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">kde</span><span class="p">,</span> <span class="n">densort</span>
+</div>
+<div class="viewcode-block" id="greedy_kde_areas_2d"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.greedy_kde_areas_2d">[docs]</a><span class="k">def</span> <span class="nf">greedy_kde_areas_2d</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ny</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns an estimate of the area within the given credible levels</span>
+<span class="sd">    for the posterior represented by ``pts``.  </span>
+
+<span class="sd">    The algorithm uses a two-step process (see `this document</span>
+<span class="sd">    &lt;https://dcc.ligo.org/LIGO-P1400054/public&gt;`_) so that the</span>
+<span class="sd">    resulting credible areas will be unbiased.</span>
+
+<span class="sd">    :param pts: An ``(Npts, 2)`` array giving samples from the</span>
+<span class="sd">      posterior.  The algorithm assumes that each point is an</span>
+<span class="sd">      independent draw from the posterior.</span>
+
+<span class="sd">    :param levels: The credible levels for which the areas are</span>
+<span class="sd">      desired.</span>
+
+<span class="sd">    :param Nx: The number of subdivisions along the first parameter to</span>
+<span class="sd">      be used for the credible area integral.</span>
+
+<span class="sd">    :param Ny: The number of subdivisions along the second parameter</span>
+<span class="sd">      to be used for the credible area integral.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+
+    <span class="n">Npts</span> <span class="o">=</span> <span class="n">pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">kde_pts</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[:</span><span class="n">Npts</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">den_pts</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[</span><span class="n">Npts</span><span class="o">/</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:]</span>
+
+    <span class="n">kde</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">kde_pts</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">den_pts</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">densort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">den</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pts</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pts</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">Nx</span><span class="p">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pts</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pts</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">Ny</span><span class="p">)</span>
+
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">ys</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">xmids</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">xs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">ymids</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">ys</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">ys</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="n">XMIDS</span><span class="p">,</span> <span class="n">YMIDS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xmids</span><span class="p">,</span> <span class="n">ymids</span><span class="p">)</span>
+    <span class="n">ZS</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">row_stack</span><span class="p">((</span><span class="n">XMIDS</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">YMIDS</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">XMIDS</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">areas</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">densort</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">l</span><span class="o">*</span><span class="n">den_pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ZS</span> <span class="o">&gt;</span> <span class="n">d</span><span class="p">)</span>
+        <span class="n">areas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dx</span><span class="o">*</span><span class="n">dy</span><span class="o">*</span><span class="n">count</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">areas</span>
+    
 </div>
 <div class="viewcode-block" id="plot_greedy_histogram_interval_2d"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_greedy_histogram_interval_2d">[docs]</a><span class="k">def</span> <span class="nf">plot_greedy_histogram_interval_2d</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ny</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
                                       <span class="n">cmap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
