@@ -160,3 +160,112 @@ def usimp_log_jacobian(p):
     log_j_terms = np.log(zs) + np.log1p(-zs) + np.log1p(-csxs[:-1])
 
     return np.sum(log_j_terms)
+
+def bounded_values(p, low=np.NINF, high=np.inf):
+    r"""Returns the values, each bounded between ``low`` and ``high`` (one
+    of these can be ``None``) associated with the parameters ``p``.
+
+    The parameterisation is 
+
+    .. math::
+
+      p = \log\left( x - \mathrm{low} \right) - \log\left( \mathrm{high} - x \right)
+
+    if both lower and upper limits are given, and 
+
+    .. math::
+
+      p = \log\left( x - \mathrm{low} \right)
+
+    or 
+
+    .. math::
+
+      p = -\log\left( \mathrm{high} - x \right)
+
+    if only one limit is given.
+
+    :param p: The parameters associated with the values.
+      :math:`-\infty < p < \infty`
+
+    :param low: The lower bound on the parameters.  Can be a vector
+      that matches the shape of ``p``.
+
+    :param high: The upper bound on the parameters.  Can be a vector
+      that matches the shape of ``p``.
+
+    """
+
+    p = np.atleast_1d(p)
+    x = np.zeros(p.shape)
+
+    for i, (p, l, h) in enumerate(np.broadcast(p, low, high)):
+        if l == np.NINF:
+            if h == np.inf:
+                raise ValueError('bounded_values: must supply at least one limit')
+            else:
+                # Only upper limit
+                x[i] = h - np.exp(-p)
+        else:
+            if h == np.inf:
+                # Only lower limit.
+                x[i] = l + np.exp(p)
+            else:
+                # Both bounds
+                ep = np.exp(p)
+                x[i] = (ep*h + l)/(ep + 1)
+
+    return x
+
+def bounded_params(x, low=np.NINF, high=np.inf):
+    """Returns the parameters associated with the values ``x`` that are
+    bounded between ``low`` and ``high``.
+
+    """
+
+    x = np.atleast_1d(x)
+    p = np.zeros(x.shape)
+
+    for i, (x, l, h) in enumerate(np.broadcast(x, low, high)):
+        if l == np.NINF:
+            if h == np.inf:
+                raise ValueError('bounded_params: must supply at least one limit')
+            else:
+                # Only upper limit
+                p[i] = -np.log(h - x)
+        else:
+            if h == np.inf:
+                # Only lower limit
+                p[i] = np.log(x - l)
+            else:
+                p[i] = np.log(x - l) - np.log(h - x)
+
+def bounded_log_jacobian(p, low=np.NINF, high=np.inf):
+    r"""Returns the log of the Jacobian factor 
+
+    .. math::
+
+      \left| \frac{\partial x}{\partial p} \right|
+
+    for the bounded parameters p.
+
+    """
+
+    lj = 0.0
+
+    for p, l, h in np.broadcast(p, low, high):
+        if l == np.NINF:
+            if h == np.inf:
+                raise ValueError('bounded_log_jacobian: must supply at least one limit')
+            else:
+                # Only upper limit
+                lj -= p
+        else:
+            if h == np.inf:
+                # Only lower limit
+                lj += p
+            else:
+                # Both limits
+                lj += np.log(h-l) + p - 2.0*np.log1p(np.exp(p))
+
+    return lj
