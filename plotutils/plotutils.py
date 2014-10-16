@@ -1,3 +1,4 @@
+import bisect
 import bounded_kde as bk
 import bz2
 import gzip
@@ -245,8 +246,7 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
 
     pp.contour(XS, YS, ZS, zvalues, colors=colors, cmap=cmap, *args, **kwargs)
 
-
-def greedy_kde_areas_2d(pts, levels, Nx=100, Ny=100):
+def greedy_kde_areas_2d(pts, levels, Nx=100, Ny=100, truth=None):
     """Returns an estimate of the area within the given credible levels
     for the posterior represented by ``pts``.  
 
@@ -267,9 +267,32 @@ def greedy_kde_areas_2d(pts, levels, Nx=100, Ny=100):
     :param Ny: The number of subdivisions along the second parameter
       to be used for the credible area integral.
 
+    :param truth: If given, then the area contained within the
+      posterior contours that are more probable than the posterior
+      evaluated at ``truth`` will be returned.  Also, the credible
+      level that corresponds to truth is returned.  The area quantity
+      is sometimes called the 'searched area', since it is the area a
+      greedy search algorithm will cover before finding the true
+      values.
+
+    :return: If ``truth`` is None, ``areas``, an array of the same
+      shape as ``levels`` giving the credible areas; if ``truth`` is
+      not ``None`` then ``(areas, searched_area, p_value)``.
+
     """
 
     pts = np.random.permutation(pts)
+
+    mu = np.mean(pts, axis=0)
+    cov = np.cov(pts, rowvar=0)
+
+    L = np.linalg.cholesky(cov)
+    detL = L[0,0]*L[1,1]
+
+    pts = np.linalg.solve(L, (pts - mu).T).T
+
+    if truth is not None:
+        truth = np.linalg.solve(L, truth-mu)
 
     Npts = pts.shape[0]
     kde_pts = pts[:Npts/2, :]
@@ -295,9 +318,17 @@ def greedy_kde_areas_2d(pts, levels, Nx=100, Ny=100):
     for l in levels:
         d = densort[int(round(l*den_pts.shape[0]))]
         count = np.sum(ZS > d)
-        areas.append(dx*dy*count)
+        areas.append(dx*dy*count*detL)
 
-    return areas
+    if truth is not None:
+        td = kde(truth)
+        count = np.sum(ZS > td)
+        tarea = dx*dy*count*detL
+        index = bisect.bisect(densort[::-1], td)
+        p_value = 1-float(index)/densort.shape[0]
+        return areas, tarea, p_value
+    else:
+        return areas
     
 
 def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, 
