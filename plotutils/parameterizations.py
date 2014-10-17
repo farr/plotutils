@@ -141,7 +141,7 @@ def usimp_parameters(x):
     return ys
 
 def usimp_log_jacobian(p):
-    """Returns the log of the Jacobian factor, 
+    r"""Returns the log of the Jacobian factor,
 
     .. math::
 
@@ -150,6 +150,7 @@ def usimp_log_jacobian(p):
     where :math:`x` are the unit simplex lengths.
 
     """
+
     p = np.atleast_1d(p)
     N = p.shape[0]
     zs = _usimp_zs(p)
@@ -269,3 +270,58 @@ def bounded_log_jacobian(p, low=np.NINF, high=np.inf):
                 lj += np.log(h-l) + p - 2.0*np.log1p(np.exp(p))
 
     return lj
+
+def increasing_values(p):
+    r"""Returns the values for parameters ``p`` which are constrained to be
+    always increasing.
+
+    The parameterisation is 
+
+    .. math::
+
+      p_i = \begin{cases}
+        x_0 & i = 0 \\
+        \log\left( x_i - x_{i-1} \right) & \mathrm{otherwise}
+      \end{cases}
+
+    Note that :math:`-\infty < p < \infty`.
+
+    """
+
+    p = np.atleast_1d(p)
+    x = np.zeros(p.shape)
+
+    x[0] = p[0]
+    for i in range(1, x.shape[0]):
+        x[i] = x[i-1] + np.exp(p[i])
+
+    return x
+
+def increasing_params(x):
+    """Returns the parameters associated with the values ``x`` which
+    should be increasing.  
+
+    """
+
+    x = np.atleast_1d(x)
+    x = np.sort(x)
+    p = np.zeros(x.shape)
+
+    p[0] = x[0]
+    for i in range(1, x.shape[0]):
+        p[i] = np.log(x[i] - x[i-1])
+
+    return p
+
+def increasing_log_jacobian(p):
+    r"""Returns the log of the Jacobian factor
+
+    .. math::
+
+      \left| \frac{\partial x}{\partial p} \right|
+
+    for the parameters p.
+
+    """
+
+    return np.sum(p[1:])

@@ -797,6 +797,36 @@ with it through the <a class="reference internal" href="#plotutils.parameterizat
 </dd></dl>
 
 <dl class="function">
+<dt id="plotutils.parameterizations.increasing_log_jacobian">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">increasing_log_jacobian</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#increasing_log_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.increasing_log_jacobian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log of the Jacobian factor</p>
+<div class="math">
+\[\left| \frac{\partial x}{\partial p} \right|\]</div>
+<p>for the parameters p.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.parameterizations.increasing_params">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">increasing_params</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#increasing_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.increasing_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameters associated with the values <tt class="docutils literal"><span class="pre">x</span></tt> which
+should be increasing.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotutils.parameterizations.increasing_values">
+<tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">increasing_values</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#increasing_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.increasing_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the values for parameters <tt class="docutils literal"><span class="pre">p</span></tt> which are constrained to be
+always increasing.</p>
+<p>The parameterisation is</p>
+<div class="math">
+\[\begin{split}p_i = \begin{cases}
+  x_0 &amp; i = 0 \\
+  \log\left( x_i - x_{i-1} \right) &amp; \mathrm{otherwise}
+\end{cases}\end{split}\]</div>
+<p>Note that <span class="math">\(-\infty &lt; p &lt; \infty\)</span>.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="plotutils.parameterizations.usimp_lengths">
 <tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_lengths</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#usimp_lengths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.usimp_lengths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given <tt class="docutils literal"><span class="pre">N-1</span></tt> parameters, <tt class="docutils literal"><span class="pre">p</span></tt>, returns <tt class="docutils literal"><span class="pre">N</span></tt> positive values that
@@ -811,14 +841,9 @@ lengths.</p>
 <dt id="plotutils.parameterizations.usimp_log_jacobian">
 <tt class="descclassname">plotutils.parameterizations.</tt><tt class="descname">usimp_log_jacobian</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="_modules/plotutils/parameterizations.html#usimp_log_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.parameterizations.usimp_log_jacobian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the log of the Jacobian factor,</p>
-<blockquote>
-<div><div class="math">
-\[\left| \]</div>
-</div></blockquote>
-<p>rac{partial x}{partial p} 
-ight|</p>
-<blockquote>
-<div>where <span class="math">\(x\)</span> are the unit simplex lengths.</div></blockquote>
+<div class="math">
+\[\left| \frac{\partial x}{\partial p} \right|\]</div>
+<p>where <span class="math">\(x\)</span> are the unit simplex lengths.</p>
 </dd></dl>
 
 <dl class="function">
