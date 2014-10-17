@@ -191,7 +191,7 @@
     <span class="k">return</span> <span class="n">ys</span>
 </div>
 <div class="viewcode-block" id="usimp_log_jacobian"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.usimp_log_jacobian">[docs]</a><span class="k">def</span> <span class="nf">usimp_log_jacobian</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the log of the Jacobian factor, </span>
+    <span class="sd">r&quot;&quot;&quot;Returns the log of the Jacobian factor,</span>
 
 <span class="sd">    .. math::</span>
 
@@ -200,6 +200,7 @@
 <span class="sd">    where :math:`x` are the unit simplex lengths.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
     <span class="n">N</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">zs</span> <span class="o">=</span> <span class="n">_usimp_zs</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
@@ -318,7 +319,62 @@
                 <span class="c"># Both limits</span>
                 <span class="n">lj</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">h</span><span class="o">-</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="n">p</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">lj</span></div>
+    <span class="k">return</span> <span class="n">lj</span>
+</div>
+<div class="viewcode-block" id="increasing_values"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.increasing_values">[docs]</a><span class="k">def</span> <span class="nf">increasing_values</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Returns the values for parameters ``p`` which are constrained to be</span>
+<span class="sd">    always increasing.</span>
+
+<span class="sd">    The parameterisation is </span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">      p_i = \begin{cases}</span>
+<span class="sd">        x_0 &amp; i = 0 \\</span>
+<span class="sd">        \log\left( x_i - x_{i-1} \right) &amp; \mathrm{otherwise}</span>
+<span class="sd">      \end{cases}</span>
+
+<span class="sd">    Note that :math:`-\infty &lt; p &lt; \infty`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">x</span>
+</div>
+<div class="viewcode-block" id="increasing_params"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.increasing_params">[docs]</a><span class="k">def</span> <span class="nf">increasing_params</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the parameters associated with the values ``x`` which</span>
+<span class="sd">    should be increasing.  </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">p</span>
+</div>
+<div class="viewcode-block" id="increasing_log_jacobian"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.increasing_log_jacobian">[docs]</a><span class="k">def</span> <span class="nf">increasing_log_jacobian</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Returns the log of the Jacobian factor</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">      \left| \frac{\partial x}{\partial p} \right|</span>
+
+<span class="sd">    for the parameters p.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span></div>
 </pre></div>
 
           </div>
