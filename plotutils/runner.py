@@ -257,7 +257,7 @@ class PTSamplerRunner(EnsembleSamplerRunner):
         :func:`ac.emcee_thinned_ptchain`
 
         """
-        if self.chain.shape[2] == 0:
+        if self.chain is None or self.chain.shape[2] == 0:
             return None
         else:
             return ac.emcee_thinned_ptchain(self.chain)
