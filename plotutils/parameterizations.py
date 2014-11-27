@@ -241,6 +241,8 @@ def bounded_params(x, low=np.NINF, high=np.inf):
             else:
                 p[i] = np.log(x - l) - np.log(h - x)
 
+    return p
+
 def bounded_log_jacobian(p, low=np.NINF, high=np.inf):
     r"""Returns the log of the Jacobian factor 
 
