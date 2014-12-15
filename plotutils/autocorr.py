@@ -8,6 +8,7 @@ implementation details differ.
 
 """
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 def _next_power_of_two(i):
@@ -45,34 +46,157 @@ def autocorrelation_function(series, axis=0):
 
 def autocorrelation_length_estimate(series, acf=None, M=5, axis=0):
     r"""Returns an estimate of the autocorrelation length of the given
-    series.  The autocorrelation length is defined as the smallest
-    integer, :math:`i`, such that
+    series:
 
     .. math::
 
-      \sum_{j < M i} \left| \rho(j) \right| < i
+      L = \int_{-\infty}^\infty \rho(t) dt
 
-    This empirical relation is intended to estimate in a robust way
-    the exponential decay constant for an ACF that decays like
-    :math:`\exp(t/\tau)`.  The constant :math:`M` controls how many
-    estimated ACLs are included in the calculation of the ACL.
+    The estimate is the smallest :math:`L` such that 
 
-    Returns ``None`` if no such index is present; this indicates that
-    the ACL estimate is not converged.
+    .. math::
+
+      L = \rho(0) + 2 \sum_{j = 1}^{M L} \rho(j)
+
+    In words: the ACL is estimated over a window that is at least
+    :math:`M` ACLs long, with the constraint that :math:`ML < N/2`.
+
+    Defined in this way, the ACL gives the reduction factor between
+    the number of samples and the "effective" number of samples.  In
+    particular, the variance of the estimated mean of the series is
+    given by
+
+    .. math::
+
+      \left\langle \left( \frac{1}{N} \sum_{i=0}^{N-1} x_i - \mu
+      \right)^2 \right\rangle = \frac{\left\langle \left(x_i -
+      \mu\right)^2 \right\rangle}{N/L}
+
+    Returns ``None`` if there is no such estimate possible (because
+    the series is too short to fit :math:`2M` ACLs).
 
     """
     if acf is None:
         acf = autocorrelation_function(series, axis=axis)
-
-    summed_acf = np.cumsum(np.abs(acf), axis=axis) + 1.0 # Don't forget about
-                                                         # double the zero-lag
-                                                         # component
     m = [slice(None)] * len(acf.shape)
-    acls = (np.cumsum(np.ones(summed_acf.shape), axis=axis)-1.0)/M
-    diffs = summed_acf - acls
+    nmax = acf.shape[axis]/2
+
+    m[axis] = slice(0, nmax)
+    acl_ests = 2.0*np.cumsum(acf[m], axis=axis) - 1.0
+
+    shape = acf.shape[:axis] + (nmax,) + acf.shape[axis+1:]
+    lags = np.cumsum(np.ones(shape), axis=axis) - 1.0
+
+    diffs = M*acl_ests - lags
     if np.any(diffs < 0):
         i = np.argmin(np.abs(diffs), axis=axis)
         j = tuple(np.indices(i.shape))
-        return acls[j[:axis] + (i,) + j[axis:]]
+        return acl_ests[j[:axis] + (i,) + j[axis:]]
     else:
         return None
+
+def _default_burnin(M):
+    return 1.0/(M + 1.0)
+
+def emcee_chain_autocorrelation_lengths(chain, M=5, fburnin=None):
+    r"""Returns an array giving the ACL for each parameter in the given
+    emcee chain.
+
+    :param chain: The emcee sampler chain.
+
+    :param M: See :func:`autocorrelation_length_estimate`
+
+    :param fburnin: Discard the first ``fburnin`` fraction of the
+      samples as burn-in before computing the ACLs.  Default is to
+      discard the first :math:`1/(M+1)`, ensuring that at least one
+      ACL is discarded.
+
+    """
+
+    if fburnin is None:
+        fburnin = _default_burnin(M)
+
+    istart = int(round(fburnin*chain.shape[1]))
+
+    return np.array([autocorrelation_length_estimate(np.mean(chain[:,istart:,k], axis=0)) for k in range(chain.shape[2])])
+
+def emcee_ptchain_autocorrelation_lengths(ptchain, M=5, fburnin=None):
+    r"""Returns an array of shape ``(Ntemp, Nparams)`` giving the estimated
+    autocorrelation lengths for each parameter across each temperature
+    of the parallel-tempered set of chains.  If a particular ACL
+    cannot be estimated, that element of the array will be ``None``.
+    See :func:`emcee_chain_autocorrelation_lengths` for a description
+    of the optional arguments.
+
+    """
+
+    return np.array([emcee_chain_autocorrelation_lengths(ptchain[i,...], M=M, fburnin=fburnin) for i in range(ptchain.shape[0])])
+
+def emcee_thinned_chain(chain, M=5, fburnin=None):
+    r"""Returns a thinned, burned-in version of the emcee chain.
+
+    :param chain: The emcee sampler chain.
+
+    :param M: See :func:`autocorrelation_length_estimate`
+
+    :param fburnin: Discard the first ``fburnin`` fraction of the
+      samples as burn-in before computing the ACLs.  Default is to
+      discard the first :math:`1/(M+1)`, ensuring that at least one
+      ACL is discarded.
+
+    """
+
+    if fburnin is None:
+        fburnin = _default_burnin(M)
+
+    istart = int(round(fburnin*chain.shape[1]))
+
+    acls = emcee_chain_autocorrelation_lengths(chain, M=M, fburnin=fburnin)
+
+    if any(ac is None for ac in acls):
+        return None
+
+    tau = int(np.ceil(np.max(acls)))
+
+    return chain[:,istart::tau,:]
+
+def emcee_thinned_ptchain(ptchain, M=5, fburnin=None):
+    r"""Returns a thinned, burned in version of the emcee parallel-tempered
+    chains in ``ptchain``, or ``None`` if it is not possible to
+    estimate an ACL for some component of the chain.
+
+    """
+
+    if fburnin is None:
+        fburnin = _default_burnin(M)
+
+    istart = int(round(fburnin*ptchain.shape[2]))
+
+    acls = emcee_ptchain_autocorrelation_lengths(ptchain, M=M, fburnin=fburnin)
+
+    if any(ac is None for ac in acls.flatten()):
+        return None
+
+    tau = int(np.ceil(np.max(acls)))
+
+    return ptchain[:,:,istart::tau,:]
+
+def plot_emcee_chain_autocorrelation_functions(chain, fburnin=None):
+    r"""Plots a grid of the autocorrelation function (post burnin) for each
+    of the parameters in the given chain.
+    
+    """
+
+    if fburnin is None:
+        fburnin = _default_burnin(5)
+
+    istart = int(round(fburnin*chain.shape[1]))
+
+    chain = chain[:,istart:,:]
+
+    npar = chain.shape[2]
+    nside = int(np.ceil(np.sqrt(npar)))
+
+    for i in range(npar):
+        plt.subplot(nside, nside, i+1)
+        plt.plot(autocorrelation_function(np.mean(chain[:,:,i], axis=0)))

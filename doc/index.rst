@@ -33,6 +33,11 @@ posterior distribution you can
   one-dimensional series.  See
   :func:`plotutils.autocorr.autocorrelation_function` and
   :func:`plotutils.autocorr.autocorrelation_length_estimate`.
+* Easily run ``emcee`` simulations with the
+  :class:`plotutils.runner.EnsembleSamplerRunner` class.
+* Use several common, efficient parameterizations for objects that
+  often appear in posterior functions with the
+  :mod:`plotutils.parameterizations` module.
 
 To install ``plotutils``, simply execute ``python setup.py install``
 in the root directory.

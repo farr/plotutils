@@ -1,3 +1,4 @@
+import bisect
 import bounded_kde as bk
 import bz2
 import gzip
@@ -63,12 +64,8 @@ def plot_emcee_chains(chain, truths=None, mean=True):
     nk = chain.shape[2]
     n = int(np.ceil(np.sqrt(nk)))
 
-    pp.subplots_adjust(hspace=0, wspace=0)
-
     for k in range(nk):
         pp.subplot(n,n,k+1)
-        pp.gca().xaxis.set_ticklabels([])
-        pp.gca().yaxis.set_ticklabels([])
 
         if mean:
             pp.plot(np.mean(chain[:,:,k], axis=0))
@@ -179,6 +176,10 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
     selection algorithm.  Additional arguments passed to
     :func:`pp.contour`.
 
+    The algorithm uses a two-step process (see `this document
+    <https://dcc.ligo.org/LIGO-P1400054/public>`_) so that the
+    resulting credible areas will be unbiased.
+
     :param pts: Array of shape ``(Npts, 2)`` that contains the points
       in question.
 
@@ -206,12 +207,20 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
     :param cmap: See :func:`pp.contour`.
 
     :param colors: See :func:`pp.contour`.
-      """
 
-    kde=ss.gaussian_kde(pts.T)
-    den=kde(pts.T)
-    densort=np.sort(den)[::-1]
+    """
+
     Npts=pts.shape[0]
+
+    kde_pts = pts[:Npts/2,:]
+    den_pts = pts[Npts/2:,:]
+
+    Nkde = kde_pts.shape[0]
+    Nden = den_pts.shape[0]
+
+    kde=ss.gaussian_kde(kde_pts.T)
+    den=kde(den_pts.T)
+    densort=np.sort(den)[::-1]
 
     if xmin is None:
         xmin = np.min(pts[:,0])
@@ -230,12 +239,97 @@ def plot_greedy_kde_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ym
 
     zvalues=[]
     for level in levels:
-        ilevel = int(Npts*level + 0.5)
-        if ilevel >= Npts:
-            ilevel = Npts-1
+        ilevel = int(Nden*level + 0.5)
+        if ilevel >= Nden:
+            ilevel = Nden-1
         zvalues.append(densort[ilevel])
 
     pp.contour(XS, YS, ZS, zvalues, colors=colors, cmap=cmap, *args, **kwargs)
+
+def greedy_kde_areas_2d(pts, levels, Nx=100, Ny=100, truth=None):
+    """Returns an estimate of the area within the given credible levels
+    for the posterior represented by ``pts``.  
+
+    The algorithm uses a two-step process (see `this document
+    <https://dcc.ligo.org/LIGO-P1400054/public>`_) so that the
+    resulting credible areas will be unbiased.
+
+    :param pts: An ``(Npts, 2)`` array giving samples from the
+      posterior.  The algorithm assumes that each point is an
+      independent draw from the posterior.
+
+    :param levels: The credible levels for which the areas are
+      desired.
+
+    :param Nx: The number of subdivisions along the first parameter to
+      be used for the credible area integral.
+
+    :param Ny: The number of subdivisions along the second parameter
+      to be used for the credible area integral.
+
+    :param truth: If given, then the area contained within the
+      posterior contours that are more probable than the posterior
+      evaluated at ``truth`` will be returned.  Also, the credible
+      level that corresponds to truth is returned.  The area quantity
+      is sometimes called the 'searched area', since it is the area a
+      greedy search algorithm will cover before finding the true
+      values.
+
+    :return: If ``truth`` is None, ``areas``, an array of the same
+      shape as ``levels`` giving the credible areas; if ``truth`` is
+      not ``None`` then ``(areas, searched_area, p_value)``.
+
+    """
+
+    pts = np.random.permutation(pts)
+
+    mu = np.mean(pts, axis=0)
+    cov = np.cov(pts, rowvar=0)
+
+    L = np.linalg.cholesky(cov)
+    detL = L[0,0]*L[1,1]
+
+    pts = np.linalg.solve(L, (pts - mu).T).T
+
+    if truth is not None:
+        truth = np.linalg.solve(L, truth-mu)
+
+    Npts = pts.shape[0]
+    kde_pts = pts[:Npts/2, :]
+    den_pts = pts[Npts/2:, :]
+
+    kde = ss.gaussian_kde(kde_pts.T)
+    den = kde(den_pts.T)
+    densort = np.sort(den)[::-1]
+
+    xs = np.linspace(np.min(pts[:,0]), np.max(pts[:,0]), Nx)
+    ys = np.linspace(np.min(pts[:,1]), np.max(pts[:,1]), Ny)
+
+    dx = xs[1]-xs[0]
+    dy = ys[1]-ys[0]
+
+    xmids = 0.5*(xs[:-1] + xs[1:])
+    ymids = 0.5*(ys[:-1] + ys[1:])
+
+    XMIDS, YMIDS = np.meshgrid(xmids, ymids)
+    ZS = kde(np.row_stack((XMIDS.flatten(), YMIDS.flatten()))).reshape(XMIDS.shape)
+
+    areas = []
+    for l in levels:
+        d = densort[int(round(l*den_pts.shape[0]))]
+        count = np.sum(ZS > d)
+        areas.append(dx*dy*count*detL)
+
+    if truth is not None:
+        td = kde(truth)
+        count = np.sum(ZS > td)
+        tarea = dx*dy*count*detL
+        index = bisect.bisect(densort[::-1], td)
+        p_value = 1-float(index)/densort.shape[0]
+        return areas, tarea, p_value
+    else:
+        return areas
+    
 
 def plot_greedy_histogram_interval_2d(pts, levels, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, 
                                       cmap=None, colors=None, *args, **kwargs):

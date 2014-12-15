@@ -48,23 +48,7 @@
           <div class="body">
             
   <h1>Source code for plotutils.plotutils</h1><div class="highlight"><pre>
-<span class="c"># plotutils.py: Useful functions for plotting PDFs using matplotlib.</span>
-<span class="c"># Copyright (C) 2013 Will M. Farr &lt;w-farr@northwestern.edu&gt;</span>
-
-<span class="c"># This program is free software: you can redistribute it and/or modify</span>
-<span class="c"># it under the terms of the GNU General Public License as published by</span>
-<span class="c"># the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c"># (at your option) any later version.</span>
-
-<span class="c"># This program is distributed in the hope that it will be useful, but</span>
-<span class="c"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
-<span class="c"># General Public License for more details.</span>
-
-<span class="c"># You should have received a copy of the GNU General Public License</span>
-<span class="c"># along with this program.  If not, see</span>
-<span class="c"># &lt;http://www.gnu.org/licenses/&gt;.</span>
-
+<span class="kn">import</span> <span class="nn">bisect</span>
 <span class="kn">import</span> <span class="nn">bounded_kde</span> <span class="kn">as</span> <span class="nn">bk</span>
 <span class="kn">import</span> <span class="nn">bz2</span>
 <span class="kn">import</span> <span class="nn">gzip</span>
@@ -108,6 +92,38 @@
                 <span class="k">return</span> <span class="n">do_read</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">do_read</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plot_emcee_chains"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_emcee_chains">[docs]</a><span class="k">def</span> <span class="nf">plot_emcee_chains</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">truths</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Produces a chain plot of the mean values of each variable at each</span>
+<span class="sd">    step.  The chain should have the shape ``(nwalkers, nsteps,</span>
+<span class="sd">    nvars)``, and the resulting grid of plots will be as close to</span>
+<span class="sd">    square as possible, showing the mean walker position at each step.</span>
+
+<span class="sd">    :param chain: An array of shape ``(nwalkers, nsteps, nvars)``</span>
+<span class="sd">      giving the history of the chain.</span>
+
+<span class="sd">    :param truths: Either ``None`` or an iterable giving the truth</span>
+<span class="sd">      values for each of the parameters, which will be plotted as a</span>
+<span class="sd">      horizontal line.</span>
+
+<span class="sd">    :param mean: If ``True`` (default) plot only the mean of the</span>
+<span class="sd">      walker ensemble.  Otherwise, plot the evolution of each walker</span>
+<span class="sd">      in the chain.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nk</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nk</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nk</span><span class="p">):</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mean</span><span class="p">:</span>
+            <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,:,</span><span class="n">k</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,:,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">truths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">pp</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">truths</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="decorrelated_2d_histogram_pdf"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.decorrelated_2d_histogram_pdf">[docs]</a><span class="k">def</span> <span class="nf">decorrelated_2d_histogram_pdf</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns ``(XS, YS, ZS)``, with ``ZS`` of shape ``(Nx,Ny)`` and</span>
@@ -210,6 +226,10 @@
 <span class="sd">    selection algorithm.  Additional arguments passed to</span>
 <span class="sd">    :func:`pp.contour`.</span>
 
+<span class="sd">    The algorithm uses a two-step process (see `this document</span>
+<span class="sd">    &lt;https://dcc.ligo.org/LIGO-P1400054/public&gt;`_) so that the</span>
+<span class="sd">    resulting credible areas will be unbiased.</span>
+
 <span class="sd">    :param pts: Array of shape ``(Npts, 2)`` that contains the points</span>
 <span class="sd">      in question.</span>
 
@@ -237,12 +257,20 @@
 <span class="sd">    :param cmap: See :func:`pp.contour`.</span>
 
 <span class="sd">    :param colors: See :func:`pp.contour`.</span>
-<span class="sd">      &quot;&quot;&quot;</span>
 
-    <span class="n">kde</span><span class="o">=</span><span class="n">ss</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">pts</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-    <span class="n">den</span><span class="o">=</span><span class="n">kde</span><span class="p">(</span><span class="n">pts</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-    <span class="n">densort</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">den</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">Npts</span><span class="o">=</span><span class="n">pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">kde_pts</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[:</span><span class="n">Npts</span><span class="o">/</span><span class="mi">2</span><span class="p">,:]</span>
+    <span class="n">den_pts</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[</span><span class="n">Npts</span><span class="o">/</span><span class="mi">2</span><span class="p">:,:]</span>
+
+    <span class="n">Nkde</span> <span class="o">=</span> <span class="n">kde_pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Nden</span> <span class="o">=</span> <span class="n">den_pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">kde</span><span class="o">=</span><span class="n">ss</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">kde_pts</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">den</span><span class="o">=</span><span class="n">kde</span><span class="p">(</span><span class="n">den_pts</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">densort</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">den</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">xmin</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">xmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pts</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
@@ -261,12 +289,97 @@
 
     <span class="n">zvalues</span><span class="o">=</span><span class="p">[]</span>
     <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
-        <span class="n">ilevel</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">Npts</span><span class="o">*</span><span class="n">level</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ilevel</span> <span class="o">&gt;=</span> <span class="n">Npts</span><span class="p">:</span>
-            <span class="n">ilevel</span> <span class="o">=</span> <span class="n">Npts</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">ilevel</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">Nden</span><span class="o">*</span><span class="n">level</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ilevel</span> <span class="o">&gt;=</span> <span class="n">Nden</span><span class="p">:</span>
+            <span class="n">ilevel</span> <span class="o">=</span> <span class="n">Nden</span><span class="o">-</span><span class="mi">1</span>
         <span class="n">zvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">densort</span><span class="p">[</span><span class="n">ilevel</span><span class="p">])</span>
 
     <span class="n">pp</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">XS</span><span class="p">,</span> <span class="n">YS</span><span class="p">,</span> <span class="n">ZS</span><span class="p">,</span> <span class="n">zvalues</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="greedy_kde_areas_2d"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.greedy_kde_areas_2d">[docs]</a><span class="k">def</span> <span class="nf">greedy_kde_areas_2d</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ny</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">truth</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns an estimate of the area within the given credible levels</span>
+<span class="sd">    for the posterior represented by ``pts``.  </span>
+
+<span class="sd">    The algorithm uses a two-step process (see `this document</span>
+<span class="sd">    &lt;https://dcc.ligo.org/LIGO-P1400054/public&gt;`_) so that the</span>
+<span class="sd">    resulting credible areas will be unbiased.</span>
+
+<span class="sd">    :param pts: An ``(Npts, 2)`` array giving samples from the</span>
+<span class="sd">      posterior.  The algorithm assumes that each point is an</span>
+<span class="sd">      independent draw from the posterior.</span>
+
+<span class="sd">    :param levels: The credible levels for which the areas are</span>
+<span class="sd">      desired.</span>
+
+<span class="sd">    :param Nx: The number of subdivisions along the first parameter to</span>
+<span class="sd">      be used for the credible area integral.</span>
+
+<span class="sd">    :param Ny: The number of subdivisions along the second parameter</span>
+<span class="sd">      to be used for the credible area integral.</span>
+
+<span class="sd">    :param truth: If given, then the area contained within the</span>
+<span class="sd">      posterior contours that are more probable than the posterior</span>
+<span class="sd">      evaluated at ``truth`` will be returned.  Also, the credible</span>
+<span class="sd">      level that corresponds to truth is returned.  The area quantity</span>
+<span class="sd">      is sometimes called the &#39;searched area&#39;, since it is the area a</span>
+<span class="sd">      greedy search algorithm will cover before finding the true</span>
+<span class="sd">      values.</span>
+
+<span class="sd">    :return: If ``truth`` is None, ``areas``, an array of the same</span>
+<span class="sd">      shape as ``levels`` giving the credible areas; if ``truth`` is</span>
+<span class="sd">      not ``None`` then ``(areas, searched_area, p_value)``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+    <span class="n">detL</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">pts</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">if</span> <span class="n">truth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">truth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">truth</span><span class="o">-</span><span class="n">mu</span><span class="p">)</span>
+
+    <span class="n">Npts</span> <span class="o">=</span> <span class="n">pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">kde_pts</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[:</span><span class="n">Npts</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">den_pts</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[</span><span class="n">Npts</span><span class="o">/</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:]</span>
+
+    <span class="n">kde</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">kde_pts</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">den_pts</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">densort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">den</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pts</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pts</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">Nx</span><span class="p">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pts</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pts</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">Ny</span><span class="p">)</span>
+
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">ys</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">xmids</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">xs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">ymids</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">ys</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">ys</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="n">XMIDS</span><span class="p">,</span> <span class="n">YMIDS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xmids</span><span class="p">,</span> <span class="n">ymids</span><span class="p">)</span>
+    <span class="n">ZS</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">row_stack</span><span class="p">((</span><span class="n">XMIDS</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">YMIDS</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">XMIDS</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">areas</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">densort</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">l</span><span class="o">*</span><span class="n">den_pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ZS</span> <span class="o">&gt;</span> <span class="n">d</span><span class="p">)</span>
+        <span class="n">areas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dx</span><span class="o">*</span><span class="n">dy</span><span class="o">*</span><span class="n">count</span><span class="o">*</span><span class="n">detL</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">truth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">td</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">truth</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ZS</span> <span class="o">&gt;</span> <span class="n">td</span><span class="p">)</span>
+        <span class="n">tarea</span> <span class="o">=</span> <span class="n">dx</span><span class="o">*</span><span class="n">dy</span><span class="o">*</span><span class="n">count</span><span class="o">*</span><span class="n">detL</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">bisect</span><span class="o">.</span><span class="n">bisect</span><span class="p">(</span><span class="n">densort</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">td</span><span class="p">)</span>
+        <span class="n">p_value</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">/</span><span class="n">densort</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">areas</span><span class="p">,</span> <span class="n">tarea</span><span class="p">,</span> <span class="n">p_value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">areas</span>
+    
 </div>
 <div class="viewcode-block" id="plot_greedy_histogram_interval_2d"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_greedy_histogram_interval_2d">[docs]</a><span class="k">def</span> <span class="nf">plot_greedy_histogram_interval_2d</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ny</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
                                       <span class="n">cmap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -562,7 +675,7 @@
 </div>
 <div class="viewcode-block" id="plot_cumulative_distribution"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_cumulative_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_cumulative_distribution</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plots the 1D normalized empirical CDF for the given points.</span>
-<span class="sd">    Additional arguments are passed to :fun:`pp.plot`.</span>
+<span class="sd">    Additional arguments are passed to matplotlib&#39;s ``plot``.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
@@ -611,7 +724,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Will M. Farr.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
