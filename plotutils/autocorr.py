@@ -10,6 +10,7 @@ implementation details differ.
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.ma as ma
 
 def _next_power_of_two(i):
     pt = 2
@@ -22,6 +23,10 @@ def autocorrelation_function(series, axis=0):
     """Returns the autocorrelation function of the given series.  The
     function is normalised so that it is 1 at zero lag.
 
+    If ``series`` is an N-dimensional array, the ACF will be computed
+    along ``axis`` and the result will have the same shape as
+    ``series``.
+
     """
     series = np.atleast_1d(series)
     shape = np.array(series.shape)
@@ -33,7 +38,7 @@ def autocorrelation_function(series, axis=0):
     shape[axis] = n
 
     padded_series = np.zeros(shape)
-    padded_series[m] = series - np.mean(series, axis=axis)
+    padded_series[m] = series - np.expand_dims(series.mean(axis=axis), axis=axis)
 
     ps_tilde = np.fft.fft(padded_series, axis=axis)
     acf = np.real(np.fft.ifft(ps_tilde*np.conj(ps_tilde), axis=axis))[m]
@@ -72,8 +77,12 @@ def autocorrelation_length_estimate(series, acf=None, M=5, axis=0):
       \right)^2 \right\rangle = \frac{\left\langle \left(x_i -
       \mu\right)^2 \right\rangle}{N/L}
 
-    Returns ``None`` if there is no such estimate possible (because
+    Returns ``nan`` if there is no such estimate possible (because
     the series is too short to fit :math:`2M` ACLs).
+
+    For an N-dimensional array, returns an array of ACLs of the same
+    shape as ``series``, but with the dimension along ``axis``
+    removed.
 
     """
     if acf is None:
@@ -81,19 +90,23 @@ def autocorrelation_length_estimate(series, acf=None, M=5, axis=0):
     m = [slice(None)] * len(acf.shape)
     nmax = acf.shape[axis]/2
 
+    # Generate ACL candidates.
     m[axis] = slice(0, nmax)
     acl_ests = 2.0*np.cumsum(acf[m], axis=axis) - 1.0
 
+    # Build array of lags (like arange, but N-dimensional).
     shape = acf.shape[:axis] + (nmax,) + acf.shape[axis+1:]
     lags = np.cumsum(np.ones(shape), axis=axis) - 1.0
 
-    diffs = M*acl_ests - lags
-    if np.any(diffs < 0):
-        i = np.argmin(np.abs(diffs), axis=axis)
-        j = tuple(np.indices(i.shape))
-        return acl_ests[j[:axis] + (i,) + j[axis:]]
-    else:
-        return None
+    # Mask out unwanted lags and set corresponding ACLs to nan.
+    mask = M*acl_ests >= lags
+    acl_ests[mask] = np.nan
+    i = ma.masked_greater(mask, lags, copy=False)
+
+    # Now get index of smallest unmasked lag -- if all are masked, this will be 0.
+    j = i.argmin(axis=axis)
+    k = tuple(np.indices(j.shape))
+    return acl_ests[k[:axis] + (j,) + k[axis:]]
 
 def _default_burnin(M):
     return 1.0/(M + 1.0)
