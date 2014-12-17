@@ -131,7 +131,7 @@ def emcee_chain_autocorrelation_lengths(chain, M=5, fburnin=None):
 
     istart = int(round(fburnin*chain.shape[1]))
 
-    return np.array([autocorrelation_length_estimate(np.mean(chain[:,istart:,k], axis=0)) for k in range(chain.shape[2])])
+    return autocorrelation_length_estimate(np.mean(chain[:,istart:,:], axis=0), axis=0)
 
 def emcee_ptchain_autocorrelation_lengths(ptchain, M=5, fburnin=None):
     r"""Returns an array of shape ``(Ntemp, Nparams)`` giving the estimated
@@ -143,7 +143,12 @@ def emcee_ptchain_autocorrelation_lengths(ptchain, M=5, fburnin=None):
 
     """
 
-    return np.array([emcee_chain_autocorrelation_lengths(ptchain[i,...], M=M, fburnin=fburnin) for i in range(ptchain.shape[0])])
+    if fburnin is None:
+        fburnin = _default_burnin(M)
+
+    istart = int(round(fburnin*ptchain.shape[2]))
+    
+    return autocorrelation_length_estimate(np.mean(ptchain[:, :, istart:, :], axis=1), axis=1)
 
 def emcee_thinned_chain(chain, M=5, fburnin=None):
     r"""Returns a thinned, burned-in version of the emcee chain.
@@ -166,7 +171,7 @@ def emcee_thinned_chain(chain, M=5, fburnin=None):
 
     acls = emcee_chain_autocorrelation_lengths(chain, M=M, fburnin=fburnin)
 
-    if any(ac is None for ac in acls):
+    if np.any(np.isnan(acls)):
         return None
 
     tau = int(np.ceil(np.max(acls)))
@@ -187,7 +192,7 @@ def emcee_thinned_ptchain(ptchain, M=5, fburnin=None):
 
     acls = emcee_ptchain_autocorrelation_lengths(ptchain, M=M, fburnin=fburnin)
 
-    if any(ac is None for ac in acls.flatten()):
+    if np.any(np.isnan(acls)):
         return None
 
     tau = int(np.ceil(np.max(acls)))
