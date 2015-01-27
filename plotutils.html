@@ -200,6 +200,15 @@ in the chain.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="plotutils.plotutils.plot_emcee_chains_one_fig">
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains_one_fig</tt><big>(</big><em>chain</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_emcee_chains_one_fig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains_one_fig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a single-figure representation of the chain evolution of the
+given chain.  The figure shows the evolution of the mean of each
+coordinate of the ensemble, normalised to zero-mean, unit-standard
+deviation.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="plotutils.plotutils.plot_greedy_histogram_interval_2d">
 <tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_greedy_histogram_interval_2d</tt><big>(</big><em>pts</em>, <em>levels</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>colors=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_greedy_histogram_interval_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_greedy_histogram_interval_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot probability interval contours estimated from a histogram
@@ -404,14 +413,17 @@ and implemented in the associated <tt class="docutils literal"><span class="pre"
 implementation details differ.</p>
 <dl class="function">
 <dt id="plotutils.autocorr.autocorrelation_function">
-<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">autocorrelation_function</tt><big>(</big><em>series</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#autocorrelation_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.autocorrelation_function" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">autocorrelation_function</tt><big>(</big><em>series</em>, <em>axis=0</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#autocorrelation_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.autocorrelation_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the autocorrelation function of the given series.  The
 function is normalised so that it is 1 at zero lag.</p>
+<p>If <tt class="docutils literal"><span class="pre">series</span></tt> is an N-dimensional array, the ACF will be computed
+along <tt class="docutils literal"><span class="pre">axis</span></tt> and the result will have the same shape as
+<tt class="docutils literal"><span class="pre">series</span></tt>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="plotutils.autocorr.autocorrelation_length_estimate">
-<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">autocorrelation_length_estimate</tt><big>(</big><em>series</em>, <em>acf=None</em>, <em>M=5</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#autocorrelation_length_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.autocorrelation_length_estimate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">autocorrelation_length_estimate</tt><big>(</big><em>series</em>, <em>acf=None</em>, <em>M=5</em>, <em>axis=0</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#autocorrelation_length_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.autocorrelation_length_estimate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an estimate of the autocorrelation length of the given
 series:</p>
 <div class="math">
@@ -429,8 +441,11 @@ given by</p>
 \[\left\langle \left( \frac{1}{N} \sum_{i=0}^{N-1} x_i - \mu
 \right)^2 \right\rangle = \frac{\left\langle \left(x_i -
 \mu\right)^2 \right\rangle}{N/L}\]</div>
-<p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if there is no such estimate possible (because
+<p>Returns <tt class="docutils literal"><span class="pre">nan</span></tt> if there is no such estimate possible (because
 the series is too short to fit <span class="math">\(2M\)</span> ACLs).</p>
+<p>For an N-dimensional array, returns an array of ACLs of the same
+shape as <tt class="docutils literal"><span class="pre">series</span></tt>, but with the dimension along <tt class="docutils literal"><span class="pre">axis</span></tt>
+removed.</p>
 </dd></dl>
 
 <dl class="function">

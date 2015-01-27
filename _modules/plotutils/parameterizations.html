@@ -290,6 +290,8 @@
                 <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">l</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p</span>
 </div>
 <div class="viewcode-block" id="bounded_log_jacobian"><a class="viewcode-back" href="../../plotutils.html#plotutils.parameterizations.bounded_log_jacobian">[docs]</a><span class="k">def</span> <span class="nf">bounded_log_jacobian</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">NINF</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Returns the log of the Jacobian factor </span>
