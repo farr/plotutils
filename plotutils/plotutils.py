@@ -75,6 +75,23 @@ def plot_emcee_chains(chain, truths=None, mean=True):
         if truths is not None:
             pp.axhline(truths[k], color='k')
 
+def plot_emcee_chains_one_fig(chain):
+    """Plots a single-figure representation of the chain evolution of the
+    given chain.  The figure shows the evolution of the mean of each
+    coordinate of the ensemble, normalised to zero-mean, unit-standard
+    deviation.
+
+    """
+
+    nk = chain.shape[2]
+
+    for k in range(nk):
+        mus = np.mean(chain[:,:,k], axis=0)
+        mu = np.mean(mus)
+        sigma = np.std(mus)
+
+        pp.plot((mus - mu)/sigma)
+
 def decorrelated_2d_histogram_pdf(pts, xmin=None, xmax=None, ymin=None, ymax=None):
     """Returns ``(XS, YS, ZS)``, with ``ZS`` of shape ``(Nx,Ny)`` and
     ``XS`` and ``YS`` of shape ``(Nx+1,Ny+1)`` giving the height and

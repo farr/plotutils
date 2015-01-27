@@ -60,6 +60,7 @@
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.ma</span> <span class="kn">as</span> <span class="nn">ma</span>
 
 <span class="k">def</span> <span class="nf">_next_power_of_two</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
     <span class="n">pt</span> <span class="o">=</span> <span class="mi">2</span>
@@ -68,26 +69,37 @@
 
     <span class="k">return</span> <span class="n">pt</span>
 
-<div class="viewcode-block" id="autocorrelation_function"><a class="viewcode-back" href="../../plotutils.html#plotutils.autocorr.autocorrelation_function">[docs]</a><span class="k">def</span> <span class="nf">autocorrelation_function</span><span class="p">(</span><span class="n">series</span><span class="p">):</span>
+<div class="viewcode-block" id="autocorrelation_function"><a class="viewcode-back" href="../../plotutils.html#plotutils.autocorr.autocorrelation_function">[docs]</a><span class="k">def</span> <span class="nf">autocorrelation_function</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns the autocorrelation function of the given series.  The</span>
 <span class="sd">    function is normalised so that it is 1 at zero lag.</span>
 
+<span class="sd">    If ``series`` is an N-dimensional array, the ACF will be computed</span>
+<span class="sd">    along ``axis`` and the result will have the same shape as</span>
+<span class="sd">    ``series``.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
-    
-    <span class="n">n</span> <span class="o">=</span> <span class="n">_next_power_of_two</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 
-    <span class="n">padded_series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="n">padded_series</span><span class="p">[:</span><span class="n">series</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">series</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
+    <span class="n">n0</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">_next_power_of_two</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n0</span><span class="p">)</span>
+    <span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span>
 
-    <span class="n">ps_tilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">padded_series</span><span class="p">)</span>
+    <span class="n">padded_series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">padded_series</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">series</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
 
-    <span class="n">acf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">ps_tilde</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">ps_tilde</span><span class="p">)))</span>
-    <span class="n">acf</span> <span class="o">/=</span> <span class="n">acf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ps_tilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">padded_series</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="n">acf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">ps_tilde</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">ps_tilde</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))[</span><span class="n">m</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">acf</span><span class="p">[:</span><span class="n">series</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">m</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">acf</span> <span class="o">/=</span> <span class="n">acf</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">n0</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">acf</span>
 </div>
-<div class="viewcode-block" id="autocorrelation_length_estimate"><a class="viewcode-back" href="../../plotutils.html#plotutils.autocorr.autocorrelation_length_estimate">[docs]</a><span class="k">def</span> <span class="nf">autocorrelation_length_estimate</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">acf</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<div class="viewcode-block" id="autocorrelation_length_estimate"><a class="viewcode-back" href="../../plotutils.html#plotutils.autocorr.autocorrelation_length_estimate">[docs]</a><span class="k">def</span> <span class="nf">autocorrelation_length_estimate</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">acf</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Returns an estimate of the autocorrelation length of the given</span>
 <span class="sd">    series:</span>
 
@@ -115,23 +127,36 @@
 <span class="sd">      \right)^2 \right\rangle = \frac{\left\langle \left(x_i -</span>
 <span class="sd">      \mu\right)^2 \right\rangle}{N/L}</span>
 
-<span class="sd">    Returns ``None`` if there is no such estimate possible (because</span>
+<span class="sd">    Returns ``nan`` if there is no such estimate possible (because</span>
 <span class="sd">    the series is too short to fit :math:`2M` ACLs).</span>
+
+<span class="sd">    For an N-dimensional array, returns an array of ACLs of the same</span>
+<span class="sd">    shape as ``series``, but with the dimension along ``axis``</span>
+<span class="sd">    removed.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">acf</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">acf</span> <span class="o">=</span> <span class="n">autocorrelation_function</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
+        <span class="n">acf</span> <span class="o">=</span> <span class="n">autocorrelation_function</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">acf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">nmax</span> <span class="o">=</span> <span class="n">acf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span>
 
-    <span class="n">nmax</span> <span class="o">=</span> <span class="n">acf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span>
+    <span class="c"># Generate ACL candidates.</span>
+    <span class="n">m</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
+    <span class="n">acl_ests</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">acf</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span>
 
-    <span class="n">acl_ests</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">acf</span><span class="p">[:</span><span class="n">nmax</span><span class="p">])</span> <span class="o">-</span> <span class="mf">1.0</span>
+    <span class="c"># Build array of lags (like arange, but N-dimensional).</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">acf</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="n">axis</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">nmax</span><span class="p">,)</span> <span class="o">+</span> <span class="n">acf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">lags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span>
 
-    <span class="n">sel</span> <span class="o">=</span> <span class="n">M</span><span class="o">*</span><span class="n">acl_ests</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
+    <span class="c"># Mask out unwanted lags and set corresponding ACLs to nan.</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">M</span><span class="o">*</span><span class="n">acl_ests</span> <span class="o">&gt;=</span> <span class="n">lags</span>
+    <span class="n">acl_ests</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_greater</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">lags</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">sel</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">acl_ests</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">sel</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">None</span>
+    <span class="c"># Now get index of smallest unmasked lag -- if all are masked, this will be 0.</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">acl_ests</span><span class="p">[</span><span class="n">k</span><span class="p">[:</span><span class="n">axis</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">j</span><span class="p">,)</span> <span class="o">+</span> <span class="n">k</span><span class="p">[</span><span class="n">axis</span><span class="p">:]]</span>
 </div>
 <span class="k">def</span> <span class="nf">_default_burnin</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
     <span class="k">return</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
@@ -156,7 +181,7 @@
 
     <span class="n">istart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">fburnin</span><span class="o">*</span><span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">autocorrelation_length_estimate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,</span><span class="n">istart</span><span class="p">:,</span><span class="n">k</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])])</span>
+    <span class="k">return</span> <span class="n">autocorrelation_length_estimate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,</span><span class="n">istart</span><span class="p">:,:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="emcee_ptchain_autocorrelation_lengths"><a class="viewcode-back" href="../../plotutils.html#plotutils.autocorr.emcee_ptchain_autocorrelation_lengths">[docs]</a><span class="k">def</span> <span class="nf">emcee_ptchain_autocorrelation_lengths</span><span class="p">(</span><span class="n">ptchain</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Returns an array of shape ``(Ntemp, Nparams)`` giving the estimated</span>
@@ -168,7 +193,12 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">emcee_chain_autocorrelation_lengths</span><span class="p">(</span><span class="n">ptchain</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="o">...</span><span class="p">],</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="n">fburnin</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ptchain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+    <span class="k">if</span> <span class="n">fburnin</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">fburnin</span> <span class="o">=</span> <span class="n">_default_burnin</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+
+    <span class="n">istart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">fburnin</span><span class="o">*</span><span class="n">ptchain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    
+    <span class="k">return</span> <span class="n">autocorrelation_length_estimate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ptchain</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">istart</span><span class="p">:,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="emcee_thinned_chain"><a class="viewcode-back" href="../../plotutils.html#plotutils.autocorr.emcee_thinned_chain">[docs]</a><span class="k">def</span> <span class="nf">emcee_thinned_chain</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Returns a thinned, burned-in version of the emcee chain.</span>
@@ -191,7 +221,7 @@
 
     <span class="n">acls</span> <span class="o">=</span> <span class="n">emcee_chain_autocorrelation_lengths</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="n">fburnin</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">ac</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">acls</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">acls</span><span class="p">)):</span>
         <span class="k">return</span> <span class="bp">None</span>
 
     <span class="n">tau</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">acls</span><span class="p">)))</span>
@@ -212,7 +242,7 @@
 
     <span class="n">acls</span> <span class="o">=</span> <span class="n">emcee_ptchain_autocorrelation_lengths</span><span class="p">(</span><span class="n">ptchain</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="n">fburnin</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">ac</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">acls</span><span class="o">.</span><span class="n">flatten</span><span class="p">()):</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">acls</span><span class="p">)):</span>
         <span class="k">return</span> <span class="bp">None</span>
 
     <span class="n">tau</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">acls</span><span class="p">)))</span>
