@@ -173,7 +173,7 @@ class EnsembleSamplerRunner(object):
         while self.chain.shape[1] == 0 or self.thin_chain is None or self.thin_chain.shape[1] < neff:
             self.run_mcmc(neff)
             
-            print 'Accumulated ', self.chain.shape[1], ' ensembles'
+            print 'Accumulated ', self.chain.shape[1], ' ensembles, acceptance rate is ', np.mean(self.sampler.acceptance_fraction)
             if self.thin_chain is not None:
                 print 'Equivalent to ', self.thin_chain.shape[1], ' effective ensembles'
 
