@@ -174,7 +174,7 @@ Additional arguments are passed to matplotlib&#8217;s <tt class="docutils litera
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_emcee_chains">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains</tt><big>(</big><em>chain</em>, <em>truths=None</em>, <em>mean=True</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_emcee_chains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains</tt><big>(</big><em>chain</em>, <em>truths=None</em>, <em>mean=True</em>, <em>fburnin=0</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_emcee_chains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produces a chain plot of the mean values of each variable at each
 step.  The chain should have the shape <tt class="docutils literal"><span class="pre">(nwalkers,</span> <span class="pre">nsteps,</span>
 <span class="pre">nvars)</span></tt>, and the resulting grid of plots will be as close to
@@ -192,6 +192,8 @@ horizontal line.</li>
 <li><strong>mean</strong> &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt> (default) plot only the mean of the
 walker ensemble.  Otherwise, plot the evolution of each walker
 in the chain.</li>
+<li><strong>fburnin</strong> &#8211; The fraction of points to discard at the beginning
+of the chain.</li>
 </ul>
 </td>
 </tr>
@@ -201,11 +203,25 @@ in the chain.</li>
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_emcee_chains_one_fig">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains_one_fig</tt><big>(</big><em>chain</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_emcee_chains_one_fig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains_one_fig" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_emcee_chains_one_fig</tt><big>(</big><em>chain</em>, <em>fburnin=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_emcee_chains_one_fig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_emcee_chains_one_fig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a single-figure representation of the chain evolution of the
 given chain.  The figure shows the evolution of the mean of each
 coordinate of the ensemble, normalised to zero-mean, unit-standard
 deviation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>chain</strong> &#8211; The sampler chain, of shape <tt class="docutils literal"><span class="pre">(nwalkers,</span> <span class="pre">niter,</span>
+<span class="pre">nparams)</span></tt></li>
+<li><strong>fburnin</strong> &#8211; If not <tt class="docutils literal"><span class="pre">None</span></tt>, refers to the fraction of samples
+to discard at the beginning of the chain.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">

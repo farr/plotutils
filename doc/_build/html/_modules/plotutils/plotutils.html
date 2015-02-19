@@ -93,7 +93,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">do_read</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="plot_emcee_chains"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_emcee_chains">[docs]</a><span class="k">def</span> <span class="nf">plot_emcee_chains</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">truths</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_emcee_chains"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_emcee_chains">[docs]</a><span class="k">def</span> <span class="nf">plot_emcee_chains</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">truths</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produces a chain plot of the mean values of each variable at each</span>
 <span class="sd">    step.  The chain should have the shape ``(nwalkers, nsteps,</span>
 <span class="sd">    nvars)``, and the resulting grid of plots will be as close to</span>
@@ -110,33 +110,48 @@
 <span class="sd">      walker ensemble.  Otherwise, plot the evolution of each walker</span>
 <span class="sd">      in the chain.</span>
 
+<span class="sd">    :param fburnin: The fraction of points to discard at the beginning</span>
+<span class="sd">      of the chain.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nk</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nk</span><span class="p">)))</span>
 
+    <span class="n">istart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">fburnin</span><span class="o">*</span><span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nk</span><span class="p">):</span>
         <span class="n">pp</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">mean</span><span class="p">:</span>
-            <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,:,</span><span class="n">k</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+            <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,</span><span class="n">istart</span><span class="p">:,</span><span class="n">k</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,:,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,</span><span class="n">istart</span><span class="p">:,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">truths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">pp</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">truths</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="plot_emcee_chains_one_fig"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_emcee_chains_one_fig">[docs]</a><span class="k">def</span> <span class="nf">plot_emcee_chains_one_fig</span><span class="p">(</span><span class="n">chain</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_emcee_chains_one_fig"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_emcee_chains_one_fig">[docs]</a><span class="k">def</span> <span class="nf">plot_emcee_chains_one_fig</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plots a single-figure representation of the chain evolution of the</span>
 <span class="sd">    given chain.  The figure shows the evolution of the mean of each</span>
 <span class="sd">    coordinate of the ensemble, normalised to zero-mean, unit-standard</span>
 <span class="sd">    deviation.</span>
 
+<span class="sd">    :param chain: The sampler chain, of shape ``(nwalkers, niter,</span>
+<span class="sd">      nparams)`` </span>
+
+<span class="sd">    :param fburnin: If not ``None``, refers to the fraction of samples</span>
+<span class="sd">      to discard at the beginning of the chain.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">nk</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">fburnin</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">istart</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">istart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">fburnin</span><span class="o">*</span><span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nk</span><span class="p">):</span>
-        <span class="n">mus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,:,</span><span class="n">k</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">mus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,</span><span class="n">istart</span><span class="p">:,</span><span class="n">k</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mus</span><span class="p">)</span>
         <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">mus</span><span class="p">)</span>
 

@@ -43,7 +43,7 @@ def load_header_data(file, header_commented=False):
     else:
         return do_read(inp)
 
-def plot_emcee_chains(chain, truths=None, mean=True):
+def plot_emcee_chains(chain, truths=None, mean=True, fburnin=0):
     """Produces a chain plot of the mean values of each variable at each
     step.  The chain should have the shape ``(nwalkers, nsteps,
     nvars)``, and the resulting grid of plots will be as close to
@@ -60,33 +60,48 @@ def plot_emcee_chains(chain, truths=None, mean=True):
       walker ensemble.  Otherwise, plot the evolution of each walker
       in the chain.
 
+    :param fburnin: The fraction of points to discard at the beginning
+      of the chain.
+
     """
     nk = chain.shape[2]
     n = int(np.ceil(np.sqrt(nk)))
 
+    istart = int(round(fburnin*chain.shape[1]))
+    
     for k in range(nk):
         pp.subplot(n,n,k+1)
 
         if mean:
-            pp.plot(np.mean(chain[:,:,k], axis=0))
+            pp.plot(np.mean(chain[:,istart:,k], axis=0))
         else:
-            pp.plot(chain[:,:,k].T)
+            pp.plot(chain[:,istart:,k].T)
 
         if truths is not None:
             pp.axhline(truths[k], color='k')
 
-def plot_emcee_chains_one_fig(chain):
+def plot_emcee_chains_one_fig(chain, fburnin=None):
     """Plots a single-figure representation of the chain evolution of the
     given chain.  The figure shows the evolution of the mean of each
     coordinate of the ensemble, normalised to zero-mean, unit-standard
     deviation.
 
+    :param chain: The sampler chain, of shape ``(nwalkers, niter,
+      nparams)`` 
+
+    :param fburnin: If not ``None``, refers to the fraction of samples
+      to discard at the beginning of the chain.
+
     """
 
     nk = chain.shape[2]
+    if fburnin is None:
+        istart = 0
+    else:
+        istart = int(round(fburnin*chain.shape[1]))
 
     for k in range(nk):
-        mus = np.mean(chain[:,:,k], axis=0)
+        mus = np.mean(chain[:,istart:,k], axis=0)
         mu = np.mean(mus)
         sigma = np.std(mus)
 
