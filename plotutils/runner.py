@@ -5,6 +5,7 @@ import numpy as np
 import os
 import os.path as op
 import pickle
+import sys
 
 def load_runner(dir):
     """Loads the saved runner from the given directory.
@@ -146,7 +147,7 @@ class EnsembleSamplerRunner(object):
             print 'WARNING: EnsembleSamplerRunner: interrupted during load, inconsistent loaded state'
             raise
 
-    def run_mcmc(self, nthinsteps):
+    def run_mcmc(self, nthinsteps, *args, **kwargs):
         """Run the associated sampler to produce ``nthinsteps`` worth of
         stored ensembles (i.e. the sampler will be run for
         ``nthinsteps*self.thin`` total steps).
@@ -156,14 +157,14 @@ class EnsembleSamplerRunner(object):
         nsteps = self.thin * nthinsteps
         
         if self._first_step:
-            self.result = self.sampler.run_mcmc(self.result, nsteps, thin=self.thin)
+            self.result = self.sampler.run_mcmc(self.result, nsteps, thin=self.thin, *args, **kwargs)
             self._first_step = False
         else:
-            self.result = self.sampler.run_mcmc(self.result[0], nsteps, lnprob0=self.result[1], thin=self.thin)
+            self.result = self.sampler.run_mcmc(self.result[0], nsteps, lnprob0=self.result[1], thin=self.thin, *args, **kwargs)
 
         return self.result
 
-    def run_to_neff(self, neff, savedir=None):
+    def run_to_neff(self, neff, savedir=None, *args, **kwargs):
         """Run the sampler, thinning as necessary, until ``neff`` effective
         ensembles are obtained.  When ``savedir`` is not ``None``, the
         sampler will be periodically saved to the given directory.
@@ -171,7 +172,7 @@ class EnsembleSamplerRunner(object):
         """
         
         while self.chain.shape[1] == 0 or self.thin_chain is None or self.thin_chain.shape[1] < neff:
-            self.run_mcmc(neff)
+            self.run_mcmc(neff, *args, **kwargs)
             
             print 'Accumulated ', self.chain.shape[1], ' ensembles, acceptance rate is ', np.mean(self.sampler.acceptance_fraction)
             if self.thin_chain is not None:
@@ -184,6 +185,8 @@ class EnsembleSamplerRunner(object):
             if self.chain.shape[1] > 10*neff:
                 self.rethin()
                 print 'Thinned chain; now ', self.chain.shape[1], ' ensembles'
+
+            sys.__stdout__.flush()
 
     def rethin(self):
         """Increase the thinning parameter by a factor of two, modifying the
@@ -290,7 +293,13 @@ class PTSamplerRunner(EnsembleSamplerRunner):
          * ``chain.npy.bz2``
          * ``lnprob.npy.bz2``
          * ``lnlike.npy.bz2``
+         * ``beta_history.npy.bz2``
+         * ``nswap.txt``
+         * ``nswap_accepted.txt``
+         * ``nprop.txt``
+         * ``nprop_accepted.txt``
          * ``betas.txt``
+         * ``time.txt``
          * ``thin.txt``
 
         Storing the current chain, lnprob, lnlike, betas (inverse
@@ -307,8 +316,20 @@ class PTSamplerRunner(EnsembleSamplerRunner):
             np.save(out, self.lnprobability)
         with bz2.BZ2File(op.join(dir, 'lnlike.npy.bz2.temp'), 'w') as out:
             np.save(out, self.lnlikelihood)
+        with bz2.BZ2File(op.join(dir, 'beta_history.npy.bz2.temp'), 'w') as out:
+            np.save(out, self.sampler.beta_history)
+        with open(op.join(dir, 'nswap.txt.temp'), 'w') as out:
+            np.savetxt(out, self.sampler.nswap)
+        with open(op.join(dir, 'nswap_accepted.txt.temp'), 'w') as out:
+            np.savetxt(out, self.sampler.nswap_accepted)
+        with open(op.join(dir, 'nprop.txt.temp'), 'w') as out:
+            np.savetxt(out, self.sampler.nprop)
+        with open(op.join(dir, 'nprop_accepted.txt.temp'), 'w') as out:
+            np.savetxt(out, self.sampler.nprop_accepted)
         with open(op.join(dir, 'betas.txt.temp'), 'w') as out:
             np.savetxt(out, self.sampler.betas.reshape((1, -1)))
+        with open(op.join(dir, 'time.txt.temp'), 'w') as out:
+            out.write('{0:d}\n'.format(self.sampler._time))
         with open(op.join(dir, 'thin.txt.temp'), 'w') as out:
             out.write('{0:d}\n'.format(self.thin))
 
@@ -319,8 +340,20 @@ class PTSamplerRunner(EnsembleSamplerRunner):
                       op.join(dir, 'lnprob.npy.bz2'))
             os.rename(op.join(dir, 'lnlike.npy.bz2.temp'),
                       op.join(dir, 'lnlike.npy.bz2'))
+            os.rename(op.join(dir, 'beta_history.npy.bz2.temp'),
+                      op.join(dir, 'beta_history.npy.bz2'))
+            os.rename(op.join(dir, 'nswap.txt.temp'),
+                      op.join(dir, 'nswap.txt'))
+            os.rename(op.join(dir, 'nswap_accepted.txt.temp'),
+                      op.join(dir, 'nswap_accepted.txt'))
+            os.rename(op.join(dir, 'nprop.txt.temp'),
+                      op.join(dir, 'nprop.txt'))
+            os.rename(op.join(dir, 'nprop_accepted.txt.temp'),
+                      op.join(dir, 'nprop_accepted.txt'))
             os.rename(op.join(dir, 'betas.txt.temp'),
                       op.join(dir, 'betas.txt'))
+            os.rename(op.join(dir, 'time.txt.temp'),
+                      op.join(dir, 'time.txt'))
             os.rename(op.join(dir, 'thin.txt.temp'),
                       op.join(dir, 'thin.txt'))
         except:
@@ -346,8 +379,20 @@ class PTSamplerRunner(EnsembleSamplerRunner):
                 self.sampler._lnprob = np.load(inp)
             with bz2.BZ2File(op.join(dir, 'lnlike.npy.bz2'), 'r') as inp:
                 self.sampler._lnlikelihood = np.load(inp)
+            with bz2.BZ2File(op.join(dir, 'beta_history.npy.bz2'), 'r') as inp:
+                self.sampler._beta_history = np.load(inp)
+            with open(op.join(dir, 'nswap.txt'), 'r') as inp:
+                self.sampler.nswap = np.loadtxt(inp)
+            with open(op.join(dir, 'nswap_accepted.txt'), 'r') as inp:
+                self.sampler.nswap_accepted = np.loadtxt(inp)
+            with open(op.join(dir, 'nprop.txt'), 'r') as inp:
+                self.sampler.nprop = np.loadtxt(inp)
+            with open(op.join(dir, 'nprop_accepted.txt'), 'r') as inp:
+                self.sampler.nprop_accepted = np.loadtxt(inp)
             with open(op.join(dir, 'betas.txt'), 'r') as inp:
                 self.sampler._betas = np.loadtxt(inp)
+            with open(op.join(dir, 'time.txt'), 'r') as inp:
+                self.sampler._time = int(inp.readline())
             with open(op.join(dir, 'thin.txt'), 'r') as inp:
                 self.thin = int(inp.readline())
 
@@ -357,7 +402,7 @@ class PTSamplerRunner(EnsembleSamplerRunner):
             print 'WARNING: EnsembleSamplerRunner: interrupted during load, inconsistent loaded state'
             raise
 
-    def run_to_neff(self, neff, savedir=None):
+    def run_to_neff(self, neff, savedir=None, *args, **kwargs):
         """Run the sampler, thinning as necessary, until ``neff`` effective
         ensembles are obtained.  When ``savedir`` is not ``None``, the
         sampler will be periodically saved to the given directory.
@@ -365,7 +410,7 @@ class PTSamplerRunner(EnsembleSamplerRunner):
         """
         
         while self.thin_chain is None or self.thin_chain.shape[2] < neff:
-            self.run_mcmc(neff)
+            self.run_mcmc(neff, *args, **kwargs)
             
             print 'Accumulated ', self.chain.shape[2], ' ensembles'
             if self.thin_chain is not None:
@@ -379,6 +424,8 @@ class PTSamplerRunner(EnsembleSamplerRunner):
                 self.rethin()
                 print 'Thinned chain; now ', self.chain.shape[2], ' ensembles'
 
+            sys.__stdout__.flush()
+
     def rethin(self):
         """Increase the thinning parameter by a factor of two, modifying the
         stored chain and lnprob states accordingly.  
@@ -388,4 +435,5 @@ class PTSamplerRunner(EnsembleSamplerRunner):
         self.sampler._chain = self.sampler._chain[:,:,1::2,:]
         self.sampler._lnprob = self.sampler._lnprob[:,:,1::2]
         self.sampler._lnlikelihood = self.sampler._lnlikelihood[:,:,1::2]
+        self.sampler._beta_history = self.sampler._beta_history[:, 1::2]
         self.thin *= 2
