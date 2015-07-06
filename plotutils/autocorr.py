@@ -218,3 +218,33 @@ def plot_emcee_chain_autocorrelation_functions(chain, fburnin=None):
     for i in range(npar):
         plt.subplot(nside, nside, i+1)
         plt.plot(autocorrelation_function(np.mean(chain[:,:,i], axis=0)))
+
+def emcee_gelman_rubin_r(chain, fburnin=None):
+    r"""Returns the Gelman-Rubin R convergence statistic applied to
+    individual walkers' trajectories in each parameter.
+
+    """
+
+    if fburnin is None:
+        fburnin = _default_burnin(5)
+
+    istart = int(round(fburnin*chain.shape[1]))
+
+    chain = chain[:,istart:,:]
+
+    n = chain.shape[1]
+    m = chain.shape[0]
+    
+    walker_means = np.mean(chain, axis=1)
+    walker_variances = np.var(chain, axis=1)
+
+    walker_mean_var = np.var(walker_means, axis=0)
+    walker_var_mean = np.mean(walker_variances, axis=0)
+
+    sigma2 = (n - 1.0)/n*walker_var_mean + walker_mean_var
+
+    Vest2 = sigma2 + walker_mean_var / m
+
+    return Vest2 / walker_var_mean
+
+    

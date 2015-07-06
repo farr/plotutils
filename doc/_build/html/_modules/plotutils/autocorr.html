@@ -267,7 +267,37 @@
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">npar</span><span class="p">):</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">nside</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">autocorrelation_function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)))</span></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">autocorrelation_function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,:,</span><span class="n">i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)))</span>
+</div>
+<div class="viewcode-block" id="emcee_gelman_rubin_r"><a class="viewcode-back" href="../../plotutils.html#plotutils.autocorr.emcee_gelman_rubin_r">[docs]</a><span class="k">def</span> <span class="nf">emcee_gelman_rubin_r</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Returns the Gelman-Rubin R convergence statistic applied to</span>
+<span class="sd">    individual walkers&#39; trajectories in each parameter.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">fburnin</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">fburnin</span> <span class="o">=</span> <span class="n">_default_burnin</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="n">istart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">fburnin</span><span class="o">*</span><span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">chain</span><span class="p">[:,</span><span class="n">istart</span><span class="p">:,:]</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">walker_means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">walker_variances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">walker_mean_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">walker_means</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">walker_var_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">walker_variances</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">sigma2</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="o">*</span><span class="n">walker_var_mean</span> <span class="o">+</span> <span class="n">walker_mean_var</span>
+
+    <span class="n">Vest2</span> <span class="o">=</span> <span class="n">sigma2</span> <span class="o">+</span> <span class="n">walker_mean_var</span> <span class="o">/</span> <span class="n">m</span>
+
+    <span class="k">return</span> <span class="n">Vest2</span> <span class="o">/</span> <span class="n">walker_var_mean</span>
+
+    </div>
 </pre></div>
 
           </div>

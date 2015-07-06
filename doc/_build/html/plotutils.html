@@ -488,6 +488,13 @@ ACL is discarded.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="plotutils.autocorr.emcee_gelman_rubin_r">
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_gelman_rubin_r</tt><big>(</big><em>chain</em>, <em>fburnin=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#emcee_gelman_rubin_r"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.emcee_gelman_rubin_r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Gelman-Rubin R convergence statistic applied to
+individual walkers&#8217; trajectories in each parameter.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="plotutils.autocorr.emcee_ptchain_autocorrelation_lengths">
 <tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">emcee_ptchain_autocorrelation_lengths</tt><big>(</big><em>ptchain</em>, <em>M=5</em>, <em>fburnin=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#emcee_ptchain_autocorrelation_lengths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.emcee_ptchain_autocorrelation_lengths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an array of shape <tt class="docutils literal"><span class="pre">(Ntemp,</span> <span class="pre">Nparams)</span></tt> giving the estimated
@@ -595,7 +602,7 @@ stored chain and lnprob states accordingly.</p>
 
 <dl class="method">
 <dt id="plotutils.runner.EnsembleSamplerRunner.run_mcmc">
-<tt class="descname">run_mcmc</tt><big>(</big><em>nthinsteps</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.run_mcmc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.run_mcmc" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">run_mcmc</tt><big>(</big><em>nthinsteps</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.run_mcmc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.run_mcmc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the associated sampler to produce <tt class="docutils literal"><span class="pre">nthinsteps</span></tt> worth of
 stored ensembles (i.e. the sampler will be run for
 <tt class="docutils literal"><span class="pre">nthinsteps*self.thin</span></tt> total steps).</p>
@@ -603,7 +610,7 @@ stored ensembles (i.e. the sampler will be run for
 
 <dl class="method">
 <dt id="plotutils.runner.EnsembleSamplerRunner.run_to_neff">
-<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.run_to_neff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#EnsembleSamplerRunner.run_to_neff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.EnsembleSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the sampler, thinning as necessary, until <tt class="docutils literal"><span class="pre">neff</span></tt> effective
 ensembles are obtained.  When <tt class="docutils literal"><span class="pre">savedir</span></tt> is not <tt class="docutils literal"><span class="pre">None</span></tt>, the
 sampler will be periodically saved to the given directory.</p>
@@ -687,7 +694,7 @@ stored chain and lnprob states accordingly.</p>
 
 <dl class="method">
 <dt id="plotutils.runner.PTSamplerRunner.run_to_neff">
-<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.run_to_neff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">run_to_neff</tt><big>(</big><em>neff</em>, <em>savedir=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/plotutils/runner.html#PTSamplerRunner.run_to_neff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.runner.PTSamplerRunner.run_to_neff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the sampler, thinning as necessary, until <tt class="docutils literal"><span class="pre">neff</span></tt> effective
 ensembles are obtained.  When <tt class="docutils literal"><span class="pre">savedir</span></tt> is not <tt class="docutils literal"><span class="pre">None</span></tt>, the
 sampler will be periodically saved to the given directory.</p>
@@ -705,7 +712,13 @@ nearly safe from interruption):</p>
 <li><tt class="docutils literal"><span class="pre">chain.npy.bz2</span></tt></li>
 <li><tt class="docutils literal"><span class="pre">lnprob.npy.bz2</span></tt></li>
 <li><tt class="docutils literal"><span class="pre">lnlike.npy.bz2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">beta_history.npy.bz2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">nswap.txt</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">nswap_accepted.txt</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">nprop.txt</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">nprop_accepted.txt</span></tt></li>
 <li><tt class="docutils literal"><span class="pre">betas.txt</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">time.txt</span></tt></li>
 <li><tt class="docutils literal"><span class="pre">thin.txt</span></tt></li>
 </ul>
 </div></blockquote>
