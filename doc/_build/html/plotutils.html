@@ -542,6 +542,19 @@ estimate an ACL for some component of the chain.</p>
 of the parameters in the given chain.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="plotutils.autocorr.waic">
+<tt class="descclassname">plotutils.autocorr.</tt><tt class="descname">waic</tt><big>(</big><em>lnlikes</em>, <em>fburnin=None</em><big>)</big><a class="reference internal" href="_modules/plotutils/autocorr.html#waic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.autocorr.waic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an estimate of the WAIC from an emcee sampler&#8217;s lnlike
+(should be of shape <tt class="docutils literal"><span class="pre">(nwalkers,</span> <span class="pre">nsteps)</span></tt>).  The WAIC is defined
+by</p>
+<div class="math">
+\[\mathrm{WAIC} = -2 \left( \left\langle \ln \mathcal{L} \right\rangle - \mathrm{Var}\, \ln\mathcal{L} \right).\]</div>
+<p>See Gelman, Hwang, and Vehtari (2013) for a motivation for this
+quantity in terms of an unbiased estimate of the expected log
+pointwise predictive density.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-plotutils.runner">
 <span id="runner-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">runner</span></tt> Module<a class="headerlink" href="#module-plotutils.runner" title="Permalink to this headline">¶</a></h2>

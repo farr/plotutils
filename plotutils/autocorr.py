@@ -247,4 +247,29 @@ def emcee_gelman_rubin_r(chain, fburnin=None):
 
     return Vest2 / walker_var_mean
 
-    
+def waic(lnlikes, fburnin=None):
+    r"""Returns an estimate of the WAIC from an emcee sampler's lnlike
+    (should be of shape ``(nwalkers, nsteps)``).  The WAIC is defined
+    by
+
+    .. math::
+
+      \mathrm{WAIC} = -2 \left( \left\langle \ln \mathcal{L} \right\rangle - \mathrm{Var}\, \ln\mathcal{L} \right).
+
+    See Gelman, Hwang, and Vehtari (2013) for a motivation for this
+    quantity in terms of an unbiased estimate of the expected log
+    pointwise predictive density.
+
+    """
+
+    if fburnin is None:
+        fburnin = _default_burnin(5)
+
+    istart = int(round(fburnin*lnlikes.shape[1]))
+
+    lnlikes = lnlikes[:,istart:]
+
+    mu = np.mean(lnlikes)
+    v = np.var(lnlikes)
+
+    return -2.0*(mu - v)
