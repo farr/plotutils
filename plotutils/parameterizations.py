@@ -354,9 +354,8 @@ def _stable_polynomial_roots_logjac(p, rmin, rmax):
     n = p.shape[0]
 
     rs = []
-    i = 0
     lj = 0.0
-    while i < n-1:
+    for i in range(0, n-1, 2):
         y = _invlogitab(p[i], a, b)
         lj += _logitablogjac(y, a, b)
 
@@ -377,8 +376,6 @@ def _stable_polynomial_roots_logjac(p, rmin, rmax):
             rs.append(x-rmin)
             b = x
 
-        i += 2
-
     if n % 2 == 1:
         if b > 0.0:
             b = 0.0 # The final root must be negative real, no matter what
@@ -396,6 +393,9 @@ def stable_polynomial_log_jacobian(p, rmin, rmax):
     return _stable_polynomial_roots_logjac(p, rmin, rmax)[1]
 
 def stable_polynomial_params(r, rmin, rmax):
+    r = np.atleast_1d(r)
+    n = r.shape[0]
+
     cplx_r = r[np.imag(r) > 0.0]
     real_r = np.real(r[np.imag(r) == 0.0])
 
@@ -415,9 +415,19 @@ def stable_polynomial_params(r, rmin, rmax):
 
         b = y
 
+    if n % 2 == 1:
+        last_r = real_r[-1]
+        real_r = real_r[:-1]
+        
     for rr in real_r:
         y = rr + rmin
         p.append(_logitab(y, a, b))
         b = y
 
+    if n % 2 == 1:
+        if b > 0.0:
+            b = 0.0
+        y = last_r + rmin
+        p.append(_logitab(y, a, b))
+        
     return np.array(p)
