@@ -327,3 +327,97 @@ def increasing_log_jacobian(p):
     """
 
     return np.sum(p[1:])
+
+def _logitab(x, a, b):
+    return np.log(x - a) - np.log(b - x)
+
+def _invlogitab(y, a, b):
+    if y > 0.0:
+        ey = np.exp(-y)
+        return (a*ey + b)/(1.0 + ey)
+    else:
+        ey = np.exp(y)
+        return (b*ey + a)/(1.0 + ey)
+
+def _logitablogjac(x, a, b):
+    return np.log(x-a) + np.log(b-x) - np.log(b-a)
+
+def _stable_polynomial_roots_logjac(p, rmin, rmax):
+    """
+
+    """
+    p = np.atleast_1d(p)
+
+    a = -(rmax-rmin)
+    b = rmax
+
+    n = p.shape[0]
+
+    rs = []
+    i = 0
+    lj = 0.0
+    while i < n-1:
+        y = _invlogitab(p[i], a, b)
+        lj += _logitablogjac(y, a, b)
+
+        if y > 0.0:
+            # Complex root
+            x = _invlogitab(p[i+1], -rmax, -rmin)
+            lj += _logitablogjac(x, -rmax, -rmin)
+
+            rs.append(x + y*1j)
+            rs.append(x - y*1j)
+            b = y
+        else:
+            rs.append(y-rmin)
+            b = y
+
+            x = _invlogitab(p[i+1], a, b)
+            lj += _logitablogjac(x, a, b)
+            rs.append(x-rmin)
+            b = x
+
+        i += 2
+
+    if n % 2 == 1:
+        if b > 0.0:
+            b = 0.0 # The final root must be negative real, no matter what
+        x = _invlogitab(p[n-1], a, b)
+        lj += _logitablogjac(x, a, b)
+
+        rs.append(x - rmin)
+
+    return np.array(rs, dtype=np.complex), lj
+
+def stable_polynomial_roots(p, rmin, rmax):
+    return _stable_polynomial_roots_logjac(p, rmin, rmax)[0]
+
+def stable_polynomial_log_jacobian(p, rmin, rmax):
+    return _stable_polynomial_roots_logjac(p, rmin, rmax)[1]
+
+def stable_polynomial_params(r, rmin, rmax):
+    cplx_r = r[np.imag(r) > 0.0]
+    real_r = np.real(r[np.imag(r) == 0.0])
+
+    cplx_r = cplx_r[np.argsort(np.imag(cplx_r))][::-1] # Decreasing imag
+    real_r = real_r[np.argsort(real_r)][::-1] # Decreasing real
+
+    a = -(rmax-rmin)
+    b = rmax
+
+    p = []
+    for rc in cplx_r:
+        y = np.imag(rc)
+        p.append(_logitab(y, a, b))
+
+        x = np.real(rc)
+        p.append(_logitab(x, -rmax, -rmin))
+
+        b = y
+
+    for rr in real_r:
+        y = rr + rmin
+        p.append(_logitab(y, a, b))
+        b = y
+
+    return np.array(p)
