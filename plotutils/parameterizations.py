@@ -387,6 +387,96 @@ def _stable_polynomial_roots_logjac(p, rmin, rmax):
     return np.array(rs, dtype=np.complex), lj
 
 def stable_polynomial_roots(p, rmin, rmax):
+    r"""A parameterisation of the roots of a real, 'stable' polynomial.
+
+    A stable polynomial has roots with a negative real part; it is the
+    characteristic polynomial for a linear ODE with decaying
+    solutions.  The parameterisation provides a mapping from
+    :math:`\mathbb{R}^n` to the roots that is one-to-one; there are no
+    root-permutation degeneracies.  The log-Jacobian function produces
+    a flat distribution on the real and imaginary (if any) parts of
+    the roots.
+
+    :param p: The array giving the parameters in :math:`\mathbb{R}^n`
+      for the roots of the polynomial.
+
+    :param rmin: The real part of all the roots is bounded below
+      :math:`-r_\mathrm{min}`.
+
+    :param rmax: The real part of all the roots is bounded above
+      :math:`-r_\mathrm{max}`, and the imaginary parts of all the
+      roots are bounded between :math:`-r_\mathrm{max}` and
+      :math:`r_\mathrm{max}`.
+
+    The parameterisation uses a 'bounded logit' transformation to map
+    ranges of reals to :math:`\pm \infty`:
+
+    .. math::
+
+      \mathrm{logit}\left(x; a, b\right) = \log(x-a) - log(b-x)
+
+    The mapping of the roots proceeds as follows.  First, discard the
+    roots with strictly negative imaginary parts (these are the
+    conjugates of corresponding roots with strictly positive imaginary
+    parts, so we lose no information).  Then, sort the remaining roots
+    in order of decreasing imaginary part; if there are any strictly
+    real roots, with imaginary part zero, sort these in decreasing
+    order, from least negative to most negative.  
+
+    Let :math:`a = -\left( r_\mathrm{max} - r_\mathrm{min} \right)`
+    and :math:`b = r_\mathrm{max}`.  Then, proceeding by pairs of
+    roots:
+
+      * If the imaginary part of root ``i`` is greater than zero, then 
+
+        .. math::
+
+          p_i = \mathrm{logit}\left(\mathrm{im}\left(r_i\right); a, b\right) \\
+          p_{i+1} = \mathrm{logit}\left(\mathrm{re}\left(r_i\right); -r_\mathrm{max}, -r_\mathrm{min} \right) 
+
+        Then set :math:`b = \mathrm{im} r_i`, and proceed to the next pair.
+
+      * If the imaginary part of root ``i`` is zero, then 
+
+        .. math::
+
+          p_i = \mathrm{logit}\left( r_i + r_\mathrm{min}; a, b \right) \\
+          p_{i+1} = \mathrm{logit}\left( r_{i+1} + r_\mathrm{min}; a, r_i + r_\mathrm{min} \right)
+
+        then set :math:`b = r_{i+1} + r_\mathrm{min}`.
+
+      * If the number of roots is odd, then the final root must be
+        real, and is the smallest of all the real roots:
+
+        .. math::
+
+          p_{N-1} = \mathrm{logit}\left( r_{N-1} + r_\mathrm{min}; a, \mathrm{min}(b, 0) \right).
+
+    Intuitively, you can imagine constructing the parameterisation
+    using a line that sweeps down the imaginary axis, starting from
+    :math:`i r_\mathrm{max}`; as it hits each complex root, it records
+    the logit of that root's imaginary and real parts (which must lie
+    within certain bounds), and then sets the maximum bound for the
+    imaginary part of the next root.  Once all the complex roots have
+    been parameterised, a line begins at :math:`-r_\mathrm{min}` on
+    the real axis and sweeps left; as it hits each real root, it
+    records the logit of that root between the current bounds, and
+    resets the bound on the maximum value of the next root to the
+    current real root.
+
+    The reverse transformation begins by unpacking the first parameter
+    value using the inverse logit transform; if this value is
+    positive, then the root is complex, and the next parameter
+    correponds to the real part.  If the value is negative, then this
+    a real root, and the following roots are also real (and negative).
+    Bounds on the subsequent root values are set accordingly in either
+    case for the next inverse logit transformation.  
+
+    The parameterisation maps the allowed, sorted root space onto the
+    entire :math:`\mathbb{R}^N` real space in a one-to-one way.
+
+    """
+
     return _stable_polynomial_roots_logjac(p, rmin, rmax)[0]
 
 def stable_polynomial_log_jacobian(p, rmin, rmax):
