@@ -411,8 +411,13 @@ class PTSamplerRunner(EnsembleSamplerRunner):
         
         while self.thin_chain is None or self.thin_chain.shape[2] < neff:
             self.run_mcmc(neff, *args, **kwargs)
+
+            arate = np.mean(self.sampler.acceptance_fraction)
+            tarate = np.mean(self.sampler.tswap_acceptance_fraction)
             
             print 'Accumulated ', self.chain.shape[2], ' ensembles'
+            print '  acc rate is       ', arate
+            print '  tswap acc rate is ', tarate
             if self.thin_chain is not None:
                 print 'Equivalent to ', self.thin_chain.shape[2], ' effective ensembles'
 
