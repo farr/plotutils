@@ -339,8 +339,13 @@ def _invlogitab(y, a, b):
         ey = np.exp(y)
         return (b*ey + a)/(1.0 + ey)
 
-def _logitablogjac(x, a, b):
-    return np.log(x-a) + np.log(b-x) - np.log(b-a)
+def _logitablogjac(y, a, b):
+    if y > 0.0:
+        ey = np.exp(y)
+        return np.log(b-a) + y - 2.0*np.log1p(ey)
+    else:
+        ey = np.exp(-y)
+        return np.log(b-a) - y - 2.0*np.log1p(ey) 
 
 def _stable_polynomial_roots_logjac(p, rmin, rmax):
     """
@@ -357,12 +362,12 @@ def _stable_polynomial_roots_logjac(p, rmin, rmax):
     lj = 0.0
     for i in range(0, n-1, 2):
         y = _invlogitab(p[i], a, b)
-        lj += _logitablogjac(y, a, b)
+        lj += _logitablogjac(p[i], a, b)
 
         if y > 0.0:
             # Complex root
             x = _invlogitab(p[i+1], -rmax, -rmin)
-            lj += _logitablogjac(x, -rmax, -rmin)
+            lj += _logitablogjac(p[i+1], -rmax, -rmin)
 
             rs.append(x + y*1j)
             rs.append(x - y*1j)
@@ -372,7 +377,7 @@ def _stable_polynomial_roots_logjac(p, rmin, rmax):
             b = y
 
             x = _invlogitab(p[i+1], a, b)
-            lj += _logitablogjac(x, a, b)
+            lj += _logitablogjac(p[i+1], a, b)
             rs.append(x-rmin)
             b = x
 
@@ -380,7 +385,7 @@ def _stable_polynomial_roots_logjac(p, rmin, rmax):
         if b > 0.0:
             b = 0.0 # The final root must be negative real, no matter what
         x = _invlogitab(p[n-1], a, b)
-        lj += _logitablogjac(x, a, b)
+        lj += _logitablogjac(p[n-1], a, b)
 
         rs.append(x - rmin)
 
