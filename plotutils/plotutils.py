@@ -80,6 +80,12 @@ def plot_emcee_chains(chain, truths=None, mean=True, fburnin=0):
         if truths is not None:
             pp.axhline(truths[k], color='k')
 
+def plot_kombine_chains(chain, truths=None, mean=True, fburnin=0):
+    """Like :func:`plot_emcee_chains` but for kombine.
+    
+    """
+    plot_emcee_chains(np.transpose(chain, (1,0,2)), truths=truths, mean=mean, fburnin=fburnin)
+
 def plot_emcee_chains_one_fig(chain, fburnin=None):
     """Plots a single-figure representation of the chain evolution of the
     given chain.  The figure shows the evolution of the mean of each
@@ -106,6 +112,12 @@ def plot_emcee_chains_one_fig(chain, fburnin=None):
         sigma = np.std(mus)
 
         pp.plot((mus - mu)/sigma)
+
+def plot_kombine_chains_one_fig(chain, fburnin=None):
+    """Like :func:`plot_emcee_chains_one_fig` but for kombine.
+
+    """
+    plot_emcee_chains_one_fig(np.transpose(chain, (1,0,2)), fburnin=fburnin)
 
 def decorrelated_2d_histogram_pdf(pts, xmin=None, xmax=None, ymin=None, ymax=None):
     """Returns ``(XS, YS, ZS)``, with ``ZS`` of shape ``(Nx,Ny)`` and
