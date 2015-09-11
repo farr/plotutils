@@ -133,6 +133,13 @@ def emcee_chain_autocorrelation_lengths(chain, M=5, fburnin=None):
 
     return autocorrelation_length_estimate(np.mean(chain[:,istart:,:], axis=0), axis=0)
 
+def kombine_chain_autocorrelation_lengths(chain, M=5, fburnin=None):
+    """Just like :func:`emcee_chain_autocorrelation_lengths` but for kombine.
+
+    """
+
+    return emcee_chain_autocorrelation_lengths(np.transpose(chain, (1,0,2)), M=M, fburnin=fburnin)
+
 def emcee_ptchain_autocorrelation_lengths(ptchain, M=5, fburnin=None):
     r"""Returns an array of shape ``(Ntemp, Nparams)`` giving the estimated
     autocorrelation lengths for each parameter across each temperature
