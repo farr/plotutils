@@ -243,14 +243,14 @@ class PTSamplerRunner(EnsembleSamplerRunner):
 
     @property
     def burnedin_chain(self):
-        """Returns a chain with the first 1/2 of the samples removed.  This
+        """Returns a chain with the first 1/6 of the samples removed.  This
         chain corresponds to the samples that are then thinned to
         produce the ``thin_chain`` property.  There is, of course, no
         guarantee that this chain is actually burned in.
 
         """
         nensembles = self.chain.shape[2]
-        istart = int(round(nensembles/2.0))
+        istart = int(round(nensembles/6.0))
 
         return self.chain[:,:,istart:,:]
 
@@ -263,7 +263,7 @@ class PTSamplerRunner(EnsembleSamplerRunner):
         if self.chain is None or self.chain.shape[2] == 0:
             return None
         else:
-            return ac.emcee_thinned_ptchain(self.chain, fburnin=0.5)
+            return ac.emcee_thinned_ptchain(self.chain)
 
     @property
     def thin_flatchain(self):
