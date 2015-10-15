@@ -339,8 +339,10 @@ def _invlogitab(y, a, b):
         ey = np.exp(y)
         return (b*ey + a)/(1.0 + ey)
 
+e^y(b-a)/(e^y+1)^2
+    
 def _logitablogjac(y, a, b):
-    if y > 0.0:
+    if y < 0.0:
         ey = np.exp(y)
         return np.log(b-a) + y - 2.0*np.log1p(ey)
     else:
