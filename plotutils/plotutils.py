@@ -519,7 +519,7 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=Non
 
         xs = np.exp(np.linspace(xmin, xmax, N))
 
-        pp.plot(xs, kde(xs), *args, **kwargs)
+        pp.plot(xs, kde(log(xs)), *args, **kwargs)
         pp.xscale('log')
     else:
         kde=ss.gaussian_kde(pts)
