@@ -520,7 +520,12 @@
 <span class="sd">      domain of the PDF.  </span>
 
 <span class="sd">    :param high: If not ``None``, indicates an upper boundary for the</span>
-<span class="sd">      domain of the PDF.&quot;&quot;&quot;</span>
+<span class="sd">      domain of the PDF.</span>
+
+<span class="sd">    :param log: If ``True``, plot a PDF for ``log(pts)`` instead of</span>
+<span class="sd">      ``pts``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
 
@@ -560,7 +565,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">xmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">xmax</span><span class="p">)</span>
 
-        <span class="n">kde</span><span class="o">=</span><span class="n">lk</span><span class="o">.</span><span class="n">Log_kde</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+        <span class="n">kde</span><span class="o">=</span><span class="n">ss</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">lpts</span><span class="p">)</span>
 
         <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
 
@@ -618,7 +623,7 @@
     <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
         <span class="n">pp</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s">&#39;log&#39;</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="plot_kde_posterior_2d"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_kde_posterior_2d">[docs]</a><span class="k">def</span> <span class="nf">plot_kde_posterior_2d</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ny</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_kde_posterior_2d"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_kde_posterior_2d">[docs]</a><span class="k">def</span> <span class="nf">plot_kde_posterior_2d</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ny</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">logspace</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plot a 2D KDE estimated posterior.</span>
 
 <span class="sd">    :param pts: A ``(Npts, 2)`` array of points.</span>
