@@ -470,7 +470,12 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=Non
       domain of the PDF.  
 
     :param high: If not ``None``, indicates an upper boundary for the
-      domain of the PDF."""
+      domain of the PDF.
+
+    :param log: If ``True``, plot a PDF for ``log(pts)`` instead of
+      ``pts``.
+
+    """
 
     sigma = np.std(pts)
 
@@ -510,7 +515,7 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=Non
         else:
             xmax = np.log(xmax)
 
-        kde=lk.Log_kde(pts)
+        kde=ss.gaussian_kde(lpts)
 
         xs = np.exp(np.linspace(xmin, xmax, N))
 
@@ -568,7 +573,7 @@ def plot_histogram_posterior(pts, xmin=None, xmax=None, log=False, **args):
     if log:
         pp.xscale('log')
 
-def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None, log=False):
+def plot_kde_posterior_2d(pts, xmin=None, xmax=None, ymin=None, ymax=None, Nx=100, Ny=100, cmap=None, log=False, logspace=False):
     """Plot a 2D KDE estimated posterior.
 
     :param pts: A ``(Npts, 2)`` array of points.

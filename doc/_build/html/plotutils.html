@@ -382,6 +382,8 @@ interval.</li>
 domain of the PDF.</li>
 <li><strong>high</strong> &#8211; If not <tt class="docutils literal"><span class="pre">None</span></tt>, indicates an upper boundary for the
 domain of the PDF.</li>
+<li><strong>log</strong> &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt>, plot a PDF for <tt class="docutils literal"><span class="pre">log(pts)</span></tt> instead of
+<tt class="docutils literal"><span class="pre">pts</span></tt>.</li>
 </ul>
 </td>
 </tr>
@@ -391,7 +393,7 @@ domain of the PDF.</li>
 
 <dl class="function">
 <dt id="plotutils.plotutils.plot_kde_posterior_2d">
-<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior_2d</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>log=False</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior_2d" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">plotutils.plotutils.</tt><tt class="descname">plot_kde_posterior_2d</tt><big>(</big><em>pts</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>Nx=100</em>, <em>Ny=100</em>, <em>cmap=None</em>, <em>log=False</em>, <em>logspace=False</em><big>)</big><a class="reference internal" href="_modules/plotutils/plotutils.html#plot_kde_posterior_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotutils.plotutils.plot_kde_posterior_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a 2D KDE estimated posterior.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
