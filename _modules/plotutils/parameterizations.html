@@ -48,7 +48,7 @@
           <div class="body">
             
   <h1>Source code for plotutils.parameterizations</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;Useful parameterizations for various commonly-found elements of</span>
+<span></span><span class="sd">&quot;&quot;&quot;Useful parameterizations for various commonly-found elements of</span>
 <span class="sd">models.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -61,7 +61,7 @@
     <span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">8.0</span><span class="o">*</span><span class="n">M</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">N</span><span class="o">/</span><span class="mi">2</span> <span class="o">==</span> <span class="n">M</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;input must have shape (N+1)*N/2 for some N&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;input must have shape (N+1)*N/2 for some N&#39;</span><span class="p">)</span>
         
     <span class="k">return</span> <span class="n">N</span>
     
@@ -206,7 +206,7 @@
     <span class="n">zs</span> <span class="o">=</span> <span class="n">_usimp_zs</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
     <span class="n">xs</span> <span class="o">=</span> <span class="n">usimp_lengths</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-    <span class="n">csxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">-</span> <span class="n">xs</span> <span class="c"># Starts from zero</span>
+    <span class="n">csxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">-</span> <span class="n">xs</span> <span class="c1"># Starts from zero</span>
 
     <span class="n">log_j_terms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="o">-</span><span class="n">zs</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="o">-</span><span class="n">csxs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
@@ -253,16 +253,16 @@
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">NINF</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;bounded_values: must supply at least one limit&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;bounded_values: must supply at least one limit&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># Only upper limit</span>
+                <span class="c1"># Only upper limit</span>
                 <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
-                <span class="c"># Only lower limit.</span>
+                <span class="c1"># Only lower limit.</span>
                 <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># Both bounds</span>
+                <span class="c1"># Both bounds</span>
                 <span class="n">ep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
                 <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ep</span><span class="o">*</span><span class="n">h</span> <span class="o">+</span> <span class="n">l</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">ep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -280,13 +280,13 @@
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">NINF</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;bounded_params: must supply at least one limit&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;bounded_params: must supply at least one limit&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># Only upper limit</span>
+                <span class="c1"># Only upper limit</span>
                 <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
-                <span class="c"># Only lower limit</span>
+                <span class="c1"># Only lower limit</span>
                 <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">l</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
@@ -309,16 +309,16 @@
     <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">NINF</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;bounded_log_jacobian: must supply at least one limit&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;bounded_log_jacobian: must supply at least one limit&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># Only upper limit</span>
+                <span class="c1"># Only upper limit</span>
                 <span class="n">lj</span> <span class="o">-=</span> <span class="n">p</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
-                <span class="c"># Only lower limit</span>
+                <span class="c1"># Only lower limit</span>
                 <span class="n">lj</span> <span class="o">+=</span> <span class="n">p</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># Both limits</span>
+                <span class="c1"># Both limits</span>
                 <span class="n">lj</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">h</span><span class="o">-</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="n">p</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">lj</span>
@@ -415,7 +415,7 @@
         <span class="n">lj</span> <span class="o">+=</span> <span class="n">_logitablogjac</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
-            <span class="c"># Complex root</span>
+            <span class="c1"># Complex root</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">_invlogitab</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">rmax</span><span class="p">,</span> <span class="o">-</span><span class="n">rmin</span><span class="p">)</span>
             <span class="n">lj</span> <span class="o">+=</span> <span class="n">_logitablogjac</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">rmax</span><span class="p">,</span> <span class="o">-</span><span class="n">rmin</span><span class="p">)</span>
 
@@ -433,7 +433,7 @@
 
     <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c"># The final root must be negative real, no matter what</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># The final root must be negative real, no matter what</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">_invlogitab</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
         <span class="n">lj</span> <span class="o">+=</span> <span class="n">_logitablogjac</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
@@ -544,8 +544,8 @@
     <span class="n">cplx_r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">]</span>
     <span class="n">real_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">])</span>
 
-    <span class="n">cplx_r</span> <span class="o">=</span> <span class="n">cplx_r</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">cplx_r</span><span class="p">))][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c"># Decreasing imag</span>
-    <span class="n">real_r</span> <span class="o">=</span> <span class="n">real_r</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">real_r</span><span class="p">)][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c"># Decreasing real</span>
+    <span class="n">cplx_r</span> <span class="o">=</span> <span class="n">cplx_r</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">cplx_r</span><span class="p">))][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Decreasing imag</span>
+    <span class="n">real_r</span> <span class="o">=</span> <span class="n">real_r</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">real_r</span><span class="p">)][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Decreasing real</span>
 
     <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">rmax</span><span class="o">-</span><span class="n">rmin</span><span class="p">)</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">rmax</span>
