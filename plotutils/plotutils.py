@@ -475,9 +475,13 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=Non
     :param log: If ``True``, plot a PDF for ``log(pts)`` instead of
       ``pts``.
 
+    :return: ``(xs, ys)``, the coordinates of the plotted line.
+
     """
 
     sigma = np.std(pts)
+    xs = None
+    ys = None
 
     if xmin is None and not log:
         xmin = np.min(pts)-0.5*sigma
@@ -494,10 +498,14 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=Non
     if periodic:
         period=xmax-xmin
         kde=ss.gaussian_kde(pts)
-        pp.plot(xs, kde(xs)+kde(xs+period)+kde(xs-period), *args, **kwargs)
+        ys = kde(xs)+kde(xs+period)+kde(xs-period)
+        pp.plot(xs, ys, *args, **kwargs)
+        return xs, ys
     elif low is not None or high is not None:
         kde=bk.Bounded_kde(pts, low=low, high=high)
-        pp.plot(xs, kde(xs), *args, **kwargs)
+        ys = kde(xs)
+        pp.plot(xs, ys, *args, **kwargs)
+        return xs, ys
     elif log:
         assert low is None, 'cannot impose low boundary in log-space'
         assert high is None, 'cannot impose high boundary in log-space'
@@ -518,12 +526,15 @@ def plot_kde_posterior(pts, xmin=None, xmax=None, N=100, periodic=False, low=Non
         kde=ss.gaussian_kde(lpts)
 
         xs = np.exp(np.linspace(xmin, xmax, N))
-
-        pp.plot(xs, kde(np.log(xs)), *args, **kwargs)
+        ys = kde(np.log(xs))
+        pp.plot(xs, ys, *args, **kwargs)
         pp.xscale('log')
+        return xs, ys
     else:
         kde=ss.gaussian_kde(pts)
-        pp.plot(xs, kde(xs), *args, **kwargs)
+        ys = kde(xs)
+        pp.plot(xs, ys, *args, **kwargs)
+        return xs, ys
 
 def plot_histogram_posterior(pts, xmin=None, xmax=None, log=False, **args):
     """Plots a histogram estimate of the posterior from which ``pts``

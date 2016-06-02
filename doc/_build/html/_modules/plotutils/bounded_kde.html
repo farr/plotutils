@@ -48,7 +48,7 @@
           <div class="body">
             
   <h1>Source code for plotutils.bounded_kde</h1><div class="highlight"><pre>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">erf</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
 
@@ -67,7 +67,7 @@
 <span class="sd">        :param high: The upper domain boundary.&quot;&quot;&quot;</span>
         <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
 
-        <span class="k">assert</span> <span class="n">pts</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;Bounded_kde can only be one-dimensional&#39;</span>
+        <span class="k">assert</span> <span class="n">pts</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Bounded_kde can only be one-dimensional&#39;</span>
         
         <span class="nb">super</span><span class="p">(</span><span class="n">Bounded_kde</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -88,7 +88,7 @@
         <span class="sd">&quot;&quot;&quot;Return an estimate of the density evaluated at the given</span>
 <span class="sd">        points.&quot;&quot;&quot;</span>
         <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">xs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;points must be one-dimensional&#39;</span>
+        <span class="k">assert</span> <span class="n">xs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;points must be one-dimensional&#39;</span>
 
         <span class="n">pdf</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Bounded_kde</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
 

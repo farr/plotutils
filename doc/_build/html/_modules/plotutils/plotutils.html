@@ -48,7 +48,7 @@
           <div class="body">
             
   <h1>Source code for plotutils.plotutils</h1><div class="highlight"><pre>
-<span class="kn">import</span> <span class="nn">bisect</span>
+<span></span><span class="kn">import</span> <span class="nn">bisect</span>
 <span class="kn">import</span> <span class="nn">bounded_kde</span> <span class="kn">as</span> <span class="nn">bk</span>
 <span class="kn">import</span> <span class="nn">bz2</span>
 <span class="kn">import</span> <span class="nn">gzip</span>
@@ -81,14 +81,14 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">f</span><span class="p">,</span><span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
         
-        <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s">&#39;.gz&#39;</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.gz&#39;</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">do_read</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s">&#39;.bz2&#39;</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">bz2</span><span class="o">.</span><span class="n">BZ2File</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.bz2&#39;</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">bz2</span><span class="o">.</span><span class="n">BZ2File</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">do_read</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">do_read</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">do_read</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
@@ -128,7 +128,7 @@
             <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,</span><span class="n">istart</span><span class="p">:,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">truths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">pp</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">truths</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">)</span>
+            <span class="n">pp</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">truths</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="plot_kombine_chains"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_kombine_chains">[docs]</a><span class="k">def</span> <span class="nf">plot_kombine_chains</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">truths</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fburnin</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Like :func:`plot_emcee_chains` but for kombine.</span>
@@ -209,7 +209,7 @@
     <span class="n">cov</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="c"># cov = L*L^T</span>
+    <span class="c1"># cov = L*L^T</span>
     <span class="n">d</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
 
     <span class="n">rescaled_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pts</span><span class="o">-</span><span class="n">mu</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
@@ -222,7 +222,7 @@
 
     <span class="n">H</span><span class="p">,</span><span class="n">xs</span><span class="p">,</span><span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram2d</span><span class="p">(</span><span class="n">rescaled_pts</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">rescaled_pts</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="p">))</span>
 
-    <span class="c"># Backwards to account for the ordering in histogram2d.</span>
+    <span class="c1"># Backwards to account for the ordering in histogram2d.</span>
     <span class="n">YS_RESCALED</span><span class="p">,</span><span class="n">XS_RESCALED</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">xs</span><span class="p">)</span>
 
     <span class="n">HPTS_RESCALED</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">XS_RESCALED</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
@@ -476,7 +476,7 @@
                                           <span class="n">YS_CENTER</span><span class="o">.</span><span class="n">flatten</span><span class="p">())),</span>
                          <span class="n">H</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
                          <span class="n">pts</span><span class="p">,</span>
-                         <span class="n">method</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span>
+                         <span class="n">method</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
                          <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
     <span class="n">ipost</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pts_post</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -492,11 +492,11 @@
                                        <span class="n">YS_CENTER</span><span class="o">.</span><span class="n">flatten</span><span class="p">())),</span>
                       <span class="n">H</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
                       <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">PXS</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">PYS</span><span class="o">.</span><span class="n">flatten</span><span class="p">())),</span>
-                      <span class="n">method</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span>
+                      <span class="n">method</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
                       <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
     <span class="n">posts</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">posts</span><span class="p">,</span> <span class="p">(</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="p">))</span>
 
-    <span class="n">pp</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">PXS</span><span class="p">,</span> <span class="n">PYS</span><span class="p">,</span> <span class="n">posts</span><span class="p">,</span> <span class="n">post_levels</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s">&#39;lower&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">pp</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">PXS</span><span class="p">,</span> <span class="n">PYS</span><span class="p">,</span> <span class="n">posts</span><span class="p">,</span> <span class="n">post_levels</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="plot_kde_posterior"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_kde_posterior">[docs]</a><span class="k">def</span> <span class="nf">plot_kde_posterior</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -525,9 +525,13 @@
 <span class="sd">    :param log: If ``True``, plot a PDF for ``log(pts)`` instead of</span>
 <span class="sd">      ``pts``.</span>
 
+<span class="sd">    :return: ``(xs, ys)``, the coordinates of the plotted line.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">if</span> <span class="n">xmin</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">log</span><span class="p">:</span>
         <span class="n">xmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sigma</span>
@@ -544,13 +548,17 @@
     <span class="k">if</span> <span class="n">periodic</span><span class="p">:</span>
         <span class="n">period</span><span class="o">=</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span>
         <span class="n">kde</span><span class="o">=</span><span class="n">ss</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="o">+</span><span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="o">+</span><span class="n">period</span><span class="p">)</span><span class="o">+</span><span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="o">-</span><span class="n">period</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="o">+</span><span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="o">+</span><span class="n">period</span><span class="p">)</span><span class="o">+</span><span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="o">-</span><span class="n">period</span><span class="p">)</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span>
     <span class="k">elif</span> <span class="n">low</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">high</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">kde</span><span class="o">=</span><span class="n">bk</span><span class="o">.</span><span class="n">Bounded_kde</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">high</span><span class="p">)</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span>
     <span class="k">elif</span> <span class="n">log</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="n">low</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;cannot impose low boundary in log-space&#39;</span>
-        <span class="k">assert</span> <span class="n">high</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;cannot impose high boundary in log-space&#39;</span>
+        <span class="k">assert</span> <span class="n">low</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">,</span> <span class="s1">&#39;cannot impose low boundary in log-space&#39;</span>
+        <span class="k">assert</span> <span class="n">high</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">,</span> <span class="s1">&#39;cannot impose high boundary in log-space&#39;</span>
 
         <span class="n">lpts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
         <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lpts</span><span class="p">)</span>
@@ -568,12 +576,15 @@
         <span class="n">kde</span><span class="o">=</span><span class="n">ss</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">lpts</span><span class="p">)</span>
 
         <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
-
-        <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">kde</span><span class="o">=</span><span class="n">ss</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span>
 </div>
 <div class="viewcode-block" id="plot_histogram_posterior"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_histogram_posterior">[docs]</a><span class="k">def</span> <span class="nf">plot_histogram_posterior</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plots a histogram estimate of the posterior from which ``pts``</span>
@@ -606,8 +617,8 @@
 
     <span class="n">iqr</span> <span class="o">=</span> <span class="n">spts</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">Npts</span><span class="o">*</span><span class="mf">0.75</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span> <span class="o">-</span> <span class="n">spts</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">Npts</span><span class="o">*</span><span class="mf">0.25</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)]</span>
 
-    <span class="c"># Optimal for Gaussian PDF in 1D; minimizes the squared error</span>
-    <span class="c"># between true and histogram PDF.</span>
+    <span class="c1"># Optimal for Gaussian PDF in 1D; minimizes the squared error</span>
+    <span class="c1"># between true and histogram PDF.</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">iqr</span><span class="o">/</span><span class="mf">1.35</span><span class="o">*</span><span class="p">(</span><span class="mf">42.5</span><span class="o">/</span><span class="n">Npts</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span>
 
     <span class="n">Nbins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="n">h</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
@@ -617,11 +628,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pp</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">Nbins</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
 
-    <span class="c"># Just because matplotlib sometimes puts the y-axis above 0:</span>
+    <span class="c1"># Just because matplotlib sometimes puts the y-axis above 0:</span>
     <span class="n">pp</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="plot_kde_posterior_2d"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_kde_posterior_2d">[docs]</a><span class="k">def</span> <span class="nf">plot_kde_posterior_2d</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ny</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">logspace</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plot a 2D KDE estimated posterior.</span>
@@ -682,8 +693,8 @@
     <span class="n">pp</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s">&#39;log&#39;</span><span class="p">)</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="plot_histogram_posterior_2d"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_histogram_posterior_2d">[docs]</a><span class="k">def</span> <span class="nf">plot_histogram_posterior_2d</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plots a 2D histogram density of the given points.</span>
@@ -709,7 +720,7 @@
     <span class="n">ymin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">YS</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
     <span class="n">ymax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">YS</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
 
-    <span class="c"># Plot a zero-level background...</span>
+    <span class="c1"># Plot a zero-level background...</span>
     <span class="n">pp</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">],</span> <span class="p">[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">]]),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">],</span> <span class="p">[</span><span class="n">ymax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">]]),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">]]),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
@@ -719,8 +730,8 @@
     <span class="n">pp</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s">&#39;log&#39;</span><span class="p">)</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="plot_cumulative_distribution"><a class="viewcode-back" href="../../plotutils.html#plotutils.plotutils.plot_cumulative_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_cumulative_distribution</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plots the 1D normalized empirical CDF for the given points.</span>
