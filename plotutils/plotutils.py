@@ -1,8 +1,8 @@
 import bisect
-import bounded_kde as bk
+import plotutils.bounded_kde as bk
 import bz2
 import gzip
-import log_kde as lk
+import plotutils.log_kde as lk
 import numpy as np
 import matplotlib.pyplot as pp
 import os.path 
