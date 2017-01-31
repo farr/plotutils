@@ -118,7 +118,7 @@ class EnsembleSamplerRunner(object):
             os.rename(op.join(dir, 'thin.txt.temp'),
                       op.join(dir, 'thin.txt'))
         except:
-            print 'WARNING: EnsembleSamplerRunner: interrupted during save, inconsistent saved state'
+            print('WARNING: EnsembleSamplerRunner: interrupted during save, inconsistent saved state')
             raise
 
         try:
@@ -127,7 +127,7 @@ class EnsembleSamplerRunner(object):
             os.rename(op.join(dir, 'runner.pkl.bz2.temp'),
                       op.join(dir, 'runner.pkl.bz2'))
         except:
-            print 'WARNING: EnsembleSampleRunner: pickling of runner failed.'
+            print('WARNING: EnsembleSampleRunner: pickling of runner failed.')
 
     def load_state(self, dir):
         """Load a stored state from the given directory.
@@ -144,7 +144,7 @@ class EnsembleSamplerRunner(object):
             self.result = self.chain[:,-1,:]
             self._first_step = True
         except:
-            print 'WARNING: EnsembleSamplerRunner: interrupted during load, inconsistent loaded state'
+            print('WARNING: EnsembleSamplerRunner: interrupted during load, inconsistent loaded state')
             raise
 
     def run_mcmc(self, nthinsteps, *args, **kwargs):
@@ -174,17 +174,17 @@ class EnsembleSamplerRunner(object):
         while self.chain.shape[1] == 0 or self.thin_chain is None or self.thin_chain.shape[1] < neff:
             self.run_mcmc(neff, *args, **kwargs)
             
-            print 'Accumulated ', self.chain.shape[1], ' ensembles, acceptance rate is ', np.mean(self.sampler.acceptance_fraction)
+            print('Accumulated ', self.chain.shape[1], ' ensembles, acceptance rate is ', np.mean(self.sampler.acceptance_fraction))
             if self.thin_chain is not None:
-                print 'Equivalent to ', self.thin_chain.shape[1], ' effective ensembles'
+                print('Equivalent to ', self.thin_chain.shape[1], ' effective ensembles')
 
             if savedir is not None:
-                print 'Saving state...'
+                print('Saving state...')
                 self.save_state(savedir)
 
             if self.chain.shape[1] > 10*neff:
                 self.rethin()
-                print 'Thinned chain; now ', self.chain.shape[1], ' ensembles'
+                print('Thinned chain; now ', self.chain.shape[1], ' ensembles')
 
             sys.__stdout__.flush()
 
@@ -357,7 +357,7 @@ class PTSamplerRunner(EnsembleSamplerRunner):
             os.rename(op.join(dir, 'thin.txt.temp'),
                       op.join(dir, 'thin.txt'))
         except:
-            print 'WARNING: EnsembleSamplerRunner: interrupted during save, inconsistent saved state'
+            print('WARNING: EnsembleSamplerRunner: interrupted during save, inconsistent saved state')
             raise
 
         try:
@@ -366,7 +366,7 @@ class PTSamplerRunner(EnsembleSamplerRunner):
             os.rename(op.join(dir, 'runner.pkl.bz2.temp'),
                       op.join(dir, 'runner.pkl.bz2'))
         except:
-            print 'WARNING: EnsembleSampleRunner: pickling of runner failed.'
+            print('WARNING: EnsembleSampleRunner: pickling of runner failed.')
 
     def load_state(self, dir):
         """Load a stored state from the given directory.
@@ -399,7 +399,7 @@ class PTSamplerRunner(EnsembleSamplerRunner):
             self.result = self.chain[:,:,-1,:]
             self._first_step = True
         except:
-            print 'WARNING: EnsembleSamplerRunner: interrupted during load, inconsistent loaded state'
+            print('WARNING: EnsembleSamplerRunner: interrupted during load, inconsistent loaded state')
             raise
 
     def run_to_neff(self, neff, savedir=None, *args, **kwargs):
@@ -415,19 +415,19 @@ class PTSamplerRunner(EnsembleSamplerRunner):
             arate = np.mean(self.sampler.acceptance_fraction)
             tarate = np.mean(self.sampler.tswap_acceptance_fraction)
             
-            print 'Accumulated ', self.chain.shape[2], ' ensembles'
-            print '  acc rate is       ', arate
-            print '  tswap acc rate is ', tarate
+            print('Accumulated ', self.chain.shape[2], ' ensembles')
+            print('  acc rate is       ', arate)
+            print('  tswap acc rate is ', tarate)
             if self.thin_chain is not None:
-                print 'Equivalent to ', self.thin_chain.shape[2], ' effective ensembles'
+                print('Equivalent to ', self.thin_chain.shape[2], ' effective ensembles')
 
             if savedir is not None:
-                print 'Saving state...'
+                print('Saving state...')
                 self.save_state(savedir)
 
             if self.chain.shape[2] > 10*neff:
                 self.rethin()
-                print 'Thinned chain; now ', self.chain.shape[2], ' ensembles'
+                print('Thinned chain; now ', self.chain.shape[2], ' ensembles')
 
             sys.__stdout__.flush()
 
