@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import bisect
 import plotutils.bounded_kde as bk
 import bz2
