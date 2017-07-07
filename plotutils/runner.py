@@ -1,4 +1,4 @@
-import autocorr as ac
+import plotutils.autocorr as ac
 import bz2
 import emcee
 import numpy as np

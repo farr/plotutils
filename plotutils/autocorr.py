@@ -87,8 +87,8 @@ def autocorrelation_length_estimate(series, acf=None, M=5, axis=0):
     """
     if acf is None:
         acf = autocorrelation_function(series, axis=axis)
-    m = [slice(None)] * len(acf.shape)
-    nmax = acf.shape[axis]/2
+    m = [slice(None), ] * len(acf.shape)
+    nmax = acf.shape[axis]//2
 
     # Generate ACL candidates.
     m[axis] = slice(0, nmax)
