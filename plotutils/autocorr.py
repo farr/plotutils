@@ -19,6 +19,57 @@ def _next_power_of_two(i):
 
     return pt
 
+def crosscorrelation_function(series1, series2, axis=0, returnlags=True):
+    """Returns the cross-correlation of the given pair of series.
+
+    If ``series1`` and ``series2`` are of different shapes, then they are first
+    broadcast according to the numpy broadcasting rules; ``axis`` refers to the
+    corresponding axis of the resulting, broadcasted arrays.
+
+    The returned array will correspond to the correlation comptued holding
+    ``series1`` fixed and shifting (i.e. lagging) ``series2`` by ``[-(n-1),
+    -(n-2), ..., 0, 1, ..., n-1]`` timesteps, with sufficient zero-padding before
+    and after the series, where ``n`` is the length along ``axis``.  If the
+    argument ``returnlags`` is ``True``, then ``(ccf, lags)`` will be returned.
+
+    """
+
+    series1 = np.atleast_1d(series1)
+    series2 = np.atleast_1d(series2)
+
+    series1, series2 = np.broadcast_arrays(series1, series2)
+
+    shape = np.array(series1.shape)
+
+    m = [slice(None)] * len(shape)
+    m2 = [slice(None)] * len(shape)
+
+    n0 = shape[axis]
+    n2 = 2*shape[axis]
+    n = _next_power_of_two(2*shape[axis])
+
+    m[axis] = slice(0, n0)
+    m2[axis] = slice(n-n0+1, n)
+
+    shape[axis] = n
+
+    padded_series1 = np.zeros(shape)
+    padded_series1[m] = (series1 - np.expand_dims(series1.mean(axis=axis), axis=axis))/np.std(series1, axis=axis)
+
+    padded_series2 = np.zeros(shape)
+    padded_series2[m] = (series2 - np.expand_dims(series2.mean(axis=axis), axis=axis))/np.std(series2, axis=axis)
+
+    ps1_tilde = np.fft.fft(padded_series1, axis=axis)
+    ps2_tilde = np.fft.fft(padded_series2, axis=axis)
+
+    ccf = np.real(np.fft.ifft(ps1_tilde*np.conj(ps2_tilde), axis=axis))/n0
+    ccf = np.concatenate((ccf[m2], ccf[m]), axis=axis)
+
+    if returnlags:
+        return ccf, np.arange(-(n0-1), n0, dtype=np.int)
+    else:
+        return ccf
+
 def autocorrelation_function(series, axis=0):
     """Returns the autocorrelation function of the given series.  The
     function is normalised so that it is 1 at zero lag.
@@ -57,7 +108,7 @@ def autocorrelation_length_estimate(series, acf=None, M=5, axis=0):
 
       L = \int_{-\infty}^\infty \rho(t) dt
 
-    The estimate is the smallest :math:`L` such that 
+    The estimate is the smallest :math:`L` such that
 
     .. math::
 
@@ -154,7 +205,7 @@ def emcee_ptchain_autocorrelation_lengths(ptchain, M=5, fburnin=None):
         fburnin = _default_burnin(M)
 
     istart = int(round(fburnin*ptchain.shape[2]))
-    
+
     return autocorrelation_length_estimate(np.mean(ptchain[:, :, istart:, :], axis=1), axis=1)
 
 def emcee_thinned_chain(chain, M=5, fburnin=None):
@@ -209,7 +260,7 @@ def emcee_thinned_ptchain(ptchain, M=5, fburnin=None):
 def plot_emcee_chain_autocorrelation_functions(chain, fburnin=None):
     r"""Plots a grid of the autocorrelation function (post burnin) for each
     of the parameters in the given chain.
-    
+
     """
 
     if fburnin is None:
@@ -241,7 +292,7 @@ def emcee_gelman_rubin_r(chain, fburnin=None):
 
     n = chain.shape[1]
     m = chain.shape[0]
-    
+
     walker_means = np.mean(chain, axis=1)
     walker_variances = np.var(chain, axis=1)
 
